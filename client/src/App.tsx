@@ -12,24 +12,30 @@ import DataForm from "./components/DataForm";
 import Dashboard from "./pages/Dashboard";
 import Prescriptions from "./pages/Prescriptions";
 import SharedPrescriptions from "./pages/SharedPrescriptions";
+import { AuthProvider } from "./contexts/AuthContext";
 
 function App() {
   return (
-    <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/about" element={<About />} />
-      <Route path="/services" element={<Services />} />
-      <Route path="/contact" element={<Contact />} />
-      <Route path="/blog" element={<Blog />} />
-      <Route path="/sign-up" element={<Signup />} />
-      <Route path="/sign-in" element={<Signin />} />
-      <Route path="/role" element={<Role />} />
-      <Route path="/form" element={<DataForm />} />
-      <Route path="/appointments" element={<Appointments />} />
-      <Route path="/dashboard" element={<Dashboard />} />
-      <Route path="/prescriptions" element={<Prescriptions />} />
-      <Route path="/prescription/share/:id" element={<SharedPrescriptions />} />
-    </Routes>
+    <AuthProvider>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/services" element={<Services />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/blog" element={<Blog />} />
+        <Route path="/sign-up" element={<Signup />} />
+        <Route path="/sign-in" element={<Signin />} />
+        <Route path="/role" element={<Role />} />
+        <Route path="/form" element={<DataForm />} />
+        <Route path="/appointments" element={<Appointments />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/prescriptions" element={<Prescriptions />} />
+        <Route
+          path="/prescription/share/:id"
+          element={<SharedPrescriptions />}
+        />
+      </Routes>
+    </AuthProvider>
   );
 }
 

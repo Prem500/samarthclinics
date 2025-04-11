@@ -9,6 +9,10 @@ const userSchema = new mongoose.Schema(
       trim: true,
       lowercase: true,
     },
+    password: {
+      type: String,
+      required: false, // Optional for Clerk auth users
+    },
     clerkId: {
       type: String,
       required: false,

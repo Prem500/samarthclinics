@@ -1,18 +1,23 @@
 import Appointment from "@/components/Appointment";
 import DoctorAppointments from "@/components/DoctorAppointments";
 import DataForm from "@/components/DataForm";
-import { useAuth } from "@clerk/clerk-react";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
+import { isAuthenticated } from "@/lib/authUtils";
 
 const Appointments = () => {
   const userId = localStorage.getItem("userId");
   const email = localStorage.getItem("email");
   const [role, setRole] = React.useState<string | null>(null);
-  const { isSignedIn } = useAuth();
+  const [isSignedIn, setIsSignedIn] = useState(false);
   const navigate = useNavigate();
   const [needsUserInfo, setNeedsUserInfo] = useState(false);
+
+  useEffect(() => {
+    // Check authentication status
+    setIsSignedIn(isAuthenticated());
+  }, []);
 
   useEffect(() => {
     // Check if user info exists in localStorage

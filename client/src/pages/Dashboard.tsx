@@ -1,8 +1,7 @@
 import React, { useEffect, useState, useMemo, useCallback } from "react";
 import axios from "axios";
-import { useSession, useUser } from "@clerk/clerk-react";
-import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { getUserId, getAuthHeaders } from "@/lib/authUtils";
 
 // Types for our data
 interface Appointment {
@@ -35,8 +34,9 @@ interface Prescription {
 }
 
 const Dashboard: React.FC = () => {
-  const { user, isLoaded: isUserLoaded } = useUser();
-  const { session } = useSession();
+  const [isUserLoaded, setIsUserLoaded] = useState(true);
+  const userId = getUserId();
+  const email = localStorage.getItem("email");
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [prescriptions, setPrescriptions] = useState<Prescription[]>([]);
   const [loading, setLoading] = useState({
@@ -47,8 +47,6 @@ const Dashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState<"appointments" | "prescriptions">(
     "appointments"
   );
-  const userId = localStorage.getItem("userId");
-  const email = localStorage.getItem("email");
 
   useEffect(() => {
     if (userId && email) {
@@ -60,27 +58,24 @@ const Dashboard: React.FC = () => {
   }, []);
 
   // Helper to get authorization headers
-  const getAuthHeaders = useCallback(async () => {
-    if (!session) {
+  const getAuthenticationHeaders = useCallback(async () => {
+    const headers = getAuthHeaders();
+    if (!headers.Authorization) {
       throw new Error("No active session");
     }
-    const token = await session.getToken();
-    return {
-      Authorization: `Bearer ${token}`,
-    };
-  }, [session]);
+    return headers;
+  }, []);
 
   // Memoized data fetching functions
   const fetchAppointments = useCallback(async () => {
-    if (!isUserLoaded || !user || !session) return;
+    if (!isUserLoaded || !userId) return;
 
     try {
       setLoading((prev) => ({ ...prev, appointments: true }));
       setError((prev) => ({ ...prev, appointments: "" }));
 
       // Get auth headers
-      const headers = await getAuthHeaders();
-      const userId = user.id;
+      const headers = await getAuthenticationHeaders();
 
       // Try MongoDB ID first - for doctors
       const response = await axios.get(
@@ -100,18 +95,17 @@ const Dashboard: React.FC = () => {
     } finally {
       setLoading((prev) => ({ ...prev, appointments: false }));
     }
-  }, [user, isUserLoaded, session, getAuthHeaders]);
+  }, [isUserLoaded, userId, getAuthenticationHeaders]);
 
   const fetchPrescriptions = useCallback(async () => {
-    if (!isUserLoaded || !user || !session) return;
+    if (!isUserLoaded || !userId) return;
 
     try {
       setLoading((prev) => ({ ...prev, prescriptions: true }));
       setError((prev) => ({ ...prev, prescriptions: "" }));
 
       // Get auth headers
-      const headers = await getAuthHeaders();
-      const userId = user.id;
+      const headers = await getAuthenticationHeaders();
 
       const response = await axios.get(
         `${import.meta.env.VITE_BACKEND_URL}/prescription/${userId}`,
@@ -131,16 +125,16 @@ const Dashboard: React.FC = () => {
     } finally {
       setLoading((prev) => ({ ...prev, prescriptions: false }));
     }
-  }, [user, isUserLoaded, session, getAuthHeaders]);
+  }, [isUserLoaded, userId, getAuthenticationHeaders]);
 
   // Load data when component mounts or user changes
   useEffect(() => {
-    if (isUserLoaded && user && session) {
-      console.log("Fetching data for user:", user.id);
+    if (isUserLoaded && userId) {
+      console.log("Fetching data for user:", userId);
       fetchAppointments();
       fetchPrescriptions();
     }
-  }, [isUserLoaded, user, session, fetchAppointments, fetchPrescriptions]);
+  }, [isUserLoaded, userId, fetchAppointments, fetchPrescriptions]);
 
   // Format date helper - memoize for performance
   const formatDate = useCallback((dateString: string) => {
@@ -172,10 +166,8 @@ const Dashboard: React.FC = () => {
   // Handle appointment status update
   const handleAppointmentUpdate = useCallback(
     async (appointmentId: string, status: "confirmed" | "cancelled") => {
-      if (!session) return;
-
       try {
-        const headers = await getAuthHeaders();
+        const headers = await getAuthenticationHeaders();
 
         await axios.post(
           `${import.meta.env.VITE_BACKEND_URL}/booking/update/${appointmentId}`,
@@ -190,17 +182,14 @@ const Dashboard: React.FC = () => {
         alert("Failed to update appointment status");
       }
     },
-    [session, getAuthHeaders, fetchAppointments]
+    [getAuthenticationHeaders, fetchAppointments]
   );
 
   // Handle prescription payment update
   const handlePaymentUpdate = useCallback(
     async (prescriptionId: string) => {
-      if (!session) return;
-
       try {
-        const headers = await getAuthHeaders();
-        const userId = user?.id;
+        const headers = await getAuthenticationHeaders();
 
         await axios.patch(
           `${
@@ -220,7 +209,7 @@ const Dashboard: React.FC = () => {
         alert("Failed to update payment status");
       }
     },
-    [session, getAuthHeaders, fetchPrescriptions]
+    [getAuthenticationHeaders, fetchPrescriptions, userId]
   );
 
   // Derived data for summary cards - memoized
@@ -261,14 +250,14 @@ const Dashboard: React.FC = () => {
         <h1 className="text-3xl font-bold text-gray-800 mb-6">
           Doctor Dashboard
         </h1>
-        <Button
+        <button
           onClick={() => {
             window.location.href = "/";
           }}
-          className="rounded"
+          className="rounded bg-blue-500 text-white px-4 py-2"
         >
           Go Back
-        </Button>
+        </button>
       </div>
 
       {/* Summary Cards */}
@@ -455,7 +444,12 @@ const Dashboard: React.FC = () => {
             ) : error.appointments ? (
               <div className="p-6 text-center">
                 <div className="text-red-500 mb-4">{error.appointments}</div>
-                <Button onClick={fetchAppointments}>Try Again</Button>
+                <button
+                  onClick={fetchAppointments}
+                  className="rounded bg-blue-500 text-white px-4 py-2"
+                >
+                  Try Again
+                </button>
               </div>
             ) : appointments.length === 0 ? (
               <div className="p-12 text-center">
@@ -598,9 +592,12 @@ const Dashboard: React.FC = () => {
             ) : error.prescriptions ? (
               <div className="p-6 text-center">
                 <div className="text-red-500 mb-4">{error.prescriptions}</div>
-                <Button onClick={fetchPrescriptions} className="">
+                <button
+                  onClick={fetchPrescriptions}
+                  className="rounded bg-blue-500 text-white px-4 py-2"
+                >
                   Try Again
-                </Button>
+                </button>
               </div>
             ) : prescriptions.length === 0 ? (
               <div className="p-12 text-center">

@@ -1,18 +1,17 @@
-import { useUser } from "@clerk/clerk-react";
 import axios from "axios";
 import { useEffect } from "react";
 import { useNavigate } from "react-router";
 import { toast } from "sonner";
+import { getUserId } from "@/lib/authUtils";
 
 const Role = () => {
-  const { user } = useUser();
-  const userId = user?.id;
-  const email = user?.emailAddresses[0].emailAddress;
+  const userId = getUserId();
+  const email = localStorage.getItem("email");
   const navigate = useNavigate();
 
   const fetchRole = async () => {
     const res = await axios.get(
-      `${import.meta.env.BACKEND_URL}/role/${userId}`
+      `${import.meta.env.VITE_BACKEND_URL}/role/${userId}`
     );
 
     console.log(res);

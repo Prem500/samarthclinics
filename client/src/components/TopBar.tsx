@@ -1,11 +1,16 @@
-import { SignOutButton, useAuth } from "@clerk/clerk-react";
 import { Menu, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Button } from "./ui/button";
+import { isAuthenticated, logout } from "@/lib/authUtils";
 
 const TopBar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
-  const { isSignedIn } = useAuth();
+  const [isSignedIn, setIsSignedIn] = useState(false);
+
+  useEffect(() => {
+    // Check authentication status
+    setIsSignedIn(isAuthenticated());
+  }, []);
 
   const handleMenuToggle = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -126,9 +131,15 @@ const TopBar = () => {
                 >
                   Dashboard
                 </Button>
-                <SignOutButton>
-                  <Button className="w-full">Sign Out</Button>
-                </SignOutButton>
+                <Button
+                  onClick={() => {
+                    logout();
+                    setIsSignedIn(false);
+                  }}
+                  className="w-full"
+                >
+                  Sign Out
+                </Button>
               </div>
             ) : (
               <div className="space-y-3">
@@ -235,7 +246,14 @@ const TopBar = () => {
                         </button>
                       </li>
                       <li style={{ padding: "10px 0" }}>
-                        <SignOutButton />
+                        <button
+                          onClick={() => {
+                            logout();
+                            setIsSignedIn(false);
+                          }}
+                        >
+                          Sign Out
+                        </button>
                       </li>
                     </>
                   ) : (

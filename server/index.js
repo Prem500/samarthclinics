@@ -2,6 +2,8 @@ import express from "express";
 import cors from "cors";
 import { connectMongoDb } from "./lib/mongodb.js";
 import dotenv from "dotenv";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 import authRoute from "./routes/auth.route.js";
 import roleRoute from "./routes/role.route.js";

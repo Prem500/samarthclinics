@@ -1,7 +1,8 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Typed from "typed.js";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faWhatsapp } from "@fortawesome/free-brands-svg-icons";
+import { isAuthenticated } from "@/lib/authUtils";
 
 interface HeroSectionProps {
   authenticated: boolean;
@@ -10,6 +11,11 @@ interface HeroSectionProps {
 const HeroSection: React.FC<HeroSectionProps> = ({ authenticated }) => {
   const typedRef = useRef<HTMLSpanElement>(null);
   const typed = useRef<Typed | null>(null);
+  const [isUserAuthenticated, setIsUserAuthenticated] = useState(authenticated);
+
+  useEffect(() => {
+    setIsUserAuthenticated(isAuthenticated());
+  }, []);
 
   useEffect(() => {
     // Initialize Typed.js
@@ -77,7 +83,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ authenticated }) => {
                   data-aos-delay="200"
                 >
                   <a
-                    href={`${authenticated ? "/appointments" : "/form"}`}
+                    href={`${isUserAuthenticated ? "/appointments" : "/form"}`}
                     className="btn btn-primary btn-lg rounded-pill px-4 py-3 shadow-sm"
                     target="_blank"
                     rel="noopener noreferrer"

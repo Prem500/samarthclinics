@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import AOS from "aos";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "aos/dist/aos.css";
@@ -19,9 +19,12 @@ import Appointments from "./Appointments";
 
 const Home: React.FC = () => {
   const [authenticated, setAuthenticated] = useState(false);
+  const [userRole, setUserRole] = useState<string | null>(null);
+  const appointmentsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     checkAuth();
+    checkUserRole();
 
     // Initialize AOS
     AOS.init({
@@ -35,6 +38,22 @@ const Home: React.FC = () => {
     setAuthenticated(isAuth ?? false);
   };
 
+  const checkUserRole = () => {
+    // Check if user role is stored in localStorage
+    const role = localStorage.getItem("role") || null;
+    const userId = localStorage.getItem("userId");
+
+    // If user has ID but no specific role set, assume "user" role for homepage purposes
+    if (userId && !role) {
+      setUserRole("user");
+    } else {
+      setUserRole(role);
+    }
+  };
+
+  // Only show appointments section for regular users or unauthenticated visitors
+  const shouldShowAppointments = userRole !== "doctor";
+
   return (
     <div>
       {/* Header */}
@@ -46,7 +65,12 @@ const Home: React.FC = () => {
       {/* Quick Info Section */}
       <QuickInfoSection />
 
-      <Appointments />
+      {/* Conditionally render Appointments section */}
+      {shouldShowAppointments && (
+        <div ref={appointmentsRef} id="appointments">
+          <Appointments homepage={true} />
+        </div>
+      )}
 
       {/* Services Section */}
       <ServicesSection />

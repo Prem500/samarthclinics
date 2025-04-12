@@ -29,6 +29,8 @@ import {
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { useNavigate } from "react-router";
+import { useAuth } from "@/contexts/AuthContext";
+import { authAxios } from "@/lib/authUtils";
 
 const Appointment = () => {
   const [doctors, setDoctors] = useState([]);
@@ -42,6 +44,7 @@ const Appointment = () => {
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
+  const { isSignedIn, userId } = useAuth();
 
   const timeSlots = [
     "09:00",
@@ -84,7 +87,7 @@ const Appointment = () => {
 
   const checkSlotAvailability = async () => {
     try {
-      const response = await axios.post(
+      const response = await authAxios.post(
         `${import.meta.env.VITE_BACKEND_URL}/booking/time-slot`,
         {
           doctorId: selectedDoctor,
@@ -103,6 +106,14 @@ const Appointment = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    if (!isSignedIn) {
+      toast("Please sign in", {
+        description: "Please sign in to book an appointment.",
+      });
+      navigate("/sign-up");
+      return;
+    }
+
     if (!isSlotAvailable) {
       setErrorMessage(
         "Selected slot is not available. Please choose another time."
@@ -110,17 +121,15 @@ const Appointment = () => {
       return;
     }
 
-    const user = localStorage.getItem("userId");
-
     try {
       setIsSubmitting(true);
-      const response = await axios.post(
+      const response = await authAxios.post(
         `${import.meta.env.VITE_BACKEND_URL}/booking/create`,
         {
           doctor: selectedDoctor,
           date: format(selectedDate as Date, "yyyy-MM-dd"),
           time: selectedTime,
-          user,
+          user: userId,
           issue,
           visitType,
         }
@@ -139,7 +148,6 @@ const Appointment = () => {
       setSelectedDoctor("");
       setSelectedDate(undefined);
       setSelectedTime("");
-
       setIssue("");
     } catch (error) {
       console.error("Error booking appointment:", error);
@@ -151,10 +159,6 @@ const Appointment = () => {
 
   return (
     <div className="max-w-5xl h-auto mx-auto  px-6">
-      {/* <h1 className="text-4xl font-bold mb-10 text-center text-primary">
-        Book Your Physiotherapy Appointment
-      </h1> */}
-
       {successMessage && (
         <Alert className="mb-6 bg-green-50 border-green-200 shadow-sm">
           <AlertCircle className="h-5 w-5 text-green-600" />

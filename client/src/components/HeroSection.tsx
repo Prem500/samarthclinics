@@ -42,6 +42,13 @@ const HeroSection: React.FC<HeroSectionProps> = ({ authenticated }) => {
     };
   }, []);
 
+  const scrollToAppointments = () => {
+    const appointmentsSection = document.getElementById("appointments");
+    if (appointmentsSection) {
+      appointmentsSection.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
     <div
       className="site-blocks-cover position-relative"
@@ -82,11 +89,9 @@ const HeroSection: React.FC<HeroSectionProps> = ({ authenticated }) => {
                   data-aos="fade-up"
                   data-aos-delay="200"
                 >
-                  <a
-                    href={`${isUserAuthenticated ? "/appointments" : "/form"}`}
+                  <button
+                    onClick={scrollToAppointments}
                     className="btn btn-primary btn-lg rounded-pill px-4 py-3 shadow-sm"
-                    target="_blank"
-                    rel="noopener noreferrer"
                     style={{
                       background:
                         "linear-gradient(135deg, #4e73df 0%, #224abe 100%)",
@@ -102,7 +107,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ authenticated }) => {
                     }
                   >
                     खूद अपॉइंटमेंट बुक करें
-                  </a>
+                  </button>
                   <a
                     href="upi://pay?pa=akkiathletic@ybl"
                     className="btn btn-success btn-lg rounded-pill px-4 py-3 shadow-sm"

@@ -6,10 +6,14 @@ import { isAuthenticated, logout } from "@/lib/authUtils";
 const TopBar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [isSignedIn, setIsSignedIn] = useState(false);
+  const [userRole, setUserRole] = useState<string | null>(null);
 
   useEffect(() => {
     // Check authentication status
     setIsSignedIn(isAuthenticated());
+    // Get user role from localStorage or wherever it's stored
+    const role = localStorage.getItem("userRole");
+    setUserRole(role);
   }, []);
 
   const handleMenuToggle = (e: React.MouseEvent) => {
@@ -122,19 +126,22 @@ const TopBar = () => {
           <div className="mt-8 pt-4 border-t border-gray-100">
             {isSignedIn ? (
               <div className="space-y-3">
-                <Button
-                  onClick={() => {
-                    window.location.href = "/dashboard";
-                  }}
-                  className="w-full mb-2"
-                  variant="outline"
-                >
-                  Dashboard
-                </Button>
+                {userRole === "doctor" && (
+                  <Button
+                    onClick={() => {
+                      window.location.href = "/dashboard";
+                    }}
+                    className="w-full mb-2"
+                    variant="outline"
+                  >
+                    Dashboard
+                  </Button>
+                )}
                 <Button
                   onClick={() => {
                     logout();
                     setIsSignedIn(false);
+                    setUserRole(null);
                   }}
                   className="w-full"
                 >
@@ -145,12 +152,12 @@ const TopBar = () => {
               <div className="space-y-3">
                 <Button
                   onClick={() => {
-                    window.location.href = "/sign-in";
+                    window.location.href = "/sign-up";
                   }}
                   className="w-full"
                   variant="default"
                 >
-                  Doctor Sign In
+                  Sign Up
                 </Button>
                 <Button
                   onClick={() => {
@@ -159,7 +166,7 @@ const TopBar = () => {
                   className="w-full"
                   variant="outline"
                 >
-                  Doctor Sign Up
+                  Sign Up
                 </Button>
               </div>
             )}
@@ -236,20 +243,23 @@ const TopBar = () => {
                   </li>
                   {isSignedIn ? (
                     <>
-                      <li className="px-4" style={{ padding: "10px 0" }}>
-                        <button
-                          onClick={() => {
-                            window.location.href = "/dashboard";
-                          }}
-                        >
-                          Dashboard
-                        </button>
-                      </li>
+                      {userRole === "doctor" && (
+                        <li className="px-4" style={{ padding: "10px 0" }}>
+                          <button
+                            onClick={() => {
+                              window.location.href = "/dashboard";
+                            }}
+                          >
+                            Dashboard
+                          </button>
+                        </li>
+                      )}
                       <li style={{ padding: "10px 0" }}>
                         <button
                           onClick={() => {
                             logout();
                             setIsSignedIn(false);
+                            setUserRole(null);
                           }}
                         >
                           Sign Out
@@ -264,12 +274,12 @@ const TopBar = () => {
                       >
                         <Button
                           onClick={() => {
-                            window.location.href = "/sign-in";
+                            window.location.href = "/sign-up";
                           }}
                           variant={"outline"}
                           style={{ color: "#000", textDecoration: "none" }}
                         >
-                          Doctor Sign In
+                          Sign Up
                         </Button>
                       </li>
                     </>

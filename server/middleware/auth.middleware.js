@@ -14,27 +14,31 @@ export const verifyToken = async (req, res, next) => {
 
   try {
     const verified = jwt.verify(token, process.env.JWT_SECRET);
-    
+
     // Enhanced validation: verify the user still exists in the database
     const userExists = await User.findById(verified.id);
     if (!userExists) {
-      return res.status(401).json({ 
-        message: "User no longer exists in the system. Please register again." 
+      return res.status(401).json({
+        message: "User no longer exists in the system. Please register again.",
       });
     }
-    
+
     // Add fresh user data to the request
     req.user = {
       ...verified,
-      role: userExists.role // Ensure we always have the latest role from DB
+      role: userExists.role, // Ensure we always have the latest role from DB
     };
-    
+
     next();
   } catch (error) {
     if (error.name === "TokenExpiredError") {
-      return res.status(401).json({ message: "Token expired. Please log in again." });
+      return res
+        .status(401)
+        .json({ message: "Token expired. Please log in again." });
     } else if (error.name === "JsonWebTokenError") {
-      return res.status(401).json({ message: "Invalid token. Please log in again." });
+      return res
+        .status(401)
+        .json({ message: "Invalid token. Please log in again." });
     } else {
       console.error("Auth middleware error:", error);
       return res.status(401).json({ message: "Invalid token" });

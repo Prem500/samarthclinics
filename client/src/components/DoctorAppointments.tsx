@@ -47,7 +47,7 @@ import {
   AlertCircle,
 } from "lucide-react";
 import { format, isToday, isTomorrow, parseISO, isAfter } from "date-fns";
-import { useAuth, useSession, useUser } from "@clerk/clerk-react";
+import { useAuth } from "@/contexts/AuthContext";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 // Type definitions that match server responses
@@ -82,11 +82,10 @@ const DoctorAppointments = () => {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
 
-  const { user, isLoaded } = useUser();
-  const { session } = useSession();
-  const { userId } = useAuth();
+  const { isSignedIn, userId, userRole } = useAuth();
+  const isLoaded = true; // Since our authentication state is immediately available
 
-  const doctorId = user?.id || session?.user?.id || userId;
+  const doctorId = userId;
 
   useEffect(() => {
     if (isLoaded && doctorId) {
@@ -103,9 +102,14 @@ const DoctorAppointments = () => {
       setLoading(true);
       setError(null);
 
-      // First, get the doctor's MongoDB ID from the clerk ID
+      // First, get the doctor's MongoDB ID from the custom AuthContext ID
       const doctorResponse = await axios.get(
-        `${import.meta.env.VITE_BACKEND_URL}/auth/clerk/${doctorId}`
+        `${import.meta.env.VITE_BACKEND_URL}/auth/${doctorId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
       );
 
       const doctorMongoId = doctorResponse.data._id;
@@ -116,7 +120,12 @@ const DoctorAppointments = () => {
 
       // Now use the MongoDB ID to fetch bookings with populated user data
       const response = await axios.get(
-        `${import.meta.env.VITE_BACKEND_URL}/booking/${doctorMongoId}`
+        `${import.meta.env.VITE_BACKEND_URL}/booking/${doctorMongoId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
       );
 
       // Validate that we received proper booking data
@@ -206,9 +215,10 @@ const DoctorAppointments = () => {
   const handleUpdateBooking = async (updatedBooking: Booking) => {
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_BACKEND_URL}/booking/update/${
-          updatedBooking._id
-        }`,
+        `${import.meta.env.VITE_BACKEND_URL.replace(
+          "/api",
+          ""
+        )}/api/booking/update/${updatedBooking._id}`,
         updatedBooking
       );
 
@@ -229,7 +239,10 @@ const DoctorAppointments = () => {
   const handleDeleteBooking = async (id: string) => {
     try {
       await axios.delete(
-        `${import.meta.env.VITE_BACKEND_URL}/booking/delete/${id}`
+        `${import.meta.env.VITE_BACKEND_URL.replace(
+          "/api",
+          ""
+        )}/api/booking/delete/${id}`
       );
       setBookings(bookings.filter((booking) => booking._id !== id));
       setIsConfirmDialogOpen(false);

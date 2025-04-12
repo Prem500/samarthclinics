@@ -11,7 +11,7 @@ const userSchema = new mongoose.Schema(
     },
     password: {
       type: String,
-      required: false, // Optional for Clerk auth users
+      required: false, // Optional for authentication methods that don't use password
     },
     phoneNumber: {
       type: String,

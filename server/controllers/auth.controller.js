@@ -5,7 +5,7 @@ import { ObjectId } from "mongodb";
 
 export const authFunction = async (req, res) => {
   try {
-    const { email_addresses, id, full_name } = req.body.data;
+    const { email_addresses, full_name } = req.body.data;
 
     const email = email_addresses[0].email_address;
 
@@ -17,7 +17,6 @@ export const authFunction = async (req, res) => {
 
     const newUser = new User({
       email: email,
-      clerkId: id,
       full_name: full_name,
     });
 
@@ -42,7 +41,6 @@ export const getBasicUserInfo = async (req, res) => {
         phoneNumber,
         role: "user",
         full_name,
-        clerkId: "",
       });
 
       await newUser
@@ -67,22 +65,6 @@ export const getUserDetails = async (req, res) => {
   const { id } = req.params;
   try {
     const user = await User.findById(id);
-
-    if (!user) {
-      return res.status(404).json({ message: "No user found" });
-    }
-
-    res.status(200).json(user);
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ message: "Internal server error" });
-  }
-};
-
-export const getUserByClerkId = async (req, res) => {
-  const { clerkId } = req.params;
-  try {
-    const user = await User.findOne({ clerkId });
 
     if (!user) {
       return res.status(404).json({ message: "No user found" });

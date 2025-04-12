@@ -161,12 +161,12 @@ const TopBar = () => {
                 </Button>
                 <Button
                   onClick={() => {
-                    window.location.href = "/sign-up";
+                    window.location.href = "/sign-in";
                   }}
                   className="w-full"
                   variant="outline"
                 >
-                  Sign Up
+                  Sign In
                 </Button>
               </div>
             )}

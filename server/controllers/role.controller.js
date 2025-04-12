@@ -22,7 +22,7 @@ export const roleFunction = async (req, res) => {
 
     // Return default role if none is set
     const userRole = user.role || "user";
-    
+
     res.status(200).json({ role: userRole });
   } catch (error) {
     console.log("Error in roleFunction:", error);
@@ -32,16 +32,18 @@ export const roleFunction = async (req, res) => {
 
 export const updateRole = async (req, res) => {
   const { id, role, email } = req.body;
-  
+
   // Validate input
   if (!email) {
     return res.status(400).json({ message: "Email is required" });
   }
-  
+
   if (!role || !["doctor", "user"].includes(role)) {
-    return res.status(400).json({ message: "Valid role (doctor or user) is required" });
+    return res
+      .status(400)
+      .json({ message: "Valid role (doctor or user) is required" });
   }
-  
+
   try {
     const user = await User.findOne({ email });
 

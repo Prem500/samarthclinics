@@ -2,11 +2,39 @@ import mongoose from "mongoose";
 
 const Schema = mongoose.Schema;
 
+const medicationSchema = new Schema({
+  name: {
+    type: String,
+    required: true,
+  },
+  dosage: {
+    type: String,
+    required: true,
+  },
+  frequency: {
+    type: String,
+    required: true,
+  },
+  duration: {
+    type: String,
+    required: true,
+  },
+  instructions: {
+    type: String,
+  },
+});
+
 const prescriptionSchema = new Schema(
   {
     prescriptionText: {
       type: String,
-      required: true,
+    },
+    medications: {
+      type: [medicationSchema],
+      default: [],
+    },
+    diagnosis: {
+      type: String,
     },
     doctor: {
       type: Schema.Types.ObjectId,
@@ -47,6 +75,15 @@ const prescriptionSchema = new Schema(
     },
     paymentAmount: {
       type: Number,
+    },
+    patientHistory: {
+      type: String,
+    },
+    treatmentPlan: {
+      type: String,
+    },
+    followUpDate: {
+      type: Date,
     },
   },
   { timestamps: true }

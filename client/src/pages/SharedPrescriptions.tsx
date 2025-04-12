@@ -3,12 +3,27 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+
+interface Medication {
+  name: string;
+  dosage: string;
+  frequency: string;
+  duration: string;
+  instructions: string;
+}
 
 const SharedPrescriptions = () => {
   const { id } = useParams<{ id: string }>();
   const [prescription, setPrescription] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  console.log(id); // This will log the id from the URL
 
   const fetchPrescriptions = async () => {
     try {
@@ -16,7 +31,6 @@ const SharedPrescriptions = () => {
         `${import.meta.env.VITE_BACKEND_URL}/prescription/share/${id}`
       );
       const data = res.data;
-      console.log(data);
       setPrescription(data);
       setLoading(false);
     } catch (error) {
@@ -110,6 +124,10 @@ const SharedPrescriptions = () => {
                 </h2>
                 <div className="mt-2 pl-7">
                   <p className="text-gray-600">
+                    <span className="font-medium">Name:</span>{" "}
+                    {prescription.doctor?.full_name || "N/A"}
+                  </p>
+                  <p className="text-gray-600">
                     <span className="font-medium">ID:</span>{" "}
                     {prescription.doctor?._id || "N/A"}
                   </p>
@@ -147,6 +165,10 @@ const SharedPrescriptions = () => {
                     <span className="font-medium">ID:</span>{" "}
                     {prescription.patient?._id || "N/A"}
                   </p>
+                  <p className="text-gray-600">
+                    <span className="font-medium">Email:</span>{" "}
+                    {prescription.patient?.email || "N/A"}
+                  </p>
                 </div>
               </div>
             </div>
@@ -168,7 +190,7 @@ const SharedPrescriptions = () => {
                   Expiry Date
                 </h3>
                 <p className="mt-1 text-gray-900">
-                  {formatDate(prescription.expiryDate)}
+                  {prescription.expiryDate ? formatDate(prescription.expiryDate) : "Not specified"}
                 </p>
               </div>
               <div>
@@ -192,8 +214,107 @@ const SharedPrescriptions = () => {
             </div>
           </div>
 
+          {/* Diagnosis Section */}
+          {prescription.diagnosis && (
+            <div className="p-6 border-b border-gray-200">
+              <h2 className="text-lg font-semibold text-gray-700 mb-3 flex items-center">
+                <svg
+                  className="h-5 w-5 text-blue-500 mr-2"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                  />
+                </svg>
+                Diagnosis
+              </h2>
+              <div className="bg-white rounded-md p-4 border border-gray-300">
+                <p className="text-gray-800">{prescription.diagnosis}</p>
+              </div>
+            </div>
+          )}
+
+          {/* Patient History Section */}
+          {prescription.patientHistory && (
+            <div className="p-6 border-b border-gray-200">
+              <h2 className="text-lg font-semibold text-gray-700 mb-3 flex items-center">
+                <svg
+                  className="h-5 w-5 text-blue-500 mr-2"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M16 4v12l-4-2-4 2V4M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                  />
+                </svg>
+                Patient History
+              </h2>
+              <div className="bg-white rounded-md p-4 border border-gray-300">
+                <p className="text-gray-800 whitespace-pre-line">{prescription.patientHistory}</p>
+              </div>
+            </div>
+          )}
+
+          {/* Medications Section */}
+          {prescription.medications && prescription.medications.length > 0 && (
+            <div className="p-6 border-b border-gray-200">
+              <h2 className="text-lg font-semibold text-gray-700 mb-3 flex items-center">
+                <svg
+                  className="h-5 w-5 text-blue-500 mr-2"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                  />
+                </svg>
+                Medications
+              </h2>
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Medication</TableHead>
+                      <TableHead>Dosage</TableHead>
+                      <TableHead>Frequency</TableHead>
+                      <TableHead>Duration</TableHead>
+                      <TableHead>Instructions</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {prescription.medications.map((med: Medication, index: number) => (
+                      <TableRow key={index}>
+                        <TableCell>{med.name}</TableCell>
+                        <TableCell>{med.dosage}</TableCell>
+                        <TableCell>{med.frequency}</TableCell>
+                        <TableCell>{med.duration}</TableCell>
+                        <TableCell>{med.instructions || "-"}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            </div>
+          )}
+
           {/* Prescription Content */}
-          <div className="p-6">
+          <div className="p-6 border-b border-gray-200">
             <h2 className="text-lg font-semibold text-gray-700 mb-4 flex items-center">
               <svg
                 className="h-5 w-5 text-blue-500 mr-2"
@@ -220,18 +341,87 @@ const SharedPrescriptions = () => {
                 </p>
               </div>
             </div>
-
-            {prescription.notes && (
-              <div className="mt-4">
-                <h3 className="font-medium text-gray-700 mb-2">
-                  Additional Notes:
-                </h3>
-                <div className="bg-yellow-50 p-4 rounded-md border border-yellow-100">
-                  <p className="text-gray-800">{prescription.notes}</p>
-                </div>
-              </div>
-            )}
           </div>
+
+          {/* Treatment Plan Section */}
+          {prescription.treatmentPlan && (
+            <div className="p-6 border-b border-gray-200">
+              <h2 className="text-lg font-semibold text-gray-700 mb-3 flex items-center">
+                <svg
+                  className="h-5 w-5 text-blue-500 mr-2"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+                  />
+                </svg>
+                Treatment Plan
+              </h2>
+              <div className="bg-white rounded-md p-4 border border-gray-300">
+                <p className="whitespace-pre-line text-gray-800">{prescription.treatmentPlan}</p>
+              </div>
+            </div>
+          )}
+
+          {/* Additional Notes */}
+          {prescription.notes && (
+            <div className="p-6 border-b border-gray-200">
+              <h3 className="font-medium text-gray-700 mb-2 flex items-center">
+                <svg
+                  className="h-5 w-5 text-blue-500 mr-2"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"
+                  />
+                </svg>
+                Additional Notes
+              </h3>
+              <div className="bg-yellow-50 p-4 rounded-md border border-yellow-100">
+                <p className="whitespace-pre-line text-gray-800">{prescription.notes}</p>
+              </div>
+            </div>
+          )}
+          
+          {/* Follow-up Date */}
+          {prescription.followUpDate && (
+            <div className="p-6 border-b border-gray-200">
+              <h3 className="font-medium text-gray-700 mb-2 flex items-center">
+                <svg
+                  className="h-5 w-5 text-blue-500 mr-2"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                  />
+                </svg>
+                Follow-up Date
+              </h3>
+              <div className="bg-blue-50 p-4 rounded-md border border-blue-100">
+                <p className="text-gray-800">
+                  Please schedule a follow-up visit on: <strong>{formatDate(prescription.followUpDate)}</strong>
+                </p>
+              </div>
+            </div>
+          )}
 
           {/* Footer */}
           <div className="px-6 py-4 bg-gray-50 border-t border-gray-200">

@@ -56,14 +56,15 @@ const Dashboard: React.FC = () => {
       return;
     }
 
-    // If user is authenticated but not a doctor (check for email), redirect to home
-    if (userId && email) {
+    // If user is authenticated but not a doctor, redirect to home
+    const userRole = localStorage.getItem("userRole");
+    if (userRole !== "doctor") {
       toast("Only Doctors are allowed to view this page", {
         description: "Redirecting to home page",
       });
       window.location.href = "/";
     }
-  }, [userId, email]);
+  }, [userId]);
 
   // Helper to get authorization headers
   const getAuthenticationHeaders = useCallback(async () => {
@@ -262,7 +263,7 @@ const Dashboard: React.FC = () => {
           onClick={() => {
             window.location.href = "/";
           }}
-          className="rounded bg-blue-500 text-white px-4 py-2"
+          className=""
         >
           Go Back
         </button>

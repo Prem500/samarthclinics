@@ -12,14 +12,8 @@ export const GetBookings = async (req, res) => {
     if (mongoose.Types.ObjectId.isValid(id)) {
       doctorId = id;
     } else {
-      // Otherwise, assume it's a clerkId
-      const doctor = await User.findOne({ clerkId: id });
-
-      if (!doctor) {
-        return res.status(404).json({ message: "Doctor not found" });
-      }
-
-      doctorId = doctor._id;
+      // If it's not a valid ObjectId, try to find by email or other identifier if needed
+      return res.status(400).json({ message: "Invalid doctor ID format" });
     }
 
     // Always fully populate the user field to ensure consistent data format

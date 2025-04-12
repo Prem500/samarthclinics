@@ -12,10 +12,8 @@ export const getPrescriptions = async (req, res) => {
       return res.status(401).json({ message: "Unauthorized" });
     }
 
-    // Clerk Auth Verification
-    const user = await User.findOne({
-      clerkId: userId,
-    }).select("role");
+    // Auth Verification
+    const user = await User.findById(userId).select("role");
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
@@ -28,7 +26,7 @@ export const getPrescriptions = async (req, res) => {
         .json({ message: "Forbidden - doctor access required" });
     }
 
-    // FInding all prescriptions for the doctor
+    // Finding all prescriptions for the doctor
     const prescriptions = await Prescription.find({
       doctor: user.id,
     })
@@ -45,23 +43,30 @@ export const getPrescriptions = async (req, res) => {
 export const createPrescription = async (req, res) => {
   const {
     prescriptionText,
+    medications,
+    diagnosis,
     patientId,
     notes,
     paymentAmount,
     expiryDate,
     appointmentId,
+    patientHistory,
+    treatmentPlan,
+    followUpDate,
   } = req.body;
   try {
     const { id: userId } = req.params;
 
-    // Clerk Auth Verification
+    // Auth Verification
     if (!userId) {
       return res.status(401).json({ message: "Unauthorized" });
     }
 
-    const user = await User.findOne({
-      clerkId: userId,
-    });
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
 
     // Check if user is a doctor
     if (user.role !== "doctor") {
@@ -77,12 +82,17 @@ export const createPrescription = async (req, res) => {
     const prescription = await Prescription.create({
       doctor: user.id,
       prescriptionText,
+      medications: medications || [],
+      diagnosis: diagnosis || "",
       patient: patientId,
       notes: notes || "",
       expiryDate: expiryDate || null,
       paymentAmount: paymentAmount || null,
       appointment: appointmentId || null,
       shareableId,
+      patientHistory: patientHistory || "",
+      treatmentPlan: treatmentPlan || "",
+      followUpDate: followUpDate || null,
     });
 
     // update prescription details in the user's prescriptions array
@@ -106,7 +116,7 @@ export const getPatientPaymentStatus = async (req, res) => {
     const { id: userId } = req.params;
     const { patientId } = req.params;
 
-    // Clerk Auth Verification
+    // Auth Verification
     if (!userId) {
       return res.status(401).json({ message: "Unauthorized" });
     }
@@ -151,15 +161,13 @@ export const updatePaymentStatus = async (req, res) => {
     const { prescriptionId } = req.params;
     const { paymentStatus, paymentDate, paymentAmount } = req.body;
 
-    // Clerk Auth Verification
+    // Auth Verification
     if (!userId) {
       console.log("Unauthorized: No userId in request");
       return res.status(401).json({ message: "Unauthorized" });
     }
 
-    const user = await User.findOne({
-      clerkId: userId,
-    }).select("role");
+    const user = await User.findById(userId).select("role");
 
     // Check if user is a doctor
     if (!user) {
@@ -207,9 +215,14 @@ export const getPatientsWithAppointments = async (req, res) => {
   try {
     const { id: userId } = req.params;
 
+    // Enhanced logging for debugging
     console.log("User ID from request:", userId);
+    console.log(
+      "Authorization header:",
+      req.headers.authorization ? "Present" : "Missing"
+    );
 
-    // Clerk Auth Verification
+    // Auth Verification
     if (!userId) {
       console.log(
         "Unauthorized: No userId in request for getPatientsWithAppointments"
@@ -217,9 +230,8 @@ export const getPatientsWithAppointments = async (req, res) => {
       return res.status(401).json({ message: "Unauthorized" });
     }
 
-    const user = await User.findOne({
-      clerkId: userId,
-    });
+    // Validate the user exists and is a doctor
+    const user = await User.findById(userId);
 
     if (!user) {
       console.log("User not found for ID:", userId);
@@ -235,28 +247,81 @@ export const getPatientsWithAppointments = async (req, res) => {
     }
 
     // Find patients who have appointments with the doctor
-    const patientsWithDetails = await Booking.find({ doctor: user.id }).sort({
-      dateIssued: -1,
+    // Using .lean() for better performance
+    const bookings = await Booking.find({ doctor: user.id })
+      .sort({ date: -1 })
+      .lean();
+
+    console.log(`Found ${bookings.length} bookings for doctor ${userId}`);
+
+    if (!bookings || bookings.length === 0) {
+      // Return empty array instead of 404 error
+      console.log("No bookings found for doctor ID:", userId);
+      return res.status(200).json([]);
+    }
+
+    // Get unique patient IDs from bookings
+    const uniquePatientIds = [
+      ...new Set(bookings.map((booking) => booking.user.toString())),
+    ];
+    console.log(`Found ${uniquePatientIds.length} unique patients`);
+
+    // Fetch all patient details in a single query
+    const allPatients = await User.find({
+      _id: { $in: uniquePatientIds },
+    })
+      .select("_id full_name email phoneNumber")
+      .lean();
+
+    // Create a map for quick lookup
+    const patientsMap = {};
+    allPatients.forEach((patient) => {
+      patientsMap[patient._id.toString()] = patient;
     });
 
-    // return all the patients found in appointments
-    const patients = await Promise.all(
-      patientsWithDetails.map(async (booking) => {
-        const patient = await User.findById(booking.user).select(
-          "full_name email phoneNumber"
-        );
+    // Map latest booking for each patient
+    const latestBookingByPatient = {};
+    bookings.forEach((booking) => {
+      const patientId = booking.user.toString();
+      if (
+        !latestBookingByPatient[patientId] ||
+        new Date(booking.date) >
+          new Date(latestBookingByPatient[patientId].date)
+      ) {
+        latestBookingByPatient[patientId] = booking;
+      }
+    });
+
+    // Combine patient details with their latest appointment info
+    const patientsWithAppointments = uniquePatientIds
+      .map((patientId) => {
+        const patient = patientsMap[patientId];
+        const latestBooking = latestBookingByPatient[patientId];
+
+        if (!patient) {
+          console.log(
+            `Warning: Patient with ID ${patientId} not found in database`
+          );
+          return null;
+        }
+
         return {
-          ...patient._doc,
-          appointmentDate: booking.date,
-          appointmentTime: booking.time,
-          appointmentStatus: booking.status,
+          _id: patient._id,
+          full_name: patient.full_name,
+          email: patient.email,
+          phoneNumber: patient.phoneNumber,
+          appointmentDate: latestBooking?.date || null,
+          appointmentTime: latestBooking?.time || null,
+          appointmentStatus: latestBooking?.status || null,
         };
       })
+      .filter(Boolean); // Remove any null entries
+
+    console.log(
+      `Returning ${patientsWithAppointments.length} patients with appointment details`
     );
 
-    console.log(patients);
-
-    res.status(200).json(patients);
+    res.status(200).json(patientsWithAppointments);
   } catch (error) {
     console.log("Error in getPatientsWithAppointments:", error);
     res.status(500).json({ message: "Internal server error" });

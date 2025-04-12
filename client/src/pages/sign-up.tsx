@@ -95,7 +95,24 @@ const Signup = () => {
       }
     } catch (error: any) {
       console.error("Registration error:", error);
-      toast.error(error.response?.data?.message || "Failed to create account");
+
+      // Check if the error is because the user already exists
+      if (
+        error.response?.status === 400 &&
+        error.response?.data?.message === "User with this email already exists"
+      ) {
+        toast.error(
+          "An account with this email already exists. Redirecting to sign-in page..."
+        );
+        // Wait a short time to allow the user to read the toast message
+        setTimeout(() => {
+          navigate("/sign-in");
+        }, 2000);
+      } else {
+        toast.error(
+          error.response?.data?.message || "Failed to create account"
+        );
+      }
     } finally {
       setIsLoading(false);
     }

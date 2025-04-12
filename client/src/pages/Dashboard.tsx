@@ -49,13 +49,21 @@ const Dashboard: React.FC = () => {
   );
 
   useEffect(() => {
-    if (userId && email) {
-      toast("Only Doctors are allowed to view this", {
-        description: "Book an appointment to get started",
-      });
-      window.location.href = "/appointments";
+    // If no userId is found, redirect to signup
+    if (!userId) {
+      toast.error("Please sign in to access this page");
+      window.location.href = "/sign-up";
+      return;
     }
-  }, []);
+
+    // If user is authenticated but not a doctor (check for email), redirect to home
+    if (userId && email) {
+      toast("Only Doctors are allowed to view this page", {
+        description: "Redirecting to home page",
+      });
+      window.location.href = "/";
+    }
+  }, [userId, email]);
 
   // Helper to get authorization headers
   const getAuthenticationHeaders = useCallback(async () => {

@@ -190,7 +190,9 @@ const SharedPrescriptions = () => {
                   Expiry Date
                 </h3>
                 <p className="mt-1 text-gray-900">
-                  {prescription.expiryDate ? formatDate(prescription.expiryDate) : "Not specified"}
+                  {prescription.expiryDate
+                    ? formatDate(prescription.expiryDate)
+                    : "Not specified"}
                 </p>
               </div>
               <div>
@@ -261,7 +263,9 @@ const SharedPrescriptions = () => {
                 Patient History
               </h2>
               <div className="bg-white rounded-md p-4 border border-gray-300">
-                <p className="text-gray-800 whitespace-pre-line">{prescription.patientHistory}</p>
+                <p className="text-gray-800 whitespace-pre-line">
+                  {prescription.patientHistory}
+                </p>
               </div>
             </div>
           )}
@@ -298,15 +302,17 @@ const SharedPrescriptions = () => {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {prescription.medications.map((med: Medication, index: number) => (
-                      <TableRow key={index}>
-                        <TableCell>{med.name}</TableCell>
-                        <TableCell>{med.dosage}</TableCell>
-                        <TableCell>{med.frequency}</TableCell>
-                        <TableCell>{med.duration}</TableCell>
-                        <TableCell>{med.instructions || "-"}</TableCell>
-                      </TableRow>
-                    ))}
+                    {prescription.medications.map(
+                      (med: Medication, index: number) => (
+                        <TableRow key={index}>
+                          <TableCell>{med.name}</TableCell>
+                          <TableCell>{med.dosage}</TableCell>
+                          <TableCell>{med.frequency}</TableCell>
+                          <TableCell>{med.duration}</TableCell>
+                          <TableCell>{med.instructions || "-"}</TableCell>
+                        </TableRow>
+                      )
+                    )}
                   </TableBody>
                 </Table>
               </div>
@@ -364,7 +370,9 @@ const SharedPrescriptions = () => {
                 Treatment Plan
               </h2>
               <div className="bg-white rounded-md p-4 border border-gray-300">
-                <p className="whitespace-pre-line text-gray-800">{prescription.treatmentPlan}</p>
+                <p className="whitespace-pre-line text-gray-800">
+                  {prescription.treatmentPlan}
+                </p>
               </div>
             </div>
           )}
@@ -390,11 +398,13 @@ const SharedPrescriptions = () => {
                 Additional Notes
               </h3>
               <div className="bg-yellow-50 p-4 rounded-md border border-yellow-100">
-                <p className="whitespace-pre-line text-gray-800">{prescription.notes}</p>
+                <p className="whitespace-pre-line text-gray-800">
+                  {prescription.notes}
+                </p>
               </div>
             </div>
           )}
-          
+
           {/* Follow-up Date */}
           {prescription.followUpDate && (
             <div className="p-6 border-b border-gray-200">
@@ -417,7 +427,8 @@ const SharedPrescriptions = () => {
               </h3>
               <div className="bg-blue-50 p-4 rounded-md border border-blue-100">
                 <p className="text-gray-800">
-                  Please schedule a follow-up visit on: <strong>{formatDate(prescription.followUpDate)}</strong>
+                  Please schedule a follow-up visit on:{" "}
+                  <strong>{formatDate(prescription.followUpDate)}</strong>
                 </p>
               </div>
             </div>

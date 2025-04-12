@@ -7,14 +7,29 @@ import {
   getPrescriptions,
   updatePaymentStatus,
 } from "../controllers/prescription.controller.js";
+import { verifyToken, isDoctor } from "../middleware/auth.middleware.js";
 
 const router = express.Router();
 
-router.post("/create/:id", createPrescription);
-router.get("/:id/patients-with-appointments", getPatientsWithAppointments);
-router.get("/:id/patient/:patientId/payments", getPatientPaymentStatus);
-router.patch("/:id/payment/:prescriptionId", updatePaymentStatus);
+// Public route - no authentication needed
 router.get("/share/:shareableId", getPrescriptionByShareableId);
-router.get("/:id", getPrescriptions);
+
+// Protected routes - authentication required
+router.use(verifyToken);
+
+// Doctor-only routes
+router.post("/create/:id", isDoctor, createPrescription);
+router.get(
+  "/:id/patients-with-appointments",
+  isDoctor,
+  getPatientsWithAppointments
+);
+router.get(
+  "/:id/patient/:patientId/payments",
+  isDoctor,
+  getPatientPaymentStatus
+);
+router.patch("/:id/payment/:prescriptionId", isDoctor, updatePaymentStatus);
+router.get("/:id", isDoctor, getPrescriptions);
 
 export default router;

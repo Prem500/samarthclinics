@@ -1,7 +1,13 @@
 import axios from "axios";
 
+// Get auth token with validation
 export const getAuthToken = () => {
-  return localStorage.getItem("token");
+  const token = localStorage.getItem("token");
+  // Simple validation to ensure the token at least looks like a JWT
+  if (token && token.split(".").length === 3) {
+    return token;
+  }
+  return null;
 };
 
 export const isAuthenticated = () => {
@@ -9,11 +15,32 @@ export const isAuthenticated = () => {
 };
 
 export const getUserRole = () => {
-  return localStorage.getItem("userRole");
+  const role = localStorage.getItem("userRole");
+  // Default to 'user' if role is not set but user is authenticated
+  return role || (isAuthenticated() ? "user" : null);
 };
 
 export const getUserId = () => {
   return localStorage.getItem("userId");
+};
+
+export const setUserData = ({
+  token,
+  userId,
+  email,
+  role,
+}: {
+  token: string;
+  userId: string;
+  email: string;
+  role?: string | null;
+}) => {
+  localStorage.setItem("token", token);
+  localStorage.setItem("userId", userId);
+  localStorage.setItem("email", email);
+  if (role) {
+    localStorage.setItem("userRole", role);
+  }
 };
 
 export const logout = () => {
@@ -48,9 +75,18 @@ authAxios.interceptors.request.use(
 authAxios.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response && error.response.status === 401) {
-      // Token expired or invalid
-      logout();
+    if (error.response) {
+      if (error.response.status === 401) {
+        // Token expired or invalid - log out user
+        console.log(
+          "Authentication failed:",
+          error.response.data.message || "Session expired"
+        );
+        logout();
+      } else if (error.response.status === 403) {
+        // Permission issue but token is valid
+        console.log("Permission denied:", error.response.data.message);
+      }
     }
     return Promise.reject(error);
   }

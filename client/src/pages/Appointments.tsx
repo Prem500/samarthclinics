@@ -3,7 +3,7 @@ import DoctorAppointments from "@/components/DoctorAppointments";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
-import { isAuthenticated } from "@/lib/authUtils";
+import { isAuthenticated, authAxios } from "@/lib/authUtils";
 
 const Appointments = ({ homepage = false }: { homepage?: boolean }) => {
   const userId = localStorage.getItem("userId");
@@ -38,17 +38,36 @@ const Appointments = ({ homepage = false }: { homepage?: boolean }) => {
   const fetchRole = async () => {
     setIsLoading(true);
     try {
-      const res = await axios.get(
+      // Use authAxios instead of regular axios to include authentication headers
+      const res = await authAxios.get(
         `${import.meta.env.VITE_BACKEND_URL}/role/${userId}`
       );
 
       if (res.data.role) {
         setRole(res.data.role);
+        // Also store role in localStorage for persistence
+        localStorage.setItem("userRole", res.data.role);
       }
       setIsLoading(false);
     } catch (error) {
       console.error("Error fetching role:", error);
-      setError("Unable to verify user role. Please try again later.");
+
+      // More specific error handling
+      if (axios.isAxiosError(error) && error.response) {
+        if (error.response.status === 401) {
+          setError("Your session has expired. Please log in again.");
+        } else if (error.response.status === 404) {
+          setError("User information not found. Please log in again.");
+        } else {
+          setError(
+            `Error: ${
+              error.response.data.message || "Unable to verify user role"
+            }`
+          );
+        }
+      } else {
+        setError("Network error. Please check your connection and try again.");
+      }
       setIsLoading(false);
     }
   };

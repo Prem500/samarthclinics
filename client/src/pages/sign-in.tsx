@@ -63,7 +63,7 @@ const Signin = () => {
         if (response.data.user.role === "doctor") {
           navigate("/dashboard");
         } else {
-          navigate("/appointments");
+          navigate("/");
         }
       }
     } catch (error: any) {

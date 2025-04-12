@@ -13,11 +13,6 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: false, // Optional for Clerk auth users
     },
-    clerkId: {
-      type: String,
-      required: false,
-      unique: true,
-    },
     phoneNumber: {
       type: String,
       required: false,

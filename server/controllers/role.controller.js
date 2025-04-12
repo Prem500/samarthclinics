@@ -16,26 +16,34 @@ export const roleFunction = async (req, res) => {
   try {
     const user = await User.findById(id);
 
-    console.log(user);
-
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    res.status(200).json({ role: user.role });
+    // Return default role if none is set
+    const userRole = user.role || "user";
+    
+    res.status(200).json({ role: userRole });
   } catch (error) {
-    console.log(error);
+    console.log("Error in roleFunction:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };
 
 export const updateRole = async (req, res) => {
   const { id, role, email } = req.body;
+  
+  // Validate input
+  if (!email) {
+    return res.status(400).json({ message: "Email is required" });
+  }
+  
+  if (!role || !["doctor", "user"].includes(role)) {
+    return res.status(400).json({ message: "Valid role (doctor or user) is required" });
+  }
+  
   try {
-    const user = await User.findOne({
-      // clerkId: id,
-      email,
-    });
+    const user = await User.findOne({ email });
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
@@ -45,7 +53,7 @@ export const updateRole = async (req, res) => {
 
     res.status(200).json({ message: "Role updated successfully" });
   } catch (error) {
-    console.log(error);
+    console.log("Error in updateRole:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };
@@ -62,7 +70,7 @@ export const getDoctors = async (req, res) => {
 
     res.status(200).json(doctors);
   } catch (error) {
-    console.log(error);
+    console.log("Error in getDoctors:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };

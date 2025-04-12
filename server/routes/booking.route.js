@@ -8,8 +8,12 @@ import {
   slotAvailability,
   UpdateBooking,
 } from "../controllers/booking.controller.js";
+import { verifyToken } from "../middleware/auth.middleware.js";
 
 const router = express.Router();
+
+// Apply authentication middleware to all booking routes
+router.use(verifyToken);
 
 router.get("/single/:id", GetBooking);
 router.get("/:id", GetBookings);

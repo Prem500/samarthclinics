@@ -2,7 +2,6 @@ import React, { useEffect, useState, useRef } from "react";
 import AOS from "aos";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "aos/dist/aos.css";
-import { isAuthenticated } from "@/lib/handler";
 import TopBar from "@/components/TopBar";
 import HeroSection from "@/components/HeroSection";
 import QuickInfoSection from "@/components/QuickInfoSection";
@@ -18,7 +17,6 @@ import { faWhatsapp } from "@fortawesome/free-brands-svg-icons";
 import Appointments from "./Appointments";
 
 const Home: React.FC = () => {
-  const [authenticated, setAuthenticated] = useState(false);
   const [userRole, setUserRole] = useState<string | null>(null);
   const appointmentsRef = useRef<HTMLDivElement>(null);
 
@@ -33,10 +31,7 @@ const Home: React.FC = () => {
     });
   }, []);
 
-  const checkAuth = async () => {
-    const isAuth = await isAuthenticated();
-    setAuthenticated(isAuth ?? false);
-  };
+  const checkAuth = async () => {};
 
   const checkUserRole = () => {
     // Check if user role is stored in localStorage
@@ -60,7 +55,7 @@ const Home: React.FC = () => {
       <TopBar />
 
       {/* Hero Section */}
-      <HeroSection authenticated={authenticated} />
+      <HeroSection />
 
       {/* Quick Info Section */}
       <QuickInfoSection />

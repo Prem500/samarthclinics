@@ -1,21 +1,16 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import Typed from "typed.js";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faWhatsapp } from "@fortawesome/free-brands-svg-icons";
-import { isAuthenticated } from "@/lib/authUtils";
 
-interface HeroSectionProps {
-  authenticated: boolean;
-}
-
-const HeroSection: React.FC<HeroSectionProps> = ({ authenticated }) => {
+const HeroSection: React.FC = () => {
   const typedRef = useRef<HTMLSpanElement>(null);
   const typed = useRef<Typed | null>(null);
-  const [isUserAuthenticated, setIsUserAuthenticated] = useState(authenticated);
+  // const [isUserAuthenticated, setIsUserAuthenticated] = useState(authenticated);
 
-  useEffect(() => {
-    setIsUserAuthenticated(isAuthenticated());
-  }, []);
+  // useEffect(() => {
+  //   setIsUserAuthenticated(isAuthenticated());
+  // }, []);
 
   useEffect(() => {
     // Initialize Typed.js

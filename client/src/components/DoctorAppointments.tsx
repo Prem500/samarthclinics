@@ -82,7 +82,7 @@ const DoctorAppointments = () => {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
 
-  const { isSignedIn, userId, userRole } = useAuth();
+  const { userId } = useAuth();
   const isLoaded = true; // Since our authentication state is immediately available
 
   const doctorId = userId;

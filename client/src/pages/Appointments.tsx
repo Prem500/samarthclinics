@@ -2,7 +2,7 @@ import Appointment from "@/components/Appointment";
 import DoctorAppointments from "@/components/DoctorAppointments";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router";
+// import { useNavigate } from "react-router";
 import { isAuthenticated, authAxios } from "@/lib/authUtils";
 
 const Appointments = ({ homepage = false }: { homepage?: boolean }) => {
@@ -12,7 +12,7 @@ const Appointments = ({ homepage = false }: { homepage?: boolean }) => {
   const [isSignedIn, setIsSignedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   useEffect(() => {
     // Check authentication status

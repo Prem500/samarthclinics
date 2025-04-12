@@ -144,7 +144,7 @@ const Prescriptions = () => {
     useState<Prescription | null>(null);
   const [isPrintDialogOpen, setIsPrintDialogOpen] = useState(false);
 
-  const { isSignedIn, userId } = useAuth();
+  const { userId } = useAuth();
   const isLoaded = true; // Since our authentication state is immediately available
 
   useEffect(() => {

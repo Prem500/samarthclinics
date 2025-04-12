@@ -34,9 +34,7 @@ interface Prescription {
 }
 
 const Dashboard: React.FC = () => {
-  const [isUserLoaded, setIsUserLoaded] = useState(true);
   const userId = getUserId();
-  const email = localStorage.getItem("email");
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [prescriptions, setPrescriptions] = useState<Prescription[]>([]);
   const [loading, setLoading] = useState({
@@ -77,7 +75,7 @@ const Dashboard: React.FC = () => {
 
   // Memoized data fetching functions
   const fetchAppointments = useCallback(async () => {
-    if (!isUserLoaded || !userId) return;
+    if (!userId) return;
 
     try {
       setLoading((prev) => ({ ...prev, appointments: true }));
@@ -104,10 +102,10 @@ const Dashboard: React.FC = () => {
     } finally {
       setLoading((prev) => ({ ...prev, appointments: false }));
     }
-  }, [isUserLoaded, userId, getAuthenticationHeaders]);
+  }, [userId, getAuthenticationHeaders]);
 
   const fetchPrescriptions = useCallback(async () => {
-    if (!isUserLoaded || !userId) return;
+    if (!userId) return;
 
     try {
       setLoading((prev) => ({ ...prev, prescriptions: true }));
@@ -134,16 +132,16 @@ const Dashboard: React.FC = () => {
     } finally {
       setLoading((prev) => ({ ...prev, prescriptions: false }));
     }
-  }, [isUserLoaded, userId, getAuthenticationHeaders]);
+  }, [userId, getAuthenticationHeaders]);
 
   // Load data when component mounts or user changes
   useEffect(() => {
-    if (isUserLoaded && userId) {
+    if (userId) {
       console.log("Fetching data for user:", userId);
       fetchAppointments();
       fetchPrescriptions();
     }
-  }, [isUserLoaded, userId, fetchAppointments, fetchPrescriptions]);
+  }, [userId, fetchAppointments, fetchPrescriptions]);
 
   // Format date helper - memoize for performance
   const formatDate = useCallback((dateString: string) => {

@@ -104,7 +104,7 @@ interface Prescription {
   expiryDate: string | null;
   paymentStatus: "pending" | "paid";
   paymentAmount: number | null;
-  shareableUrl?: string;
+  shareableId?: string;
   patientHistory?: string;
   treatmentPlan?: string;
   followUpDate?: string | null;
@@ -373,7 +373,7 @@ const Prescriptions = () => {
       setFollowUpDate(undefined);
 
       // Set the shareable URL
-      setShareableUrl(window.location.origin + response.data.shareableUrl);
+      setShareableUrl(window.location.origin + response.data.shareableId);
 
       // Refresh prescriptions list with auth token
       const updatedPrescriptions = await axios.get(
@@ -591,9 +591,17 @@ const Prescriptions = () => {
     <div className="container mx-auto py-6 max-w-7xl">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">Medical Prescriptions</h1>
-        <Badge variant="outline" className="px-3 py-1 text-sm bg-blue-50">
-          Doctor Portal
-        </Badge>
+        <div className="flex items-center gap-3">
+          <Button
+            variant="outline"
+            onClick={() => (window.location.href = "/dashboard")}
+          >
+            Back to Dashboard
+          </Button>
+          <Badge variant="outline" className="px-3 py-1 text-sm bg-blue-50">
+            Doctor Portal
+          </Badge>
+        </div>
       </div>
 
       <Tabs defaultValue="create" className="w-full">
@@ -957,7 +965,7 @@ const Prescriptions = () => {
                         <div className="space-y-2">
                           <Label htmlFor="payment">Payment Amount</Label>
                           <div className="relative">
-                            <span className="absolute left-3 top-2.5">$</span>
+                            <span className="absolute left-3 top-2.5">₹</span>
                             <Input
                               id="payment"
                               type="number"
@@ -1130,7 +1138,7 @@ const Prescriptions = () => {
                               </Badge>
                               {prescription.paymentAmount && (
                                 <span className="ml-2 text-sm">
-                                  ${prescription.paymentAmount}
+                                  ₹{prescription.paymentAmount}
                                 </span>
                               )}
                             </TableCell>
@@ -1149,7 +1157,7 @@ const Prescriptions = () => {
                                   onClick={() =>
                                     copyShareableLink(
                                       window.location.origin +
-                                        `/prescription/share/${prescription.shareableUrl}`
+                                        `/prescription/share/${prescription.shareableId}`
                                     )
                                   }
                                 >
@@ -1336,7 +1344,7 @@ const Prescriptions = () => {
                                           </Badge>
                                           {prescription.paymentAmount && (
                                             <span className="ml-2">
-                                              Amount: $
+                                              Amount: ₹
                                               {prescription.paymentAmount}
                                             </span>
                                           )}

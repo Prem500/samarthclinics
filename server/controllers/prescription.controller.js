@@ -53,6 +53,8 @@ export const createPrescription = async (req, res) => {
     patientHistory,
     treatmentPlan,
     followUpDate,
+    physicalExaminer,
+    investigation,
   } = req.body;
   try {
     const { id: userId } = req.params;
@@ -93,6 +95,8 @@ export const createPrescription = async (req, res) => {
       patientHistory: patientHistory || "",
       treatmentPlan: treatmentPlan || "",
       followUpDate: followUpDate || null,
+      physicalExaminer: physicalExaminer || "",
+      investigation: investigation || "",
     });
 
     // update prescription details in the user's prescriptions array

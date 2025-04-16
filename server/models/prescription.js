@@ -46,6 +46,13 @@ const prescriptionSchema = new Schema(
       ref: "User",
       required: true,
     },
+    physicalExaminer: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+    },
+    investigation: {
+      type: String,
+    },
     appointment: {
       type: Schema.Types.ObjectId,
       ref: "Appointment",

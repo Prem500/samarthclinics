@@ -108,6 +108,11 @@ interface Prescription {
   patientHistory?: string;
   treatmentPlan?: string;
   followUpDate?: string | null;
+  physicalExaminer?: {
+    _id: string;
+    full_name: string;
+  } | null;
+  investigation?: string;
 }
 
 const DEFAULT_MEDICATION: Medication = {
@@ -119,6 +124,9 @@ const DEFAULT_MEDICATION: Medication = {
 };
 
 const Prescriptions = () => {
+  const [doctors, setDoctors] = useState<any[]>([]);
+  const [physicalExaminer, setPhysicalExaminer] = useState<string>("");
+  const [investigation, setInvestigation] = useState<string>("");
   const [patients, setPatients] = useState<Patient[]>([]);
   const [prescriptions, setPrescriptions] = useState<Prescription[]>([]);
   const [filteredPrescriptions, setFilteredPrescriptions] = useState<
@@ -239,6 +247,27 @@ const Prescriptions = () => {
     }
   }, [userId, isLoaded]);
 
+  // Fetch doctors for physical examiner dropdown
+  useEffect(() => {
+    const fetchDoctors = async () => {
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_BACKEND_URL}/role/doctors`
+        );
+
+        if (response.data && Array.isArray(response.data)) {
+          setDoctors(response.data);
+        }
+      } catch (error) {
+        console.error("Error fetching doctors:", error);
+      }
+    };
+
+    if (isLoaded) {
+      fetchDoctors();
+    }
+  }, [isLoaded]);
+
   useEffect(() => {
     if (searchTerm.trim() === "") {
       setFilteredPrescriptions(prescriptions);
@@ -352,6 +381,8 @@ const Prescriptions = () => {
           expiryDate: expiryDate ? expiryDate.toISOString() : null,
           followUpDate: followUpDate ? followUpDate.toISOString() : null,
           appointmentId: appointmentId || null,
+          physicalExaminer: physicalExaminer || null,
+          investigation: investigation || "",
         },
         config
       );
@@ -765,6 +796,43 @@ const Prescriptions = () => {
                             placeholder="Enter patient diagnosis..."
                             className="min-h-[80px]"
                           />
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div className="space-y-2">
+                            <Label htmlFor="physicalExaminer">
+                              Physical Examiner
+                            </Label>
+                            <Select
+                              value={physicalExaminer}
+                              onValueChange={setPhysicalExaminer}
+                            >
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select Doctor" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {doctors.map((doctor) => (
+                                  <SelectItem
+                                    key={doctor._id}
+                                    value={doctor._id}
+                                  >
+                                    Dr. {doctor.full_name}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </div>
+
+                          <div className="space-y-2">
+                            <Label htmlFor="investigation">Investigation</Label>
+                            <Textarea
+                              id="investigation"
+                              value={investigation}
+                              onChange={(e) => setInvestigation(e.target.value)}
+                              placeholder="Enter investigation details..."
+                              className="min-h-[80px]"
+                            />
+                          </div>
                         </div>
 
                         <div className="space-y-2">

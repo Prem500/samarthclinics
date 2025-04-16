@@ -175,6 +175,359 @@ const Services = () => {
                 </p>
               </div>
             </div>
+            <div className="mb-4 mb-lg-4 col-sm-6 col-md-6 col-lg-3">
+              <div className="block-service-1-card">
+                <a href="#" className="thumbnail-link d-block mb-4">
+                  <img
+                    src="images/dryneedling.jpg"
+                    alt="Image"
+                    className="img-fluid"
+                  />
+                </a>
+                <h3 className="block-service-1-heading mb-3">
+                  <a href="#">ड्राई नीडलिंग</a>
+                </h3>
+                <div className="block-service-1-excerpt">
+                  <p>
+                    ड्राई नीडलिंग विशेषज्ञ देखभाल: मांसपेशियों के दर्द और तनाव
+                    को लक्षित करती है, आराम और चलने की क्षमता में सुधार करती है।
+                  </p>
+                </div>
+                <p>
+                  <a
+                    href="#"
+                    className="d-inline-flex align-items-center block-service-1-more"
+                  >
+                    <span>और जानें</span>{" "}
+                    <span className="icon-keyboard_arrow_right icon"></span>
+                  </a>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Specialized Service Categories Section */}
+      <div className="site-section bg-light">
+        <div className="container">
+          <div className="row mb-5">
+            <div className="col-md-12 text-center">
+              <h2 className="site-section-heading text-center font-secondary text-black">
+                विशिष्ट फिजियोथेरेपी सेवाएं
+              </h2>
+              <p className="lead">
+                हमारी विशेषज्ञ फिजियोथेरेपी सेवाएं विभिन्न स्थितियों और जरूरतों
+                के लिए अनुकूलित हैं
+              </p>
+            </div>
+          </div>
+
+          {/* Orthopedic Physiotherapy Category */}
+          <div className="mb-5">
+            <h3 className="text-black mb-4 border-bottom pb-2">
+              ऑर्थोपेडिक फिजियोथेरेपी
+            </h3>
+            <div className="row">
+              <div className="col-md-4 mb-4">
+                <div className="block-service-1-card h-100">
+                  <a href="#" className="thumbnail-link d-block mb-4">
+                    <img
+                      src="images/orthopedic-1.png"
+                      alt="जोड़ पुनर्वास"
+                      className="img-fluid"
+                    />
+                  </a>
+                  <h3 className="block-service-1-heading mb-3">
+                    <a href="#">जोड़ पुनर्वास</a>
+                  </h3>
+                  <div className="block-service-1-excerpt">
+                    <p>
+                      हड्डियों, मांसपेशियों और जोड़ों की चोटों और स्थितियों के
+                      लिए विशेष उपचार, जो आपकी गतिशीलता और जीवन की गुणवत्ता में
+                      सुधार करता है।
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div className="col-md-4 mb-4">
+                <div className="block-service-1-card h-100">
+                  <a href="#" className="thumbnail-link d-block mb-4">
+                    <img
+                      src="images/orthopedic-2.png"
+                      alt="पोस्ट-सर्जिकल पुनर्वास"
+                      className="img-fluid"
+                    />
+                  </a>
+                  <h3 className="block-service-1-heading mb-3">
+                    <a href="#">पोस्ट-सर्जिकल पुनर्वास</a>
+                  </h3>
+                  <div className="block-service-1-excerpt">
+                    <p>
+                      सर्जरी के बाद की विशेष देखभाल जो तेज़ी से ठीक होने और
+                      ऑप्टिमल समारोह को सुनिश्चित करती है।
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div className="col-md-4 mb-4">
+                <div className="block-service-1-card h-100">
+                  <a href="#" className="thumbnail-link d-block mb-4">
+                    <img
+                      src="images/orthopedic-3.png"
+                      alt="कंधा पुनर्वास"
+                      className="img-fluid"
+                    />
+                  </a>
+                  <h3 className="block-service-1-heading mb-3">
+                    <a href="#">कंधा पुनर्वास</a>
+                  </h3>
+                  <div className="block-service-1-excerpt">
+                    <p>
+                      कंधे के दर्द और चोटों के लिए लक्षित उपचार, जिसमें रोटेटर
+                      कफ, जमे हुए कंधे और अस्थिभंग शामिल हैं।
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Neurological Physiotherapy Category */}
+          <div className="mb-5">
+            <h3 className="text-black mb-4 border-bottom pb-2">
+              न्यूरोलॉजिकल फिजियोथेरेपी
+            </h3>
+            <div className="row">
+              <div className="col-md-6 mb-4">
+                <div className="block-service-1-card h-100">
+                  <a href="#" className="thumbnail-link d-block mb-4">
+                    <img
+                      src="images/neurological-1.png"
+                      alt="स्ट्रोक पुनर्वास"
+                      className="img-fluid"
+                    />
+                  </a>
+                  <h3 className="block-service-1-heading mb-3">
+                    <a href="#">स्ट्रोक पुनर्वास</a>
+                  </h3>
+                  <div className="block-service-1-excerpt">
+                    <p>
+                      स्ट्रोक के बाद आंदोलन और कार्यात्मक क्षमताओं को बहाल करने
+                      के लिए विशेष रूप से डिज़ाइन किए गए उपचार और अभ्यास।
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div className="col-md-6 mb-4">
+                <div className="block-service-1-card h-100">
+                  <a href="#" className="thumbnail-link d-block mb-4">
+                    <img
+                      src="images/neurological-2.png"
+                      alt="न्यूरोलॉजिकल स्थिति प्रबंधन"
+                      className="img-fluid"
+                    />
+                  </a>
+                  <h3 className="block-service-1-heading mb-3">
+                    <a href="#">न्यूरोलॉजिकल स्थिति प्रबंधन</a>
+                  </h3>
+                  <div className="block-service-1-excerpt">
+                    <p>
+                      पार्किंसंस, मल्टीपल स्केलेरोसिस और अन्य न्यूरोलॉजिकल
+                      स्थितियों के लिए समर्थन और प्रबंधन।
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Rehabilitation Category */}
+          <div className="mb-5">
+            <h3 className="text-black mb-4 border-bottom pb-2">
+              पुनर्वास सेवाएं
+            </h3>
+            <div className="row">
+              <div className="col-md-6 mb-4">
+                <div className="block-service-1-card h-100">
+                  <a href="#" className="thumbnail-link d-block mb-4">
+                    <img
+                      src="images/rehabilation-1.png"
+                      alt="खेल चोट पुनर्वास"
+                      className="img-fluid"
+                    />
+                  </a>
+                  <h3 className="block-service-1-heading mb-3">
+                    <a href="#">खेल चोट पुनर्वास</a>
+                  </h3>
+                  <div className="block-service-1-excerpt">
+                    <p>
+                      एथलीटों और सक्रिय व्यक्तियों को खेल में सुरक्षित रूप से
+                      वापस लाने के लिए विशेष पुनर्वास कार्यक्रम।
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div className="col-md-6 mb-4">
+                <div className="block-service-1-card h-100">
+                  <a href="#" className="thumbnail-link d-block mb-4">
+                    <img
+                      src="images/rehabilation-2.png"
+                      alt="कार्य से वापसी कार्यक्रम"
+                      className="img-fluid"
+                    />
+                  </a>
+                  <h3 className="block-service-1-heading mb-3">
+                    <a href="#">कार्य से वापसी कार्यक्रम</a>
+                  </h3>
+                  <div className="block-service-1-excerpt">
+                    <p>
+                      कार्यस्थल चोटों के बाद कर्मचारियों को सुरक्षित और प्रभावी
+                      ढंग से काम पर वापस जाने में मदद करने के लिए डिज़ाइन किए गए
+                      कार्यक्रम।
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Pediatric Physiotherapy Category */}
+          <div className="mb-5">
+            <h3 className="text-black mb-4 border-bottom pb-2">
+              बाल चिकित्सा फिजियोथेरेपी
+            </h3>
+            <div className="row">
+              <div className="col-md-4 mb-4">
+                <div className="block-service-1-card h-100">
+                  <a href="#" className="thumbnail-link d-block mb-4">
+                    <img
+                      src="images/pediatric-1.png"
+                      alt="बाल विकासात्मक थेरेपी"
+                      className="img-fluid"
+                    />
+                  </a>
+                  <h3 className="block-service-1-heading mb-3">
+                    <a href="#">बाल विकासात्मक थेरेपी</a>
+                  </h3>
+                  <div className="block-service-1-excerpt">
+                    <p>
+                      मोटर स्किल्स के विकास और बच्चों के लिए विकासात्मक मील के
+                      पत्थर को समर्थन देने के लिए विशेष रूप से डिज़ाइन किया गया।
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div className="col-md-4 mb-4">
+                <div className="block-service-1-card h-100">
+                  <a href="#" className="thumbnail-link d-block mb-4">
+                    <img
+                      src="images/pediatric-2.png"
+                      alt="बाल न्यूरो पुनर्वास"
+                      className="img-fluid"
+                    />
+                  </a>
+                  <h3 className="block-service-1-heading mb-3">
+                    <a href="#">बाल न्यूरो पुनर्वास</a>
+                  </h3>
+                  <div className="block-service-1-excerpt">
+                    <p>
+                      सेरेब्रल पाल्सी और अन्य न्यूरोलॉजिकल स्थितियों वाले बच्चों
+                      के लिए विशेष फिजियोथेरेपी समर्थन।
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div className="col-md-4 mb-4">
+                <div className="block-service-1-card h-100">
+                  <a href="#" className="thumbnail-link d-block mb-4">
+                    <img
+                      src="images/pediatric-3.png"
+                      alt="बाल अस्थि प्रबंधन"
+                      className="img-fluid"
+                    />
+                  </a>
+                  <h3 className="block-service-1-heading mb-3">
+                    <a href="#">बाल अस्थि प्रबंधन</a>
+                  </h3>
+                  <div className="block-service-1-excerpt">
+                    <p>
+                      बढ़ते बच्चों में हड्डियों और जोड़ों के मुद्दों के लिए
+                      विशेष समर्थन और उपचार।
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Sports Physiotherapy Category */}
+          <div className="mb-5">
+            <h3 className="text-black mb-4 border-bottom pb-2">
+              खेल फिजियोथेरेपी
+            </h3>
+            <div className="row">
+              <div className="col-md-4 mb-4">
+                <div className="block-service-1-card h-100">
+                  <a href="#" className="thumbnail-link d-block mb-4">
+                    <img
+                      src="images/sports-1.png"
+                      alt="एथलीट पुनर्वास"
+                      className="img-fluid"
+                    />
+                  </a>
+                  <h3 className="block-service-1-heading mb-3">
+                    <a href="#">एथलीट पुनर्वास</a>
+                  </h3>
+                  <div className="block-service-1-excerpt">
+                    <p>
+                      एथलीटों के लिए विशेष पुनर्वास सेवाएं जो प्रदर्शन बहाली और
+                      चोट की रोकथाम पर केंद्रित हैं।
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div className="col-md-4 mb-4">
+                <div className="block-service-1-card h-100">
+                  <a href="#" className="thumbnail-link d-block mb-4">
+                    <img
+                      src="images/sports-2.png"
+                      alt="खेल विशिष्ट प्रशिक्षण"
+                      className="img-fluid"
+                    />
+                  </a>
+                  <h3 className="block-service-1-heading mb-3">
+                    <a href="#">खेल विशिष्ट प्रशिक्षण</a>
+                  </h3>
+                  <div className="block-service-1-excerpt">
+                    <p>
+                      विशिष्ट खेलों के लिए अनुकूलित कंडीशनिंग और चोट की रोकथाम
+                      के कार्यक्रम।
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div className="col-md-4 mb-4">
+                <div className="block-service-1-card h-100">
+                  <a href="#" className="thumbnail-link d-block mb-4">
+                    <img
+                      src="images/sports-3.png"
+                      alt="प्रदर्शन सुधार"
+                      className="img-fluid"
+                    />
+                  </a>
+                  <h3 className="block-service-1-heading mb-3">
+                    <a href="#">प्रदर्शन सुधार</a>
+                  </h3>
+                  <div className="block-service-1-excerpt">
+                    <p>
+                      एथलीटों के प्रदर्शन को अनुकूलित करने के लिए उन्नत तकनीकें
+                      और कार्यक्रम।
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

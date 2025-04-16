@@ -242,6 +242,62 @@ const SharedPrescriptions = () => {
             </div>
           )}
 
+          {/* Physical Examiner Section */}
+          {prescription.physicalExaminer && (
+            <div className="p-6 border-b border-gray-200">
+              <h2 className="text-lg font-semibold text-gray-700 mb-3 flex items-center">
+                <svg
+                  className="h-5 w-5 text-blue-500 mr-2"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                  />
+                </svg>
+                Physical Examiner
+              </h2>
+              <div className="bg-white rounded-md p-4 border border-gray-300">
+                <p className="text-gray-800">
+                  Dr. {prescription.physicalExaminer.full_name || "N/A"}
+                </p>
+              </div>
+            </div>
+          )}
+
+          {/* Investigation Section */}
+          {prescription.investigation && (
+            <div className="p-6 border-b border-gray-200">
+              <h2 className="text-lg font-semibold text-gray-700 mb-3 flex items-center">
+                <svg
+                  className="h-5 w-5 text-blue-500 mr-2"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+                  />
+                </svg>
+                Investigation
+              </h2>
+              <div className="bg-white rounded-md p-4 border border-gray-300">
+                <p className="whitespace-pre-line text-gray-800">
+                  {prescription.investigation}
+                </p>
+              </div>
+            </div>
+          )}
+
           {/* Patient History Section */}
           {prescription.patientHistory && (
             <div className="p-6 border-b border-gray-200">

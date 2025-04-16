@@ -122,31 +122,6 @@ const HeroSection: React.FC = () => {
                   >
                     भुगतान करें
                   </a>
-                  <a
-                    href="https://wa.me/+917004119766?text=नमस्कार डॉक्टर साहब, हमको आपके पास इलाज करवाना है!"
-                    className="btn btn-light btn-lg rounded-pill px-4 py-3 shadow-sm d-flex align-items-center"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    style={{
-                      background: "#25D366",
-                      color: "white",
-                      border: "none",
-                      transition: "all 0.3s ease",
-                      fontWeight: "600",
-                    }}
-                    onMouseOver={(e) =>
-                      (e.currentTarget.style.transform = "translateY(-3px)")
-                    }
-                    onMouseOut={(e) =>
-                      (e.currentTarget.style.transform = "translateY(0)")
-                    }
-                  >
-                    <FontAwesomeIcon
-                      icon={faWhatsapp}
-                      style={{ fontSize: "24px", marginRight: "8px" }}
-                    />
-                    वॉट्सएप पर बात करें
-                  </a>
                 </div>
               </div>
             </div>

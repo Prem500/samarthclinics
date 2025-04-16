@@ -57,6 +57,34 @@ export const GetBooking = async (req, res) => {
   }
 };
 
+export const GetUserBookings = async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      return res.status(400).json({ message: "Invalid user ID format" });
+    }
+
+    // Find all bookings for this specific user
+    const bookings = await Booking.find({ user: userId })
+      .populate({
+        path: "doctor",
+        select: "full_name email _id",
+        model: "User",
+      })
+      .sort({ date: -1, time: -1 });
+
+    if (!bookings || bookings.length === 0) {
+      return res.status(200).json([]); // Return empty array instead of 404 error
+    }
+
+    return res.status(200).json(bookings);
+  } catch (error) {
+    console.error("Error in GetUserBookings:", error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
 export const CreateBooking = async (req, res) => {
   const { date, time, user, doctor, issue, visitType } = req.body;
 

@@ -350,3 +350,32 @@ export const getPrescriptionByShareableId = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
+export const getUserPrescriptions = async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      return res.status(400).json({ message: "Invalid user ID format" });
+    }
+
+    // Find prescriptions where the user is the patient
+    const prescriptions = await Prescription.find({ patient: userId })
+      .populate({
+        path: "doctor",
+        select: "full_name email _id",
+        model: "User",
+      })
+      .sort({ dateIssued: -1 });
+
+    // Return empty array if no prescriptions found (instead of error)
+    if (!prescriptions || prescriptions.length === 0) {
+      return res.status(200).json([]);
+    }
+
+    return res.status(200).json(prescriptions);
+  } catch (error) {
+    console.log("Error in getUserPrescriptions:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};

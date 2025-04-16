@@ -137,6 +137,17 @@ const TopBar = () => {
                     Dashboard
                   </Button>
                 )}
+                {userRole === "user" && (
+                  <Button
+                    onClick={() => {
+                      window.location.href = "/user-dashboard";
+                    }}
+                    className="w-full mb-2"
+                    variant="outline"
+                  >
+                    My Health Dashboard
+                  </Button>
+                )}
                 <Button
                   onClick={() => {
                     logout();
@@ -251,6 +262,17 @@ const TopBar = () => {
                             }}
                           >
                             Dashboard
+                          </button>
+                        </li>
+                      )}
+                      {userRole === "user" && (
+                        <li className="px-4" style={{ padding: "10px 0" }}>
+                          <button
+                            onClick={() => {
+                              window.location.href = "/user-dashboard";
+                            }}
+                          >
+                            My Health
                           </button>
                         </li>
                       )}

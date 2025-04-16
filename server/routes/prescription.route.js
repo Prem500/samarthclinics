@@ -5,6 +5,7 @@ import {
   getPatientsWithAppointments,
   getPrescriptionByShareableId,
   getPrescriptions,
+  getUserPrescriptions,
   updatePaymentStatus,
 } from "../controllers/prescription.controller.js";
 import { verifyToken, isDoctor } from "../middleware/auth.middleware.js";
@@ -16,6 +17,9 @@ router.get("/share/:shareableId", getPrescriptionByShareableId);
 
 // Protected routes - authentication required
 router.use(verifyToken);
+
+// User route - get user's prescriptions
+router.get("/user/:userId", getUserPrescriptions);
 
 // Doctor-only routes
 router.post("/create/:id", isDoctor, createPrescription);

@@ -5,6 +5,7 @@ import {
   GetBooking,
   getBookingId,
   GetBookings,
+  GetUserBookings,
   slotAvailability,
   UpdateBooking,
 } from "../controllers/booking.controller.js";
@@ -17,6 +18,7 @@ router.use(verifyToken);
 
 router.get("/single/:id", GetBooking);
 router.get("/:id", GetBookings);
+router.get("/user/:userId", GetUserBookings); // New endpoint for user bookings
 router.post("/create", CreateBooking);
 router.post("/update/:id", UpdateBooking);
 router.delete("/delete/:id", DeleteBooking);

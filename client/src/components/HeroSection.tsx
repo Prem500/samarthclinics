@@ -1,7 +1,5 @@
 import React, { useEffect, useRef } from "react";
 import Typed from "typed.js";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faWhatsapp } from "@fortawesome/free-brands-svg-icons";
 
 const HeroSection: React.FC = () => {
   const typedRef = useRef<HTMLSpanElement>(null);

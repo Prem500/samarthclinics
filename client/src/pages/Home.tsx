@@ -9,7 +9,7 @@ import ServicesSection from "@/components/ServicesSection";
 import TeamSection from "@/components/TeamSection";
 import WhyChooseUsSection from "@/components/WhyChooseUsSection";
 import TestimonialsSection from "@/components/TestimonialsSection";
-import CTASection from "@/components/CTASection";
+// import CTASection from "@/components/CTASection";
 import Footer from "@/components/Footer";
 import Map from "@/components/Map";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -80,7 +80,7 @@ const Home: React.FC = () => {
       <TestimonialsSection />
 
       {/* CTA Section */}
-      <CTASection />
+      {/* <CTASection /> */}
 
       {/* Map Section */}
       <Map />

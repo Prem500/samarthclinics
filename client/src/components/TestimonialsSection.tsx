@@ -64,20 +64,20 @@ const TestimonialsSection: React.FC = () => {
                   </div>
                   <div className="star-rating mb-3">{renderStars(5)}</div>
                   <blockquote>
-                    फास्ट रिकवरी हुआ है और हम सहमत हैं! मैं अपनी चोट से बहुत
-                    जल्दी ठीक हो गया और अब पूरी तरह से स्वस्थ हूँ।
+                    Just a magical treatment. Hope all of you get the best
+                    treatment from this best clinic.
                   </blockquote>
                   <div className="person-wrapper">
                     <div className="person-image">
                       <img
-                        src="images/person_1.jpg"
+                        src="images/User-4.png"
                         alt="रितेश मिश्रा"
                         className="img-fluid rounded-circle"
                       />
                     </div>
                     <div className="person-info">
-                      <h4 className="person-name">रितेश मिश्रा</h4>
-                      <p className="person-title">मरीज, वाराणसी</p>
+                      <h4 className="person-name">Ravi Raj</h4>
+                      <p className="person-title">Local guide</p>
                     </div>
                   </div>
                 </div>
@@ -90,21 +90,21 @@ const TestimonialsSection: React.FC = () => {
                   </div>
                   <div className="star-rating mb-3">{renderStars(5)}</div>
                   <blockquote>
-                    बनारस के रिजेक्टेड यहां ठीक हुआ जा के! कई डॉक्टरों के पास
-                    जाने के बाद भी मेरी समस्या का समाधान नहीं मिला, लेकिन यहां
-                    मुझे पूरी राहत मिली।
+                    I visited with my Dad. Dr. Prem Prakash attends to him and
+                    he is doing physiotherapy. He is humble and supportive. He
+                    is feeling better now.
                   </blockquote>
                   <div className="person-wrapper">
                     <div className="person-image">
                       <img
-                        src="images/person_2.jpg"
+                        src="/images/User-1.png"
                         alt="सुनील कुमार"
                         className="img-fluid rounded-circle"
                       />
                     </div>
                     <div className="person-info">
-                      <h4 className="person-name">सुनील कुमार</h4>
-                      <p className="person-title">मरीज, गाजीपुर</p>
+                      <h4 className="person-name">Akhileshwar Singh</h4>
+                      <p className="person-title">Local Guide</p>
                     </div>
                   </div>
                 </div>
@@ -116,22 +116,18 @@ const TestimonialsSection: React.FC = () => {
                     <QuoteIcon />
                   </div>
                   <div className="star-rating mb-3">{renderStars(5)}</div>
-                  <blockquote>
-                    10 साल का कमर दर्द ठीक हुआ बिना दवाई के! मुझे लगता था कि
-                    मेरा दर्द कभी ठीक नहीं होगा, लेकिन यहां के फिजियोथेरेपी
-                    उपचार ने मुझे नई जिंदगी दी है।
-                  </blockquote>
+                  <blockquote>Best physiotherapist in dehri.</blockquote>
                   <div className="person-wrapper">
                     <div className="person-image">
                       <img
-                        src="images/person_3.jpg"
+                        src="images/User-2.png"
                         alt="रविंदर कुशवाहा"
                         className="img-fluid rounded-circle"
                       />
                     </div>
                     <div className="person-info">
-                      <h4 className="person-name">रविंदर कुशवाहा</h4>
-                      <p className="person-title">मरीज, मिर्जापुर</p>
+                      <h4 className="person-name">Bibhu Maurya</h4>
+                      <p className="person-title">Local guide</p>
                     </div>
                   </div>
                 </div>
@@ -144,21 +140,23 @@ const TestimonialsSection: React.FC = () => {
                   </div>
                   <div className="star-rating mb-3">{renderStars(5)}</div>
                   <blockquote>
-                    कंधे का दर्द जड़ से खत्म हो गया! अब मैं बिना किसी तकलीफ के
-                    अपने सभी काम आसानी से कर पाता हूं और यह सब इस क्लिनिक की वजह
-                    से संभव हुआ है।
+                    I had an excellent experience at Samarth Clinic under the
+                    care of Dr. Prem, one of the best physiotherapists in Dehri
+                    on Sone. I visited for chronic back pain, and within a few
+                    sessions, I saw a noticeable improvement in my mobility and
+                    pain levels.
                   </blockquote>
                   <div className="person-wrapper">
                     <div className="person-image">
                       <img
-                        src="images/person_4.jpg"
+                        src="images/User-3.png"
                         alt="बिनोद कुमार"
                         className="img-fluid rounded-circle"
                       />
                     </div>
                     <div className="person-info">
-                      <h4 className="person-name">बिनोद कुमार</h4>
-                      <p className="person-title">मरीज, चंदौली</p>
+                      <h4 className="person-name">Ritik Kumar</h4>
+                      <p className="person-title">Local guide</p>
                     </div>
                   </div>
                 </div>

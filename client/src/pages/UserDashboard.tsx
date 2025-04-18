@@ -59,6 +59,7 @@ const UserDashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState<"appointments" | "prescriptions">(
     "appointments"
   );
+  const [userName, setUserName] = useState<string>("Patient");
 
   useEffect(() => {
     // If no userId is found, redirect to signup
@@ -146,11 +147,37 @@ const UserDashboard: React.FC = () => {
     }
   }, [userId, getAuthenticationHeaders]);
 
+  // Fetch user details to get the name
+  const fetchUserDetails = useCallback(async () => {
+    if (!userId) return;
+
+    try {
+      const headers = await getAuthenticationHeaders();
+      const response = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/auth/${userId}`,
+        { headers }
+      );
+
+      if (response.data && response.data.full_name) {
+        setUserName(response.data.full_name.split(" ")[0] || "Patient");
+      }
+    } catch (err) {
+      console.error("Error fetching user details:", err);
+      // Fallback to default name if there's an error
+      // Using stored name from localStorage as backup
+      const storedName = localStorage.getItem("full_name");
+      if (storedName) {
+        setUserName(storedName.split(" ")[0]);
+      }
+    }
+  }, [userId, getAuthenticationHeaders]);
+
   // Load data when component mounts or user changes
   useEffect(() => {
     if (userId) {
       fetchAppointments();
       fetchPrescriptions();
+      fetchUserDetails();
     }
   }, [userId, fetchAppointments, fetchPrescriptions]);
 
@@ -220,7 +247,7 @@ const UserDashboard: React.FC = () => {
     <div className="container mx-auto px-4 py-8 max-w-7xl">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-3xl font-bold text-gray-800 mb-6">
-          My Health Dashboard
+          Welcome, {userName}
         </h1>
         <button
           onClick={() => {

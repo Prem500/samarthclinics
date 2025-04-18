@@ -45,6 +45,7 @@ const Dashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState<"appointments" | "prescriptions">(
     "appointments"
   );
+  const [doctorName, setDoctorName] = useState<string>("Doctor");
 
   useEffect(() => {
     // If no userId is found, redirect to signup
@@ -72,6 +73,31 @@ const Dashboard: React.FC = () => {
     }
     return headers;
   }, []);
+
+  // Fetch doctor's name on component mount
+  const fetchDoctorDetails = useCallback(async () => {
+    if (!userId) return;
+
+    try {
+      const headers = await getAuthenticationHeaders();
+      const response = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/auth/${userId}`,
+        { headers }
+      );
+
+      if (response.data && response.data.full_name) {
+        setDoctorName(response.data.full_name.split(" ")[0] || "Doctor");
+      }
+    } catch (err) {
+      console.error("Error fetching doctor details:", err);
+      // Fallback to default name if there's an error
+      // Using stored name from localStorage as backup
+      const storedName = localStorage.getItem("full_name");
+      if (storedName) {
+        setDoctorName(storedName.split(" ")[0]);
+      }
+    }
+  }, [userId, getAuthenticationHeaders]);
 
   // Memoized data fetching functions
   const fetchAppointments = useCallback(async () => {
@@ -140,8 +166,9 @@ const Dashboard: React.FC = () => {
       console.log("Fetching data for user:", userId);
       fetchAppointments();
       fetchPrescriptions();
+      fetchDoctorDetails();
     }
-  }, [userId, fetchAppointments, fetchPrescriptions]);
+  }, [userId, fetchAppointments, fetchPrescriptions, fetchDoctorDetails]);
 
   // Format date helper - memoize for performance
   const formatDate = useCallback((dateString: string) => {
@@ -255,7 +282,7 @@ const Dashboard: React.FC = () => {
     <div className="container mx-auto px-4 py-8 max-w-7xl">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-3xl font-bold text-gray-800 mb-6">
-          Doctor Dashboard
+          Welcome, Dr. {doctorName}
         </h1>
         <button
           onClick={() => {

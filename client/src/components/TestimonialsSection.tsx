@@ -70,8 +70,8 @@ const TestimonialsSection: React.FC = () => {
                   <div className="person-wrapper">
                     <div className="person-image">
                       <img
-                        src="images/User-4.png"
-                        alt="रितेश मिश्रा"
+                        src="/images/User-4.png"
+                        alt="Ravi Raj"
                         className="img-fluid rounded-circle"
                       />
                     </div>

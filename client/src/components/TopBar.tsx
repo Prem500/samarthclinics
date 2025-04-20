@@ -81,40 +81,45 @@ const TopBar = () => {
             <ul className="space-y-1">
               <li>
                 <a
-                  href="/"
+                  href="#home"
                   className="block py-3 px-4 rounded-md hover:bg-gray-100 transition-colors text-gray-800 font-medium"
+                  onClick={handleMenuToggle}
                 >
                   होम
                 </a>
               </li>
               <li>
                 <a
-                  href="/services"
+                  href="#services"
                   className="block py-3 px-4 rounded-md hover:bg-gray-100 transition-colors text-gray-800 font-medium"
+                  onClick={handleMenuToggle}
                 >
                   सेवाएं
                 </a>
               </li>
               <li>
                 <a
-                  href="/about"
+                  href="#about"
                   className="block py-3 px-4 rounded-md hover:bg-gray-100 transition-colors text-gray-800 font-medium"
+                  onClick={handleMenuToggle}
                 >
                   हमारे बारे में
                 </a>
               </li>
               <li>
                 <a
-                  href="/blog"
+                  href="#blog"
                   className="block py-3 px-4 rounded-md hover:bg-gray-100 transition-colors text-gray-800 font-medium"
+                  onClick={handleMenuToggle}
                 >
                   ब्लॉग
                 </a>
               </li>
               <li>
                 <a
-                  href="/contact"
+                  href="#contact"
                   className="block py-3 px-4 rounded-md hover:bg-gray-100 transition-colors text-gray-800 font-medium"
+                  onClick={handleMenuToggle}
                 >
                   संपर्क करें
                 </a>
@@ -190,7 +195,7 @@ const TopBar = () => {
           <div className="row align-items-center">
             <div className="col-8 col-xl-4">
               <h1 className="mb-0 site-logo">
-                <a href="/" className="text-white mb-0">
+                <a href="#home" className="text-white mb-0 font-bold">
                   समर्थ क्लिनिक<span className="text-primary">.</span>
                 </a>
               </h1>
@@ -202,7 +207,7 @@ const TopBar = () => {
             <div className="col-4 col-md-3 d-xl-none text-right flex items-center justify-end h-full">
               <a
                 href="#"
-                className="site-menu-toggle js-menu-toggle text-white"
+                className="site-menu-toggle js-menu-toggle text-[#3a9efd]"
                 onClick={handleMenuToggle}
               >
                 <span className="icon-menu h3">
@@ -217,38 +222,42 @@ const TopBar = () => {
               >
                 <ul className="site-menu js-clone-nav mr-auto d-none d-lg-block">
                   <li className="active">
-                    <a href="/">
+                    <a
+                      href="#home"
+                      className="text-[#2d405f] hover:text-[#3a9efd] transition-colors"
+                    >
                       <span>होम</span>
                     </a>
                   </li>
-                  <li className="has-children">
-                    <a href="/services">
+                  <li>
+                    <a
+                      href="#services"
+                      className="text-[#2d405f] hover:text-[#3a9efd] transition-colors"
+                    >
                       <span>सेवाएं</span>
                     </a>
-                    <ul className="dropdown arrow-top">
-                      <li>
-                        <a href="#">फिजिकल थेरेपी</a>
-                      </li>
-                      <li>
-                        <a href="#">मसाज थेरेपी</a>
-                      </li>
-                      <li>
-                        <a href="#">चिरोप्रैक्टिक थेरेपी</a>
-                      </li>
-                    </ul>
                   </li>
                   <li>
-                    <a href="/about">
+                    <a
+                      href="#about"
+                      className="text-[#2d405f] hover:text-[#3a9efd] transition-colors"
+                    >
                       <span>हमारे बारे में</span>
                     </a>
                   </li>
                   <li>
-                    <a href="/blog">
+                    <a
+                      href="#blog"
+                      className="text-[#2d405f] hover:text-[#3a9efd] transition-colors"
+                    >
                       <span>ब्लॉग</span>
                     </a>
                   </li>
                   <li>
-                    <a href="/contact">
+                    <a
+                      href="#contact"
+                      className="text-[#2d405f] hover:text-[#3a9efd] transition-colors"
+                    >
                       <span>संपर्क करें</span>
                     </a>
                   </li>
@@ -260,6 +269,7 @@ const TopBar = () => {
                             onClick={() => {
                               window.location.href = "/dashboard";
                             }}
+                            className="text-[#3a9efd]"
                           >
                             Dashboard
                           </button>
@@ -271,6 +281,7 @@ const TopBar = () => {
                             onClick={() => {
                               window.location.href = "/user-dashboard";
                             }}
+                            className="text-[#3a9efd]"
                           >
                             My Health
                           </button>
@@ -283,6 +294,7 @@ const TopBar = () => {
                             setIsSignedIn(false);
                             setUserRole(null);
                           }}
+                          className="text-[#3a9efd]"
                         >
                           Sign Out
                         </button>
@@ -290,16 +302,17 @@ const TopBar = () => {
                     </>
                   ) : (
                     <>
-                      <li
-                        className="px-1 text-white"
-                        style={{ padding: "10px 0" }}
-                      >
+                      <li className="px-1" style={{ padding: "10px 0" }}>
                         <Button
                           onClick={() => {
                             window.location.href = "/sign-up";
                           }}
                           variant={"outline"}
-                          style={{ color: "#000", textDecoration: "none" }}
+                          style={{
+                            color: "#3a9efd",
+                            textDecoration: "none",
+                            borderColor: "#3a9efd",
+                          }}
                         >
                           Sign Up
                         </Button>

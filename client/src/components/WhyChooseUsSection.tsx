@@ -8,7 +8,7 @@ const WhyChooseUsSection: React.FC = () => {
   const satisfactionCounter = useCounter(100);
 
   return (
-    <div className="block-half-content-1 d-block d-lg-flex mt-5">
+    <div id="blog" className="block-half-content-1 d-block d-lg-flex mt-5">
       <div
         className="block-half-content-img"
         style={{ backgroundImage: "url('images/hero_bg_11.webp')" }}

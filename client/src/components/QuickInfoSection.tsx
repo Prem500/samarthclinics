@@ -11,50 +11,56 @@ const QuickInfoSection: React.FC = () => {
   // Define styles for better visual appeal
   const styles = {
     section: {
-      padding: "2rem 0",
-      backgroundColor: "#f8f9fa",
-      borderBottom: "1px solid #eaeaea",
+      padding: "3rem 0",
+      backgroundColor: "#f0f7fc",
+      borderBottom: "1px solid #e1edf7",
+      marginTop: "-30px",
+      zIndex: 10,
+      position: "relative" as "relative",
     },
     container: {
-      boxShadow: "0 0 15px rgba(0,0,0,0.05)",
-      borderRadius: "8px",
-      padding: "1.5rem",
+      boxShadow: "0 5px 25px rgba(0,0,0,0.07)",
+      borderRadius: "12px",
+      padding: "1.8rem",
       backgroundColor: "#fff",
     },
     iconContainer: {
-      backgroundColor: "#e6f7ff",
-      minWidth: "50px", // Changed from width to minWidth
-      width: "50px",
-      height: "50px",
+      backgroundColor: "#e9f5ff",
+      minWidth: "55px",
+      width: "55px",
+      height: "55px",
       borderRadius: "50%",
       display: "flex",
       justifyContent: "center",
       alignItems: "center",
-      color: "#1890ff",
-      fontSize: "1.2rem",
+      color: "#3a9efd",
+      fontSize: "1.3rem",
       transition: "all 0.3s ease",
-      flexShrink: 0, // Prevent shrinking on larger screens
+      flexShrink: 0,
+      boxShadow: "0 3px 10px rgba(58, 158, 253, 0.15)",
     },
     infoBox: {
-      padding: "0.8rem",
-      borderRadius: "6px",
-      transition: "transform 0.3s ease",
+      padding: "1rem",
+      borderRadius: "8px",
+      transition: "all 0.3s ease",
       cursor: "default",
+      border: "1px solid transparent",
     },
     heading: {
       fontSize: "1.1rem",
       fontWeight: "600",
-      color: "#333",
-      marginBottom: "0.4rem",
+      color: "#2d405f",
+      marginBottom: "0.5rem",
     },
     excerpt: {
-      color: "#666",
+      color: "#5a6a85",
       fontSize: "0.95rem",
     },
     link: {
-      color: "#1890ff",
+      color: "#3a9efd",
       textDecoration: "none",
-      transition: "color 0.3s ease",
+      transition: "all 0.3s ease",
+      fontWeight: "500",
     },
   };
 
@@ -63,16 +69,20 @@ const QuickInfoSection: React.FC = () => {
       <div className="container" style={styles.container}>
         <div className="block-quick-info-2-inner">
           <div className="row">
-            <div className="col-sm-6 col-md-6 col-lg-3 mb-3 mb-lg-0">
+            <div className="col-sm-6 col-md-6 col-lg-3 mb-4 mb-lg-0">
               <div
                 className="d-flex quick-info-2"
                 style={styles.infoBox}
-                onMouseOver={(e) =>
-                  (e.currentTarget.style.transform = "translateY(-5px)")
-                }
-                onMouseOut={(e) =>
-                  (e.currentTarget.style.transform = "translateY(0)")
-                }
+                onMouseOver={(e) => {
+                  e.currentTarget.style.transform = "translateY(-5px)";
+                  e.currentTarget.style.backgroundColor = "#f9fbff";
+                  e.currentTarget.style.border = "1px solid #e9f5ff";
+                }}
+                onMouseOut={(e) => {
+                  e.currentTarget.style.transform = "translateY(0)";
+                  e.currentTarget.style.backgroundColor = "transparent";
+                  e.currentTarget.style.border = "1px solid transparent";
+                }}
               >
                 <span className="icon mr-3" style={styles.iconContainer}>
                   <FontAwesomeIcon icon={faHome} />
@@ -87,16 +97,20 @@ const QuickInfoSection: React.FC = () => {
                 </div>
               </div>
             </div>
-            <div className="col-sm-6 col-md-6 col-lg-3 mb-3 mb-lg-0">
+            <div className="col-sm-6 col-md-6 col-lg-3 mb-4 mb-lg-0">
               <div
                 className="d-flex quick-info-2"
                 style={styles.infoBox}
-                onMouseOver={(e) =>
-                  (e.currentTarget.style.transform = "translateY(-5px)")
-                }
-                onMouseOut={(e) =>
-                  (e.currentTarget.style.transform = "translateY(0)")
-                }
+                onMouseOver={(e) => {
+                  e.currentTarget.style.transform = "translateY(-5px)";
+                  e.currentTarget.style.backgroundColor = "#f9fbff";
+                  e.currentTarget.style.border = "1px solid #e9f5ff";
+                }}
+                onMouseOut={(e) => {
+                  e.currentTarget.style.transform = "translateY(0)";
+                  e.currentTarget.style.backgroundColor = "transparent";
+                  e.currentTarget.style.border = "1px solid transparent";
+                }}
               >
                 <span className="icon mr-3" style={styles.iconContainer}>
                   <FontAwesomeIcon icon={faPhone} />
@@ -109,12 +123,14 @@ const QuickInfoSection: React.FC = () => {
                     <a
                       href="tel:+917004119766"
                       style={styles.link}
-                      onMouseOver={(e) =>
-                        (e.currentTarget.style.color = "#0056b3")
-                      }
-                      onMouseOut={(e) =>
-                        (e.currentTarget.style.color = "#1890ff")
-                      }
+                      onMouseOver={(e) => {
+                        e.currentTarget.style.color = "#0071e3";
+                        e.currentTarget.style.textDecoration = "underline";
+                      }}
+                      onMouseOut={(e) => {
+                        e.currentTarget.style.color = "#3a9efd";
+                        e.currentTarget.style.textDecoration = "none";
+                      }}
                     >
                       +917004119766
                     </a>
@@ -122,16 +138,20 @@ const QuickInfoSection: React.FC = () => {
                 </div>
               </div>
             </div>
-            <div className="col-sm-6 col-md-6 col-lg-3 mb-3 mb-lg-0">
+            <div className="col-sm-6 col-md-6 col-lg-3 mb-4 mb-lg-0">
               <div
                 className="d-flex quick-info-2"
                 style={styles.infoBox}
-                onMouseOver={(e) =>
-                  (e.currentTarget.style.transform = "translateY(-5px)")
-                }
-                onMouseOut={(e) =>
-                  (e.currentTarget.style.transform = "translateY(0)")
-                }
+                onMouseOver={(e) => {
+                  e.currentTarget.style.transform = "translateY(-5px)";
+                  e.currentTarget.style.backgroundColor = "#f9fbff";
+                  e.currentTarget.style.border = "1px solid #e9f5ff";
+                }}
+                onMouseOut={(e) => {
+                  e.currentTarget.style.transform = "translateY(0)";
+                  e.currentTarget.style.backgroundColor = "transparent";
+                  e.currentTarget.style.border = "1px solid transparent";
+                }}
               >
                 <span className="icon mr-3" style={styles.iconContainer}>
                   <FontAwesomeIcon icon={faEnvelope} />
@@ -144,12 +164,14 @@ const QuickInfoSection: React.FC = () => {
                     <a
                       href="mailto:Samarthclinic.info@gmail.com"
                       style={styles.link}
-                      onMouseOver={(e) =>
-                        (e.currentTarget.style.color = "#0056b3")
-                      }
-                      onMouseOut={(e) =>
-                        (e.currentTarget.style.color = "#1890ff")
-                      }
+                      onMouseOver={(e) => {
+                        e.currentTarget.style.color = "#0071e3";
+                        e.currentTarget.style.textDecoration = "underline";
+                      }}
+                      onMouseOut={(e) => {
+                        e.currentTarget.style.color = "#3a9efd";
+                        e.currentTarget.style.textDecoration = "none";
+                      }}
                     >
                       Samarthclinic.info@gmail.com
                     </a>
@@ -157,16 +179,20 @@ const QuickInfoSection: React.FC = () => {
                 </div>
               </div>
             </div>
-            <div className="col-sm-6 col-md-6 col-lg-3 mb-3 mb-lg-0">
+            <div className="col-sm-6 col-md-6 col-lg-3 mb-4 mb-lg-0">
               <div
                 className="d-flex quick-info-2"
                 style={styles.infoBox}
-                onMouseOver={(e) =>
-                  (e.currentTarget.style.transform = "translateY(-5px)")
-                }
-                onMouseOut={(e) =>
-                  (e.currentTarget.style.transform = "translateY(0)")
-                }
+                onMouseOver={(e) => {
+                  e.currentTarget.style.transform = "translateY(-5px)";
+                  e.currentTarget.style.backgroundColor = "#f9fbff";
+                  e.currentTarget.style.border = "1px solid #e9f5ff";
+                }}
+                onMouseOut={(e) => {
+                  e.currentTarget.style.transform = "translateY(0)";
+                  e.currentTarget.style.backgroundColor = "transparent";
+                  e.currentTarget.style.border = "1px solid transparent";
+                }}
               >
                 <span className="icon mr-3" style={styles.iconContainer}>
                   <FontAwesomeIcon icon={faClock} />

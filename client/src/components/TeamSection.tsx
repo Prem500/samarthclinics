@@ -3,7 +3,7 @@ import { Container, Row, Col } from "react-bootstrap";
 
 const TeamSection: React.FC = () => {
   return (
-    <section id="team" className="py-5 bg-light">
+    <section id="about" className="py-5 bg-light">
       <Container>
         <div className="text-center mb-5" data-aos="fade-up">
           <h2 className="fw-bold display-5 text-primary">Our Team</h2>

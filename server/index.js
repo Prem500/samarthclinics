@@ -21,7 +21,7 @@ app.use("/api/role", roleRoute);
 app.use("/api/prescription", prescriptionRoute);
 app.use("/api/booking", bookingRoute);
 
-app.listen(3000, () => {
+app.listen(4000, () => {
   connectMongoDb();
   console.log("Server is running on port 3000");
 });

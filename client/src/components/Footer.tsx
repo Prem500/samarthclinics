@@ -9,7 +9,7 @@ import {
 
 const Footer: React.FC = () => {
   return (
-    <footer className="site-footer">
+    <footer id="contact" className="site-footer">
       <div className="container">
         <div className="row">
           <div className="col-md-9">

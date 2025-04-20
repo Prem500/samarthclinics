@@ -3,13 +3,51 @@ import { motion } from "framer-motion";
 
 const ServicesSection: React.FC = () => {
   return (
-    <section className="services-section py-5">
+    <section id="services" className="services-section py-5">
       <div className="container">
         <div className="row mb-5">
           <div className="col-lg-12 text-center">
-            <h2 className="section-title">हमारी सेवाएं</h2>
-            <div className="section-divider mx-auto mb-4"></div>
-            <p className="section-subtitle">
+            <span
+              className="badge text-uppercase mb-2"
+              style={{
+                backgroundColor: "#e9f5ff",
+                color: "#3a9efd",
+                fontSize: "0.8rem",
+                padding: "8px 15px",
+                borderRadius: "20px",
+                letterSpacing: "1px",
+              }}
+            >
+              हमारी विशिष्ट सेवाएं
+            </span>
+            <h2
+              className="section-title mb-3"
+              style={{
+                fontSize: "2.5rem",
+                fontWeight: "700",
+                color: "#2d405f",
+              }}
+            >
+              हमारी सेवाएं
+            </h2>
+            <div
+              className="section-divider mx-auto mb-4"
+              style={{
+                width: "70px",
+                height: "4px",
+                background: "linear-gradient(to right, #3a9efd, #56b3ff)",
+                borderRadius: "2px",
+              }}
+            ></div>
+            <p
+              className="section-subtitle"
+              style={{
+                fontSize: "1.1rem",
+                color: "#5a6a85",
+                maxWidth: "700px",
+                margin: "0 auto",
+              }}
+            >
               हम क्या प्रदान करते हैं: फिजियोथेरेपी, पुनर्वास, और संरेखण सेवाएं
             </p>
           </div>
@@ -56,14 +94,39 @@ const ServicesSection: React.FC = () => {
 
         {/* Specialized Service Categories */}
         <div className="mt-5 pt-5 border-top">
-          <h3 className="text-center mb-5 fw-bold">
+          <h3 className="text-center mb-5 fw-bold" style={{ color: "#2d405f" }}>
             विशिष्ट फिजियोथेरेपी सेवाएं
           </h3>
 
           {/* Orthopedic Physiotherapy Category */}
           <div className="service-category mb-5">
-            <h4 className="category-title mb-4 pb-2 border-bottom">
-              ऑर्थोपेडिक फिजियोथेरेपी
+            <h4
+              className="category-title mb-4 pb-2"
+              style={{
+                borderBottom: "2px solid #e9f5ff",
+                paddingBottom: "10px",
+                color: "#3a9efd",
+                fontSize: "1.3rem",
+                fontWeight: "600",
+              }}
+            >
+              <div className="d-flex align-items-center">
+                <span
+                  className="category-icon me-3"
+                  style={{
+                    backgroundColor: "#e9f5ff",
+                    height: "40px",
+                    width: "40px",
+                    borderRadius: "50%",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <i className="fa fa-bone" style={{ color: "#3a9efd" }}></i>
+                </span>
+                ऑर्थोपेडिक फिजियोथेरेपी
+              </div>
             </h4>
             <div className="row g-4">
               <ServiceCard
@@ -89,8 +152,33 @@ const ServicesSection: React.FC = () => {
 
           {/* Neurological Physiotherapy Category */}
           <div className="service-category mb-5">
-            <h4 className="category-title mb-4 pb-2 border-bottom">
-              न्यूरोलॉजिकल फिजियोथेरेपी
+            <h4
+              className="category-title mb-4 pb-2"
+              style={{
+                borderBottom: "2px solid #e9f5ff",
+                paddingBottom: "10px",
+                color: "#3a9efd",
+                fontSize: "1.3rem",
+                fontWeight: "600",
+              }}
+            >
+              <div className="d-flex align-items-center">
+                <span
+                  className="category-icon me-3"
+                  style={{
+                    backgroundColor: "#e9f5ff",
+                    height: "40px",
+                    width: "40px",
+                    borderRadius: "50%",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <i className="fa fa-brain" style={{ color: "#3a9efd" }}></i>
+                </span>
+                न्यूरोलॉजिकल फिजियोथेरेपी
+              </div>
             </h4>
             <div className="row g-4">
               <ServiceCard
@@ -110,8 +198,36 @@ const ServicesSection: React.FC = () => {
 
           {/* Rehabilitation Category */}
           <div className="service-category mb-5">
-            <h4 className="category-title mb-4 pb-2 border-bottom">
-              पुनर्वास सेवाएं
+            <h4
+              className="category-title mb-4 pb-2"
+              style={{
+                borderBottom: "2px solid #e9f5ff",
+                paddingBottom: "10px",
+                color: "#3a9efd",
+                fontSize: "1.3rem",
+                fontWeight: "600",
+              }}
+            >
+              <div className="d-flex align-items-center">
+                <span
+                  className="category-icon me-3"
+                  style={{
+                    backgroundColor: "#e9f5ff",
+                    height: "40px",
+                    width: "40px",
+                    borderRadius: "50%",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <i
+                    className="fa fa-hospital-user"
+                    style={{ color: "#3a9efd" }}
+                  ></i>
+                </span>
+                पुनर्वास सेवाएं
+              </div>
             </h4>
             <div className="row g-4">
               <ServiceCard
@@ -131,8 +247,33 @@ const ServicesSection: React.FC = () => {
 
           {/* Pediatric Physiotherapy Category */}
           <div className="service-category mb-5">
-            <h4 className="category-title mb-4 pb-2 border-bottom">
-              बाल चिकित्सा फिजियोथेरेपी
+            <h4
+              className="category-title mb-4 pb-2"
+              style={{
+                borderBottom: "2px solid #e9f5ff",
+                paddingBottom: "10px",
+                color: "#3a9efd",
+                fontSize: "1.3rem",
+                fontWeight: "600",
+              }}
+            >
+              <div className="d-flex align-items-center">
+                <span
+                  className="category-icon me-3"
+                  style={{
+                    backgroundColor: "#e9f5ff",
+                    height: "40px",
+                    width: "40px",
+                    borderRadius: "50%",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <i className="fa fa-baby" style={{ color: "#3a9efd" }}></i>
+                </span>
+                बाल चिकित्सा फिजियोथेरेपी
+              </div>
             </h4>
             <div className="row g-4">
               <ServiceCard
@@ -158,8 +299,33 @@ const ServicesSection: React.FC = () => {
 
           {/* Sports Physiotherapy Category */}
           <div className="service-category mb-5">
-            <h4 className="category-title mb-4 pb-2 border-bottom">
-              खेल फिजियोथेरेपी
+            <h4
+              className="category-title mb-4 pb-2"
+              style={{
+                borderBottom: "2px solid #e9f5ff",
+                paddingBottom: "10px",
+                color: "#3a9efd",
+                fontSize: "1.3rem",
+                fontWeight: "600",
+              }}
+            >
+              <div className="d-flex align-items-center">
+                <span
+                  className="category-icon me-3"
+                  style={{
+                    backgroundColor: "#e9f5ff",
+                    height: "40px",
+                    width: "40px",
+                    borderRadius: "50%",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <i className="fa fa-running" style={{ color: "#3a9efd" }}></i>
+                </span>
+                खेल फिजियोथेरेपी
+              </div>
             </h4>
             <div className="row g-4">
               <ServiceCard
@@ -184,16 +350,23 @@ const ServicesSection: React.FC = () => {
           </div>
         </div>
 
-        <div className="row mt-4">
+        <div className="row mt-5">
           <div className="col-12 text-center">
             <motion.a
               href="/services"
-              className="btn btn-primary btn-lg rounded-pill px-4"
+              className="btn btn-lg rounded-pill px-5 py-3"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
+              style={{
+                background: "linear-gradient(135deg, #3a9efd 0%, #0071e3 100%)",
+                color: "white",
+                border: "none",
+                boxShadow: "0 7px 15px rgba(58, 158, 253, 0.25)",
+                fontWeight: "600",
+                transition: "all 0.3s ease",
+              }}
             >
-              सभी सेवाएं देखें{" "}
-              <i className="ms-2 icon-keyboard_arrow_right"></i>
+              सभी सेवाएं देखें <i className="ms-2 fa fa-arrow-right"></i>
             </motion.a>
           </div>
         </div>
@@ -222,32 +395,119 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay }}
     >
-      <div className="service-card h-100">
-        <div className="service-card-image">
-          <img src={imageUrl} alt={title} className="img-fluid rounded" />
-          <div className="service-card-overlay">
+      <div
+        className="service-card h-100"
+        style={{
+          border: "1px solid #f0f0f0",
+          borderRadius: "12px",
+          overflow: "hidden",
+          transition: "all 0.3s ease",
+          boxShadow: "0 5px 15px rgba(0,0,0,0.05)",
+          backgroundColor: "#fff",
+        }}
+      >
+        <div
+          className="service-card-image"
+          style={{ position: "relative", overflow: "hidden" }}
+        >
+          <img
+            src={imageUrl}
+            alt={title}
+            className="img-fluid"
+            style={{
+              width: "100%",
+              height: "200px",
+              objectFit: "cover",
+              transition: "transform 0.6s ease",
+            }}
+          />
+          <div
+            className="service-card-overlay"
+            style={{
+              position: "absolute",
+              top: "0",
+              left: "0",
+              right: "0",
+              bottom: "0",
+              background: "rgba(58, 158, 253, 0.7)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              opacity: "0",
+              transition: "opacity 0.3s ease",
+            }}
+          >
             <motion.a
               href="#"
-              className="btn btn-light btn-sm"
+              className="btn btn-light btn-sm rounded-pill px-3"
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
+              style={{
+                fontWeight: "500",
+                boxShadow: "0 3px 10px rgba(0,0,0,0.1)",
+              }}
             >
               और जानें
             </motion.a>
           </div>
         </div>
-        <div className="service-card-body">
-          <h3 className="service-card-title">{title}</h3>
-          <p className="service-card-text">{description}</p>
+        <div
+          className="service-card-body"
+          style={{
+            padding: "1.5rem",
+            textAlign: "left",
+          }}
+        >
+          <h3
+            className="service-card-title"
+            style={{
+              fontSize: "1.25rem",
+              fontWeight: "600",
+              marginBottom: "0.75rem",
+              color: "#2d405f",
+            }}
+          >
+            {title}
+          </h3>
+          <p
+            className="service-card-text"
+            style={{
+              color: "#5a6a85",
+              fontSize: "0.95rem",
+              lineHeight: "1.6",
+              marginBottom: "1.5rem",
+            }}
+          >
+            {description}
+          </p>
           <motion.a
             href="#"
-            className="service-card-link"
+            className="service-card-link d-inline-block"
             whileHover={{ x: 5 }}
+            style={{
+              color: "#3a9efd",
+              textDecoration: "none",
+              fontWeight: "500",
+              fontSize: "0.95rem",
+              transition: "all 0.3s ease",
+            }}
           >
-            और जानें <i className="icon-keyboard_arrow_right"></i>
+            और जानें <i className="fa fa-arrow-right ms-1"></i>
           </motion.a>
         </div>
       </div>
+      <style>{`
+        .service-card:hover {
+          transform: translateY(-10px);
+          box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        }
+        .service-card:hover .service-card-overlay {
+          opacity: 1;
+        }
+        .service-card:hover .service-card-image img {
+          transform: scale(1.1);
+        }
+      `}</style>
     </motion.div>
   );
 };

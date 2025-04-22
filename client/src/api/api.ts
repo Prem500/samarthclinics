@@ -97,9 +97,12 @@ interface BookingData {
   doctor: string;
   date: string;
   time: string;
-  user: string;
+  user?: string; // Make user ID optional since non-authenticated users won't have one
   issue: string;
   visitType?: "clinic" | "home";
+  email: string; // Add email field for non-authenticated users
+  phoneNumber: string; // Add phone number field for non-authenticated users
+  full_name: string; // Add full name field for non-authenticated users
 }
 
 interface SlotAvailabilityData {

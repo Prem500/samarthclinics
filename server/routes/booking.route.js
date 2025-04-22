@@ -9,20 +9,25 @@ import {
   slotAvailability,
   UpdateBooking,
 } from "../controllers/booking.controller.js";
-import { verifyToken } from "../middleware/auth.middleware.js";
+import { verifyToken, isDoctor } from "../middleware/auth.middleware.js";
 
 const router = express.Router();
 
-// Apply authentication middleware to all booking routes
+// Public routes - no authentication needed
+router.post("/time-slot", slotAvailability);
+router.post("/create", CreateBooking);
+
+// Protected routes - authentication required
 router.use(verifyToken);
 
+// General booking routes (auth needed)
 router.get("/single/:id", GetBooking);
-router.get("/:id", GetBookings);
-router.get("/user/:userId", GetUserBookings); // New endpoint for user bookings
-router.post("/create", CreateBooking);
+router.get("/user/:userId", GetUserBookings);
 router.post("/update/:id", UpdateBooking);
 router.delete("/delete/:id", DeleteBooking);
-router.post("/time-slot", slotAvailability);
 router.post("/:doctorId/details/:userId", getBookingId);
+
+// Doctor-only routes
+router.get("/:id", isDoctor, GetBookings);
 
 export default router;

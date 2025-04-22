@@ -14,6 +14,8 @@ import Prescriptions from "./pages/Prescriptions";
 import SharedPrescriptions from "./pages/SharedPrescriptions";
 import UserDashboard from "./pages/UserDashboard";
 import { AuthProvider } from "./contexts/AuthContext";
+import AdminFirewall from "./pages/AdminFirewall";
+import DoctorAuth from "./pages/DoctorAuth";
 
 function App() {
   return (
@@ -26,6 +28,8 @@ function App() {
         <Route path="/blog" element={<Blog />} />
         <Route path="/sign-up" element={<Signup />} />
         <Route path="/sign-in" element={<Signin />} />
+        <Route path="/admin-firewall" element={<AdminFirewall />} />
+        <Route path="/doctor-auth" element={<DoctorAuth />} />
         <Route path="/role" element={<Role />} />
         <Route path="/form" element={<DataForm />} />
         <Route path="/appointments" element={<Appointments />} />

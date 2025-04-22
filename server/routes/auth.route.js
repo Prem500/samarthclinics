@@ -1,18 +1,29 @@
 import express from "express";
 import {
-  authFunction,
-  getBasicUserInfo,
+  verifyAdminPassword,
+  doctorLogin,
+  registerDoctor,
   getUserDetails,
-  login,
-  register,
+  getBasicUserInfo,
+  authFunction
 } from "../controllers/auth.controller.js";
+import { verifyToken } from "../middleware/auth.middleware.js";
 
 const router = express.Router();
 
-router.post("/", authFunction);
+// Admin firewall - publicly accessible
+router.post("/admin-firewall", verifyAdminPassword);
+
+// Doctor authentication routes (no token required)
+router.post("/doctor/login", doctorLogin);
+router.post("/doctor/register", registerDoctor);
+
+// Public routes for unauthenticated appointment booking
 router.post("/user", getBasicUserInfo);
+router.post("/", authFunction);
+
+// Protected routes - require authentication
+router.use(verifyToken);
 router.get("/:id", getUserDetails);
-router.post("/register", register);
-router.post("/login", login);
 
 export default router;

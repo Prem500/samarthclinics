@@ -86,24 +86,61 @@ export const GetUserBookings = async (req, res) => {
 };
 
 export const CreateBooking = async (req, res) => {
-  const { date, time, user, doctor, issue, visitType } = req.body;
-
-  const newBooking = new Booking({
-    date,
-    time,
-    user,
-    doctor,
-    issue,
-    visitType,
-  });
-
+  const { date, time, doctor, issue, visitType, email, phoneNumber, full_name, user } = req.body;
+  
   try {
+    let userId;
+    
+    if (user) {
+      // If an authenticated user is booking
+      userId = user;
+    } else if (email) {
+      // For non-authenticated users, check if the email exists in our system
+      let existingUser = await User.findOne({ email });
+      
+      if (existingUser) {
+        // Use existing user
+        userId = existingUser._id;
+        
+        // Update user info if new data is provided
+        if (full_name || phoneNumber) {
+          const updateData = {};
+          if (full_name) updateData.full_name = full_name;
+          if (phoneNumber) updateData.phoneNumber = phoneNumber;
+          
+          await User.findByIdAndUpdate(userId, updateData);
+        }
+      } else {
+        // Create a new user without password (non-authenticated)
+        const newUser = new User({
+          email,
+          full_name,
+          phoneNumber,
+          role: "user" // Default role
+        });
+        
+        const savedUser = await newUser.save();
+        userId = savedUser._id;
+      }
+    } else {
+      return res.status(400).json({ message: "Email is required for booking" });
+    }
+
+    // Create the booking with the user ID
+    const newBooking = new Booking({
+      date,
+      time,
+      user: userId,
+      doctor,
+      issue,
+      visitType,
+    });
+
     await newBooking.save();
 
-    res
-      .status(201)
-      .json({ message: "Booking created successfully", booking: newBooking });
+    res.status(201).json({ message: "Booking created successfully", booking: newBooking });
   } catch (error) {
+    console.error("Error creating booking:", error);
     res.status(409).json({ message: error.message });
   }
 };

@@ -1,4 +1,4 @@
-import { Menu, X } from "lucide-react";
+import { Menu, X, UserCog } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Button } from "./ui/button";
 import { isAuthenticated, logout } from "@/lib/authUtils";
@@ -139,18 +139,7 @@ const TopBar = () => {
                     className="w-full mb-2"
                     variant="outline"
                   >
-                    Dashboard
-                  </Button>
-                )}
-                {userRole === "user" && (
-                  <Button
-                    onClick={() => {
-                      window.location.href = "/user-dashboard";
-                    }}
-                    className="w-full mb-2"
-                    variant="outline"
-                  >
-                    My Health Dashboard
+                    Doctor Dashboard
                   </Button>
                 )}
                 <Button
@@ -168,21 +157,12 @@ const TopBar = () => {
               <div className="space-y-3">
                 <Button
                   onClick={() => {
-                    window.location.href = "/sign-up";
+                    window.location.href = "/admin-firewall";
                   }}
                   className="w-full"
                   variant="default"
                 >
-                  Sign Up
-                </Button>
-                <Button
-                  onClick={() => {
-                    window.location.href = "/sign-in";
-                  }}
-                  className="w-full"
-                  variant="outline"
-                >
-                  Sign In
+                  Doctor Login
                 </Button>
               </div>
             )}
@@ -275,18 +255,6 @@ const TopBar = () => {
                           </button>
                         </li>
                       )}
-                      {userRole === "user" && (
-                        <li className="px-4" style={{ padding: "10px 0" }}>
-                          <button
-                            onClick={() => {
-                              window.location.href = "/user-dashboard";
-                            }}
-                            className="text-[#3a9efd]"
-                          >
-                            My Health
-                          </button>
-                        </li>
-                      )}
                       <li style={{ padding: "10px 0" }}>
                         <button
                           onClick={() => {
@@ -305,7 +273,7 @@ const TopBar = () => {
                       <li className="px-1" style={{ padding: "10px 0" }}>
                         <Button
                           onClick={() => {
-                            window.location.href = "/sign-up";
+                            window.location.href = "/admin-firewall";
                           }}
                           variant={"outline"}
                           style={{
@@ -313,8 +281,10 @@ const TopBar = () => {
                             textDecoration: "none",
                             borderColor: "#3a9efd",
                           }}
+                          className="flex gap-2 items-center"
                         >
-                          Sign Up
+                          <UserCog size={16} />
+                          Doctor Login
                         </Button>
                       </li>
                     </>

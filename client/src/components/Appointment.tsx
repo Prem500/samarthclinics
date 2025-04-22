@@ -35,7 +35,6 @@ interface Doctor {
   _id: string;
   full_name: string;
   email: string;
-  // Add other properties as needed
 }
 
 const Appointment = () => {
@@ -50,6 +49,10 @@ const Appointment = () => {
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [currentStep, setCurrentStep] = useState(1);
+  // New fields for non-authenticated users
+  const [fullName, setFullName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
   const navigate = useNavigate();
   const { isSignedIn, userId } = useAuth();
 
@@ -90,7 +93,28 @@ const Appointment = () => {
       nextDay = addDays(nextDay, 1);
     }
     setSelectedDate(nextDay);
-  }, []);
+
+    // If user is signed in, pre-fill user details
+    if (isSignedIn && userId) {
+      fetchUserDetails();
+    }
+  }, [isSignedIn, userId]);
+
+  // Fetch user details if authenticated
+  const fetchUserDetails = async () => {
+    try {
+      const response = await authAxios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/auth/${userId}`
+      );
+      if (response.data) {
+        setFullName(response.data.full_name || "");
+        setEmail(response.data.email || "");
+        setPhoneNumber(response.data.phoneNumber || "");
+      }
+    } catch (error) {
+      console.error("Error fetching user details:", error);
+    }
+  };
 
   useEffect(() => {
     // Check slot availability when doctor, date and time are selected
@@ -120,12 +144,18 @@ const Appointment = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    // Validate required fields for non-authenticated users
     if (!isSignedIn) {
-      toast("Please sign in", {
-        description: "Please sign in to book an appointment.",
-      });
-      navigate("/sign-up");
-      return;
+      if (!fullName.trim() || !email.trim() || !phoneNumber.trim()) {
+        toast.error("Please fill in all required fields");
+        return;
+      }
+
+      // Basic email validation
+      if (!/^\S+@\S+\.\S+$/.test(email)) {
+        toast.error("Please enter a valid email address");
+        return;
+      }
     }
 
     if (!isSlotAvailable) {
@@ -137,16 +167,24 @@ const Appointment = () => {
 
     try {
       setIsSubmitting(true);
+
+      const bookingData = {
+        doctor: selectedDoctor,
+        date: format(selectedDate as Date, "yyyy-MM-dd"),
+        time: selectedTime,
+        issue,
+        visitType,
+        // Include user ID only if authenticated
+        ...(isSignedIn && userId ? { user: userId } : {}),
+        // Always include these fields, they'll be used for non-authenticated users
+        full_name: fullName,
+        email: email,
+        phoneNumber: phoneNumber,
+      };
+
       const response = await authAxios.post(
         `${import.meta.env.VITE_BACKEND_URL}/booking/create`,
-        {
-          doctor: selectedDoctor,
-          date: format(selectedDate as Date, "yyyy-MM-dd"),
-          time: selectedTime,
-          user: userId,
-          issue,
-          visitType,
-        }
+        bookingData
       );
 
       console.log(response.data);
@@ -163,6 +201,11 @@ const Appointment = () => {
       setSelectedDate(undefined);
       setSelectedTime("");
       setIssue("");
+      if (!isSignedIn) {
+        setFullName("");
+        setEmail("");
+        setPhoneNumber("");
+      }
     } catch (error) {
       console.error("Error booking appointment:", error);
       setErrorMessage("Failed to book appointment. Please try again.");
@@ -182,6 +225,12 @@ const Appointment = () => {
         return selectedDate !== undefined;
       case 4:
         return selectedTime !== "" && isSlotAvailable;
+      case 5:
+        // For step 5, we need to check if all contact fields are filled for non-authenticated users
+        if (!isSignedIn) {
+          return Boolean(fullName && email && phoneNumber && issue.trim());
+        }
+        return Boolean(issue.trim());
       default:
         return false;
     }
@@ -215,7 +264,7 @@ const Appointment = () => {
     { number: 4, label: "Select Time", icon: <Clock className="h-5 w-5" /> },
     {
       number: 5,
-      label: "Describe Issue",
+      label: "Your Details",
       icon: <FileText className="h-5 w-5" />,
     },
   ];
@@ -608,15 +657,69 @@ const Appointment = () => {
                   className="space-y-5"
                 >
                   <h3 className="text-xl font-semibold text-[#2d405f] mb-4">
-                    अपनी समस्या का विवरण दें
+                    अपना विवरण और समस्या बताएं
                   </h3>
 
+                  {/* Contact fields for non-authenticated users */}
+                  {!isSignedIn && (
+                    <div className="space-y-4 mb-6 bg-[#f0f7fc] p-5 rounded-lg">
+                      <h4 className="font-medium text-[#2d405f]">
+                        संपर्क जानकारी
+                      </h4>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <Label htmlFor="full_name" className="text-[#5a6a85]">
+                            पूरा नाम *
+                          </Label>
+                          <input
+                            id="full_name"
+                            value={fullName}
+                            onChange={(e) => setFullName(e.target.value)}
+                            className="w-full p-3 mt-1 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-[#3a9efd]"
+                            placeholder="अपना पूरा नाम दर्ज करें"
+                            required
+                          />
+                        </div>
+                        <div>
+                          <Label
+                            htmlFor="phoneNumber"
+                            className="text-[#5a6a85]"
+                          >
+                            फोन नंबर *
+                          </Label>
+                          <input
+                            id="phoneNumber"
+                            type="tel"
+                            value={phoneNumber}
+                            onChange={(e) => setPhoneNumber(e.target.value)}
+                            className="w-full p-3 mt-1 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-[#3a9efd]"
+                            placeholder="अपना फोन नंबर दर्ज करें"
+                            required
+                          />
+                        </div>
+                      </div>
+
+                      <div>
+                        <Label htmlFor="email" className="text-[#5a6a85]">
+                          ईमेल *
+                        </Label>
+                        <input
+                          id="email"
+                          type="email"
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                          className="w-full p-3 mt-1 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-[#3a9efd]"
+                          placeholder="अपना ईमेल पता दर्ज करें"
+                          required
+                        />
+                      </div>
+                    </div>
+                  )}
+
                   <div>
-                    <Label
-                      htmlFor="issue"
-                      className="text-base mb-1.5 block font-medium text-[#2d405f]"
-                    >
-                      अपनी समस्या का संक्षिप्त विवरण दें
+                    <Label htmlFor="issue" className="text-[#5a6a85]">
+                      अपनी समस्या का विवरण दें *
                     </Label>
                     <Textarea
                       id="issue"
@@ -633,6 +736,7 @@ const Appointment = () => {
                     <h4 className="font-medium text-[#2d405f]">
                       आपके अपॉइंटमेंट का सारांश
                     </h4>
+
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div className="flex items-start gap-2">
                         <UserRound className="h-5 w-5 text-[#3a9efd] mt-0.5" />
@@ -709,7 +813,9 @@ const Appointment = () => {
                         !selectedDoctor ||
                         !selectedDate ||
                         !selectedTime ||
-                        !issue.trim()
+                        !issue.trim() ||
+                        (!isSignedIn &&
+                          (!fullName.trim() || !email.trim() || !phoneNumber.trim()))
                           ? "not-allowed"
                           : "pointer",
                       opacity:
@@ -718,7 +824,9 @@ const Appointment = () => {
                         !selectedDoctor ||
                         !selectedDate ||
                         !selectedTime ||
-                        !issue.trim()
+                        !issue.trim() ||
+                        (!isSignedIn &&
+                          (!fullName.trim() || !email.trim() || !phoneNumber.trim()))
                           ? "0.7"
                           : "1",
                     }}
@@ -728,7 +836,9 @@ const Appointment = () => {
                       !selectedDoctor ||
                       !selectedDate ||
                       !selectedTime ||
-                      !issue.trim()
+                      !issue.trim() ||
+                      (!isSignedIn &&
+                        (!fullName.trim() || !email.trim() || !phoneNumber.trim()))
                     }
                   >
                     {isSubmitting ? (

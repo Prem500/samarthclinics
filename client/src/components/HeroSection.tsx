@@ -13,7 +13,7 @@ const HeroSection: React.FC = () => {
       className="site-blocks-cover position-relative"
       style={{
         backgroundImage:
-          "linear-gradient(rgba(28, 50, 93, 0.75), rgba(28, 50, 93, 0.65)), url(/images/hero.jpg)",
+          "linear-gradient(rgba(28, 50, 93, 0.75), rgba(28, 50, 93, 0.65)), url(/images/hero-2.jpg)",
         backgroundSize: "cover",
         backgroundPosition: "center top",
         minHeight: "90vh",

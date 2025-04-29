@@ -32,19 +32,20 @@ const loginSchema = z.object({
   password: z.string().min(1, { message: "Password is required" }),
 });
 
-const registerSchema = z.object({
-  full_name: z.string().min(2, { message: "Full name is required" }),
-  email: z.string().email({ message: "Please enter a valid email address" }),
-  password: z
-    .string()
-    .min(8, { message: "Password must be at least 8 characters" }),
-  confirmPassword: z.string(),
-  phoneNumber: z.string().optional(),
-})
-.refine((data) => data.password === data.confirmPassword, {
-  message: "Passwords don't match",
-  path: ["confirmPassword"],
-});
+const registerSchema = z
+  .object({
+    full_name: z.string().min(2, { message: "Full name is required" }),
+    email: z.string().email({ message: "Please enter a valid email address" }),
+    password: z
+      .string()
+      .min(8, { message: "Password must be at least 8 characters" }),
+    confirmPassword: z.string(),
+    phoneNumber: z.string().optional(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords don't match",
+    path: ["confirmPassword"],
+  });
 
 const DoctorAuth = () => {
   const navigate = useNavigate();
@@ -86,7 +87,7 @@ const DoctorAuth = () => {
     try {
       setIsLoading(true);
       setError("");
-      
+
       const response = await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/auth/doctor/login`,
         values
@@ -104,7 +105,7 @@ const DoctorAuth = () => {
 
         // Clear admin verification
         sessionStorage.removeItem("adminVerified");
-        
+
         // Redirect to doctor dashboard
         navigate("/dashboard");
       }
@@ -120,9 +121,9 @@ const DoctorAuth = () => {
     try {
       setIsLoading(true);
       setError("");
-      
+
       const { confirmPassword, ...registrationData } = values;
-      
+
       const response = await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/auth/doctor/register`,
         {
@@ -143,13 +144,15 @@ const DoctorAuth = () => {
 
         // Clear admin verification
         sessionStorage.removeItem("adminVerified");
-        
+
         // Redirect to doctor dashboard
         navigate("/dashboard");
       }
     } catch (error: any) {
       console.error("Registration error:", error);
-      setError(error.response?.data?.message || "Failed to create doctor account");
+      setError(
+        error.response?.data?.message || "Failed to create doctor account"
+      );
     } finally {
       setIsLoading(false);
     }
@@ -159,7 +162,9 @@ const DoctorAuth = () => {
     <div className="flex min-h-screen items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold">Doctor Authentication</CardTitle>
+          <CardTitle className="text-2xl font-bold">
+            Doctor Authentication
+          </CardTitle>
           <CardDescription>
             Login or register as a doctor to access the dashboard
           </CardDescription>
@@ -170,16 +175,22 @@ const DoctorAuth = () => {
               <AlertDescription>{error}</AlertDescription>
             </Alert>
           )}
-          
-          <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as "login" | "register")}>
+
+          <Tabs
+            value={activeTab}
+            onValueChange={(v) => setActiveTab(v as "login" | "register")}
+          >
             <TabsList className="grid grid-cols-2 mb-4">
               <TabsTrigger value="login">Login</TabsTrigger>
               <TabsTrigger value="register">Register</TabsTrigger>
             </TabsList>
-            
+
             <TabsContent value="login" className="pt-2">
               <Form {...loginForm}>
-                <form onSubmit={loginForm.handleSubmit(onLogin)} className="space-y-4">
+                <form
+                  onSubmit={loginForm.handleSubmit(onLogin)}
+                  className="space-y-4"
+                >
                   <FormField
                     control={loginForm.control}
                     name="email"
@@ -245,10 +256,13 @@ const DoctorAuth = () => {
                 </form>
               </Form>
             </TabsContent>
-            
+
             <TabsContent value="register" className="pt-2">
               <Form {...registerForm}>
-                <form onSubmit={registerForm.handleSubmit(onRegister)} className="space-y-4">
+                <form
+                  onSubmit={registerForm.handleSubmit(onRegister)}
+                  className="space-y-4"
+                >
                   <FormField
                     control={registerForm.control}
                     name="full_name"
@@ -262,7 +276,7 @@ const DoctorAuth = () => {
                       </FormItem>
                     )}
                   />
-                  
+
                   <FormField
                     control={registerForm.control}
                     name="email"
@@ -280,7 +294,7 @@ const DoctorAuth = () => {
                       </FormItem>
                     )}
                   />
-                  
+
                   <FormField
                     control={registerForm.control}
                     name="phoneNumber"
@@ -325,7 +339,7 @@ const DoctorAuth = () => {
                       </FormItem>
                     )}
                   />
-                  
+
                   <FormField
                     control={registerForm.control}
                     name="confirmPassword"
@@ -342,7 +356,9 @@ const DoctorAuth = () => {
                             <button
                               type="button"
                               className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
-                              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                              onClick={() =>
+                                setShowConfirmPassword(!showConfirmPassword)
+                              }
                             >
                               {showConfirmPassword ? (
                                 <EyeOff size={16} />

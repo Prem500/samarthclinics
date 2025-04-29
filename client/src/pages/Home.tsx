@@ -90,7 +90,7 @@ const Home: React.FC = () => {
 
       {/* WhatsApp Sticky Widget */}
       <a
-        href="https://wa.me/+917004119766?text=नमस्कार डॉक्टर साहब, हमको आपके पास इलाज करवाना है!"
+        href="https://wa.me/+917004119766?text=Hello Doctor, I would like to get treatment from you!"
         className="whatsapp-widget"
         target="_blank"
         rel="noopener noreferrer"

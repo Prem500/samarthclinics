@@ -86,28 +86,38 @@ export const GetUserBookings = async (req, res) => {
 };
 
 export const CreateBooking = async (req, res) => {
-  const { date, time, doctor, issue, visitType, email, phoneNumber, full_name, user } = req.body;
-  
+  const {
+    date,
+    time,
+    doctor,
+    issue,
+    visitType,
+    email,
+    phoneNumber,
+    full_name,
+    user,
+  } = req.body;
+
   try {
     let userId;
-    
+
     if (user) {
       // If an authenticated user is booking
       userId = user;
     } else if (email) {
       // For non-authenticated users, check if the email exists in our system
       let existingUser = await User.findOne({ email });
-      
+
       if (existingUser) {
         // Use existing user
         userId = existingUser._id;
-        
+
         // Update user info if new data is provided
         if (full_name || phoneNumber) {
           const updateData = {};
           if (full_name) updateData.full_name = full_name;
           if (phoneNumber) updateData.phoneNumber = phoneNumber;
-          
+
           await User.findByIdAndUpdate(userId, updateData);
         }
       } else {
@@ -116,9 +126,9 @@ export const CreateBooking = async (req, res) => {
           email,
           full_name,
           phoneNumber,
-          role: "user" // Default role
+          role: "user", // Default role
         });
-        
+
         const savedUser = await newUser.save();
         userId = savedUser._id;
       }
@@ -138,7 +148,9 @@ export const CreateBooking = async (req, res) => {
 
     await newBooking.save();
 
-    res.status(201).json({ message: "Booking created successfully", booking: newBooking });
+    res
+      .status(201)
+      .json({ message: "Booking created successfully", booking: newBooking });
   } catch (error) {
     console.error("Error creating booking:", error);
     res.status(409).json({ message: error.message });

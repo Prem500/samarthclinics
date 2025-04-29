@@ -815,7 +815,9 @@ const Appointment = () => {
                         !selectedTime ||
                         !issue.trim() ||
                         (!isSignedIn &&
-                          (!fullName.trim() || !email.trim() || !phoneNumber.trim()))
+                          (!fullName.trim() ||
+                            !email.trim() ||
+                            !phoneNumber.trim()))
                           ? "not-allowed"
                           : "pointer",
                       opacity:
@@ -826,7 +828,9 @@ const Appointment = () => {
                         !selectedTime ||
                         !issue.trim() ||
                         (!isSignedIn &&
-                          (!fullName.trim() || !email.trim() || !phoneNumber.trim()))
+                          (!fullName.trim() ||
+                            !email.trim() ||
+                            !phoneNumber.trim()))
                           ? "0.7"
                           : "1",
                     }}
@@ -838,7 +842,9 @@ const Appointment = () => {
                       !selectedTime ||
                       !issue.trim() ||
                       (!isSignedIn &&
-                        (!fullName.trim() || !email.trim() || !phoneNumber.trim()))
+                        (!fullName.trim() ||
+                          !email.trim() ||
+                          !phoneNumber.trim()))
                     }
                   >
                     {isSubmitting ? (

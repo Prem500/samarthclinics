@@ -26,7 +26,7 @@ import { Eye, EyeOff, Shield, ShieldAlert } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
 const formSchema = z.object({
-  adminPassword: z.string().min(1, { message: "Admin password is required" })
+  adminPassword: z.string().min(1, { message: "Admin password is required" }),
 });
 
 const AdminFirewall = () => {
@@ -46,7 +46,7 @@ const AdminFirewall = () => {
     try {
       setIsLoading(true);
       setError("");
-      
+
       // Verify the admin password
       const response = await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/auth/admin-firewall`,
@@ -55,10 +55,10 @@ const AdminFirewall = () => {
 
       if (response.data && response.data.success) {
         toast.success("Admin verification successful!");
-        
+
         // Store temporary flag for doctor registration
         sessionStorage.setItem("adminVerified", "true");
-        
+
         // Redirect to doctor sign-in or registration
         navigate("/doctor-auth");
       }
@@ -79,7 +79,9 @@ const AdminFirewall = () => {
               <ShieldAlert className="h-6 w-6 text-red-600" />
             </div>
             <div>
-              <CardTitle className="text-2xl font-bold">Admin Firewall</CardTitle>
+              <CardTitle className="text-2xl font-bold">
+                Admin Firewall
+              </CardTitle>
               <CardDescription>
                 Enter admin password to access doctor authentication
               </CardDescription>
@@ -92,7 +94,7 @@ const AdminFirewall = () => {
               <AlertDescription>{error}</AlertDescription>
             </Alert>
           )}
-          
+
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               <FormField
@@ -146,7 +148,9 @@ const AdminFirewall = () => {
             <div className="text-sm text-muted-foreground">
               <div className="flex items-center justify-center gap-2 mt-2">
                 <Shield className="h-4 w-4 text-muted-foreground" />
-                <span>This area is restricted to authorized personnel only</span>
+                <span>
+                  This area is restricted to authorized personnel only
+                </span>
               </div>
             </div>
           </div>

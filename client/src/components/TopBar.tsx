@@ -63,9 +63,9 @@ const TopBar = () => {
           {/* Mobile Menu Header */}
           <div className="flex justify-between items-center mb-8 pb-4 border-b border-gray-100">
             <div>
-              <h2 className="text-xl font-bold text-primary">समर्थ क्लिनिक</h2>
+              <h2 className="text-xl font-bold text-primary">Samarth Clinic</h2>
               <p className="text-sm text-gray-600">
-                फिजियोथैरेपी रिहैबिलिटेशन सेंटर
+                Physiotherapy Rehabilitation Center
               </p>
             </div>
             <button
@@ -85,7 +85,7 @@ const TopBar = () => {
                   className="block py-3 px-4 rounded-md hover:bg-gray-100 transition-colors text-gray-800 font-medium"
                   onClick={handleMenuToggle}
                 >
-                  होम
+                  Home
                 </a>
               </li>
               <li>
@@ -94,7 +94,7 @@ const TopBar = () => {
                   className="block py-3 px-4 rounded-md hover:bg-gray-100 transition-colors text-gray-800 font-medium"
                   onClick={handleMenuToggle}
                 >
-                  सेवाएं
+                  Services
                 </a>
               </li>
               <li>
@@ -103,7 +103,7 @@ const TopBar = () => {
                   className="block py-3 px-4 rounded-md hover:bg-gray-100 transition-colors text-gray-800 font-medium"
                   onClick={handleMenuToggle}
                 >
-                  हमारे बारे में
+                  About Us
                 </a>
               </li>
               <li>
@@ -112,7 +112,7 @@ const TopBar = () => {
                   className="block py-3 px-4 rounded-md hover:bg-gray-100 transition-colors text-gray-800 font-medium"
                   onClick={handleMenuToggle}
                 >
-                  ब्लॉग
+                  Blog
                 </a>
               </li>
               <li>
@@ -121,7 +121,7 @@ const TopBar = () => {
                   className="block py-3 px-4 rounded-md hover:bg-gray-100 transition-colors text-gray-800 font-medium"
                   onClick={handleMenuToggle}
                 >
-                  संपर्क करें
+                  Contact Us
                 </a>
               </li>
             </ul>
@@ -176,11 +176,11 @@ const TopBar = () => {
             <div className="col-8 col-xl-4">
               <h1 className="mb-0 site-logo">
                 <a href="#home" className="text-white mb-0 font-bold">
-                  समर्थ क्लिनिक<span className="text-primary">.</span>
+                  Samarth Clinic<span className="text-primary">.</span>
                 </a>
               </h1>
               <p className="text-white mb-0" style={{ fontSize: "0.7rem" }}>
-                फिजियोथैरेपी रिहैबिलिटेशन सेंटर
+                Physiotherapy Rehabilitation Center
               </p>
             </div>
             {/* Fixed alignment of menu icon with flex classes */}
@@ -206,7 +206,7 @@ const TopBar = () => {
                       href="#home"
                       className="text-[#2d405f] hover:text-[#3a9efd] transition-colors"
                     >
-                      <span>होम</span>
+                      <span>Home</span>
                     </a>
                   </li>
                   <li>
@@ -214,7 +214,7 @@ const TopBar = () => {
                       href="#services"
                       className="text-[#2d405f] hover:text-[#3a9efd] transition-colors"
                     >
-                      <span>सेवाएं</span>
+                      <span>Services</span>
                     </a>
                   </li>
                   <li>
@@ -222,7 +222,7 @@ const TopBar = () => {
                       href="#about"
                       className="text-[#2d405f] hover:text-[#3a9efd] transition-colors"
                     >
-                      <span>हमारे बारे में</span>
+                      <span>About Us</span>
                     </a>
                   </li>
                   <li>
@@ -230,7 +230,7 @@ const TopBar = () => {
                       href="#blog"
                       className="text-[#2d405f] hover:text-[#3a9efd] transition-colors"
                     >
-                      <span>ब्लॉग</span>
+                      <span>Blog</span>
                     </a>
                   </li>
                   <li>
@@ -238,7 +238,7 @@ const TopBar = () => {
                       href="#contact"
                       className="text-[#2d405f] hover:text-[#3a9efd] transition-colors"
                     >
-                      <span>संपर्क करें</span>
+                      <span>Contact Us</span>
                     </a>
                   </li>
                   {isSignedIn ? (

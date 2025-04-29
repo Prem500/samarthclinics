@@ -89,10 +89,10 @@ const QuickInfoSection: React.FC = () => {
                 </span>
                 <div className="text">
                   <strong className="d-block heading" style={styles.heading}>
-                    हमारा स्थान
+                    Our Location
                   </strong>
                   <span className="excerpt" style={styles.excerpt}>
-                    सुनील बोस के पास, कैनाल रोड - डेहरी 821307
+                    Near Sunil Bose, Canal Road - Dehri 821307
                   </span>
                 </div>
               </div>
@@ -117,7 +117,7 @@ const QuickInfoSection: React.FC = () => {
                 </span>
                 <div className="text">
                   <strong className="d-block heading" style={styles.heading}>
-                    आज हमें कॉल करें
+                    Call Us Today
                   </strong>
                   <span className="excerpt" style={styles.excerpt}>
                     <a
@@ -158,7 +158,7 @@ const QuickInfoSection: React.FC = () => {
                 </span>
                 <div className="text">
                   <strong className="d-block heading" style={styles.heading}>
-                    हमें संदेश भेजें
+                    Send Us a Message
                   </strong>
                   <span className="excerpt" style={styles.excerpt}>
                     <a
@@ -199,10 +199,10 @@ const QuickInfoSection: React.FC = () => {
                 </span>
                 <div className="text">
                   <strong className="d-block heading" style={styles.heading}>
-                    खुलने का समय
+                    Opening Hours
                   </strong>
                   <span className="excerpt" style={styles.excerpt}>
-                    सोम-शनि 10:00 AM - 06:00 PM
+                    Mon-Sat 10:00 AM - 06:00 PM
                   </span>
                 </div>
               </div>

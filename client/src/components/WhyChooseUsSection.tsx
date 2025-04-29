@@ -3,7 +3,7 @@ import { useCounter } from "@/hooks/useCounter";
 
 const WhyChooseUsSection: React.FC = () => {
   // Initialize counters
-  const customersCounter = useCounter(200);
+  const customersCounter = useCounter(1500);
   const yearsCounter = useCounter(2);
   const satisfactionCounter = useCounter(100);
 
@@ -15,12 +15,12 @@ const WhyChooseUsSection: React.FC = () => {
       ></div>
       <div className="block-half-content-text bg-primary">
         <div className="block-half-content-text-inner">
-          <h2 className="block-half-content-heading mb-4">हमें क्यों चुनें</h2>
+          <h2 className="block-half-content-heading mb-4">Why Choose Us</h2>
           <div className="block-half-content-excerpt">
             <p className="lead">
-              हमें चुनें विशेषज्ञ फिजियोथेरेपी, चिरोप्रैक्टिक, और संरेखण सेवाओं
-              के लिए, जहाँ व्यक्तिगत देखभाल, समग्र दृष्टिकोण, और अत्याधुनिक
-              तकनीक आपके कल्याण और दर्द राहत को सुनिश्चित करती है।
+              Choose us for expert physiotherapy, chiropractic, and alignment
+              services, where personalized care, a holistic approach, and
+              cutting-edge techniques ensure your well-being and pain relief.
             </p>
           </div>
         </div>
@@ -39,7 +39,7 @@ const WhyChooseUsSection: React.FC = () => {
                   </span>
                   <span className="append"></span>
                 </div>
-                <span className="block-counter-1-caption">खुश ग्राहक</span>
+                <span className="block-counter-1-caption">Happy Clients</span>
               </div>
             </div>
             <div className="col-sm-4">
@@ -54,7 +54,9 @@ const WhyChooseUsSection: React.FC = () => {
                   </span>
                   <span className="append"></span>
                 </div>
-                <span className="block-counter-1-caption">अनुभव के वर्ष</span>
+                <span className="block-counter-1-caption">
+                  Years of Experience
+                </span>
               </div>
             </div>
             <div className="col-sm-4">
@@ -69,7 +71,7 @@ const WhyChooseUsSection: React.FC = () => {
                   </span>
                   <span className="append">%</span>
                 </div>
-                <span className="block-counter-1-caption">संतुष्टि</span>
+                <span className="block-counter-1-caption">Satisfaction</span>
               </div>
             </div>
           </div>

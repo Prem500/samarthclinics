@@ -34,7 +34,7 @@ const TeamSection: React.FC = () => {
                 <h3 className="h4 fw-bold mb-2">Dr. Prem Prakash</h3>
                 <p className="text-muted mb-3">Senior Physiotherapist</p>
                 <p className="small text-muted">
-                  With over 15 years of experience, Dr. Prem Prakash specializes
+                  With over 2 years of experience, Dr. Prem Prakash specializes
                   in rehabilitation therapy, pediatrition, orthopedic
                   physiotherapy, neurological physiotherapy and sports injury
                   treatment.

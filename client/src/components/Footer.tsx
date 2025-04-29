@@ -15,58 +15,58 @@ const Footer: React.FC = () => {
           <div className="col-md-9">
             <div className="row">
               <div className="col-md-6 mb-5 mb-lg-0 col-lg-3">
-                <h2 className="footer-heading mb-4">त्वरित लिंक</h2>
+                <h2 className="footer-heading mb-4">Quick Links</h2>
                 <ul className="list-unstyled">
                   <li>
-                    <a href="#">हमारे बारे में</a>
+                    <a href="#">About Us</a>
                   </li>
                   <li>
-                    <a href="#">सेवाएं</a>
+                    <a href="#">Services</a>
                   </li>
                   <li>
-                    <a href="#">प्रशंसापत्र</a>
+                    <a href="#">Testimonials</a>
                   </li>
                   <li>
-                    <a href="#">संपर्क करें</a>
+                    <a href="#">Contact Us</a>
                   </li>
                 </ul>
               </div>
               <div className="col-md-6 mb-5 mb-lg-0 col-lg-3">
-                <h2 className="footer-heading mb-4">उत्पाद</h2>
+                <h2 className="footer-heading mb-4">Products</h2>
                 <ul className="list-unstyled">
                   <li>
-                    <a href="#">हमारे बारे में</a>
+                    <a href="#">About Us</a>
                   </li>
                   <li>
-                    <a href="#">सेवाएं</a>
+                    <a href="#">Services</a>
                   </li>
                   <li>
-                    <a href="#">प्रशंसापत्र</a>
+                    <a href="#">Testimonials</a>
                   </li>
                   <li>
-                    <a href="#">संपर्क करें</a>
+                    <a href="#">Contact Us</a>
                   </li>
                 </ul>
               </div>
               <div className="col-md-6 mb-5 mb-lg-0 col-lg-3">
-                <h2 className="footer-heading mb-4">विशेषताएं</h2>
+                <h2 className="footer-heading mb-4">Features</h2>
                 <ul className="list-unstyled">
                   <li>
-                    <a href="#">हमारे बारे में</a>
+                    <a href="#">About Us</a>
                   </li>
                   <li>
-                    <a href="#">सेवाएं</a>
+                    <a href="#">Services</a>
                   </li>
                   <li>
-                    <a href="#">प्रशंसापत्र</a>
+                    <a href="#">Testimonials</a>
                   </li>
                   <li>
-                    <a href="#">संपर्क करें</a>
+                    <a href="#">Contact Us</a>
                   </li>
                 </ul>
               </div>
               <div className="col-md-6 mb-5 mb-lg-0 col-lg-3">
-                <h2 className="footer-heading mb-4">हमें अनुसरण करें</h2>
+                <h2 className="footer-heading mb-4">Follow Us</h2>
                 <a
                   href="https://www.facebook.com/imthepremkumarshah"
                   className="pl-0 pr-3"
@@ -92,15 +92,15 @@ const Footer: React.FC = () => {
             </div>
           </div>
           <div className="col-lg-3">
-            <h2 className="footer-heading mb-4">न्यूज़लेटर सदस्यता</h2>
-            <p>हमारी मासिक सेवाओं की सदस्यता लें</p>
+            <h2 className="footer-heading mb-4">Newsletter Subscription</h2>
+            <p>Subscribe to our monthly services</p>
             <form action="#" method="post" className="subscription">
               <div className="input-group mb-3 d-flex align-items-stretch">
                 <input
                   type="text"
                   className="form-control bg-transparent"
-                  placeholder="ईमेल दर्ज करें"
-                  aria-label="ईमेल दर्ज करें"
+                  placeholder="Enter email"
+                  aria-label="Enter email"
                   aria-describedby="button-addon2"
                 />
                 <button
@@ -108,7 +108,7 @@ const Footer: React.FC = () => {
                   type="button"
                   id="button-addon2"
                 >
-                  भेजें
+                  Send
                 </button>
               </div>
             </form>
@@ -117,8 +117,7 @@ const Footer: React.FC = () => {
         <div className="row pt-5 mt-5">
           <div className="col-12 text-md-center text-left">
             <p>
-              कॉपीराइट &copy; {new Date().getFullYear()} सभी अधिकार सुरक्षित
-              हैं।
+              Copyright &copy; {new Date().getFullYear()} All Rights Reserved.
             </p>
           </div>
         </div>

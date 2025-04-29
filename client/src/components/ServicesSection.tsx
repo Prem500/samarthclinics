@@ -18,7 +18,7 @@ const ServicesSection: React.FC = () => {
                 letterSpacing: "1px",
               }}
             >
-              हमारी विशिष्ट सेवाएं
+              Our Specialized Services
             </span>
             <h2
               className="section-title mb-3"
@@ -28,7 +28,7 @@ const ServicesSection: React.FC = () => {
                 color: "#2d405f",
               }}
             >
-              हमारी सेवाएं
+              Our Services
             </h2>
             <div
               className="section-divider mx-auto mb-4"
@@ -48,7 +48,8 @@ const ServicesSection: React.FC = () => {
                 margin: "0 auto",
               }}
             >
-              हम क्या प्रदान करते हैं: फिजियोथेरेपी, पुनर्वास, और संरेखण सेवाएं
+              What We Provide: Physiotherapy, Rehabilitation, and Alignment
+              Services
             </p>
           </div>
         </div>
@@ -56,38 +57,38 @@ const ServicesSection: React.FC = () => {
         <div className="row g-4">
           <ServiceCard
             imageUrl="images/img_11.jpg"
-            title="फिजियोथेरेपी"
-            description="व्यापक फिजियोथेरेपी सेवाएं: दर्द राहत, पुनर्वास, और स्वास्थ्य, आपके उत्कृष्ट स्वास्थ्य और गतिशीलता के लिए अनुकूलित।"
+            title="Physiotherapy"
+            description="Comprehensive physiotherapy services: Pain relief, rehabilitation, and wellness, tailored for your optimal health and mobility."
             delay={0.1}
           />
           <ServiceCard
             imageUrl="images/img_22.jpg"
-            title="पुनर्वास"
-            description="पुनर्वास उत्कृष्टता: रीढ़ की हड्डी को संरेखित करना, दर्द को दूर करना, और एक स्वस्थ, सक्रिय जीवन के लिए समग्र कल्याण को बढ़ावा देना।"
+            title="Rehabilitation"
+            description="Rehabilitation excellence: Aligning the spine, relieving pain, and promoting overall wellness for a healthy, active life."
             delay={0.2}
           />
           <ServiceCard
             imageUrl="images/chiro.jpg"
-            title="चिरोप्रैक्टिक"
-            description="चिरोप्रैक्टिक विशेषज्ञता: रीढ़ की हड्डी को संरेखित करना, दर्द को दूर करना, और समग्र कल्याण को बढ़ाना, एक स्वस्थ और सक्रिय जीवन के लिए।"
+            title="Chiropractic"
+            description="Chiropractic expertise: Aligning the spine, relieving pain, and promoting overall wellness for a healthy and active life."
             delay={0.3}
           />
           <ServiceCard
             imageUrl="images/kinesio.webp"
-            title="किनेसियो टेपिंग"
-            description="किनेसियो टेपिंग नवाचार: आंदोलन को समर्थन देना, असुविधा को कम करना, और समग्र कल्याण को बढ़ावा देना, एक स्वस्थ और सक्रिय जीवन के लिए।"
+            title="Kinesio Taping"
+            description="Kinesio taping innovation: Supporting movement, reducing discomfort, and promoting overall wellness for a healthy and active life."
             delay={0.4}
           />
           <ServiceCard
             imageUrl="images/img_555.jpg"
-            title="कपिंग थेरेपी"
-            description="कपिंग थेरेपी के साथ कल्याण को बढ़ाएं: रक्त परिसंचरण को बढ़ावा दें, दर्द को कम करें, और गहरी राहत और पुनरुत्थान का अनुभव करें।"
+            title="Cupping Therapy"
+            description="Enhance wellness with cupping therapy: Boost blood circulation, reduce pain, and experience deep relief and rejuvenation."
             delay={0.5}
           />
           <ServiceCard
             imageUrl="images/dryneedling.jpg"
-            title="ड्राई नीडलिंग"
-            description="ड्राई नीडलिंग: दर्द राहत और समग्र कल्याण के लिए मांसपेशी गांठों को सटीकता से लक्षित करना।"
+            title="Dry Needling"
+            description="Dry needling: Precisely targeting muscle knots for pain relief and overall wellness."
             delay={0.6}
           />
         </div>
@@ -95,7 +96,7 @@ const ServicesSection: React.FC = () => {
         {/* Specialized Service Categories */}
         <div className="mt-5 pt-5 border-top">
           <h3 className="text-center mb-5 fw-bold" style={{ color: "#2d405f" }}>
-            विशिष्ट फिजियोथेरेपी सेवाएं
+            What We Treat
           </h3>
 
           {/* Orthopedic Physiotherapy Category */}
@@ -125,32 +126,32 @@ const ServicesSection: React.FC = () => {
                 >
                   <i className="fa fa-bone" style={{ color: "#3a9efd" }}></i>
                 </span>
-                ऑर्थोपेडिक फिजियोथेरेपी
+                Orthopedic Physiotherapy
               </div>
             </h4>
             <div className="row g-4">
               <ServiceCard
                 imageUrl="images/orthopedic-1.png"
-                title="जोड़ पुनर्वास"
-                description="हड्डियों, मांसपेशियों और जोड़ों की चोटों और स्थितियों के लिए विशेष उपचार, जो आपकी गतिशीलता और जीवन की गुणवत्ता में सुधार करता है।"
+                title="Joint Rehabilitation"
+                description="Specialized treatments for bone, muscle, and joint injuries and conditions that improve your mobility and quality of life."
                 delay={0.1}
               />
-              <ServiceCard
+              {/* <ServiceCard
                 imageUrl="images/orthopedic-2.png"
-                title="पोस्ट-सर्जिकल पुनर्वास"
-                description="सर्जरी के बाद की विशेष देखभाल जो तेज़ी से ठीक होने और ऑप्टिमल समारोह को सुनिश्चित करती है।"
+                title="Post-Surgical Rehabilitation"
+                description="Specialized post-surgery care ensuring rapid recovery and optimal function."
                 delay={0.2}
-              />
+              /> */}
               <ServiceCard
                 imageUrl="images/orthopedic-3.png"
-                title="कंधा पुनर्वास"
-                description="कंधे के दर्द और चोटों के लिए लक्षित उपचार, जिसमें रोटेटर कफ, जमे हुए कंधे और अस्थिभंग शामिल हैं।"
+                title="Shoulder Rehabilitation"
+                description="Targeted treatments for shoulder pain and injuries, including rotator cuff, frozen shoulder, and fractures."
                 delay={0.3}
               />
             </div>
           </div>
 
-          {/* Neurological Physiotherapy Category */}
+          {/* Neurological Physiotherapy Category
           <div className="service-category mb-5">
             <h4
               className="category-title mb-4 pb-2"
@@ -177,24 +178,24 @@ const ServicesSection: React.FC = () => {
                 >
                   <i className="fa fa-brain" style={{ color: "#3a9efd" }}></i>
                 </span>
-                न्यूरोलॉजिकल फिजियोथेरेपी
+                Neurological Physiotherapy
               </div>
             </h4>
             <div className="row g-4">
               <ServiceCard
                 imageUrl="images/neurological-1.png"
-                title="स्ट्रोक पुनर्वास"
-                description="स्ट्रोक के बाद आंदोलन और कार्यात्मक क्षमताओं को बहाल करने के लिए विशेष रूप से डिज़ाइन किए गए उपचार और अभ्यास।"
+                title="Stroke Rehabilitation"
+                description="Specially designed treatments and exercises to restore movement and functional abilities after stroke."
                 delay={0.1}
               />
               <ServiceCard
                 imageUrl="images/neurological-2.png"
-                title="न्यूरोलॉजिकल स्थिति प्रबंधन"
-                description="पार्किंसंस, मल्टीपल स्केलेरोसिस और अन्य न्यूरोलॉजिकल स्थितियों के लिए समर्थन और प्रबंधन।"
+                title="Neurological Condition Management"
+                description="Support and management for Parkinson's, Multiple Sclerosis and other neurological conditions."
                 delay={0.2}
               />
             </div>
-          </div>
+          </div> */}
 
           {/* Rehabilitation Category */}
           <div className="service-category mb-5">
@@ -226,20 +227,20 @@ const ServicesSection: React.FC = () => {
                     style={{ color: "#3a9efd" }}
                   ></i>
                 </span>
-                पुनर्वास सेवाएं
+                Rehabilitation Services
               </div>
             </h4>
             <div className="row g-4">
               <ServiceCard
                 imageUrl="images/rehabilation-1.png"
-                title="खेल चोट पुनर्वास"
-                description="एथलीटों और सक्रिय व्यक्तियों को खेल में सुरक्षित रूप से वापस लाने के लिए विशेष पुनर्वास कार्यक्रम।"
+                title="Sports Injury Rehabilitation"
+                description="Specialized rehabilitation programs to safely return athletes and active individuals back to sports."
                 delay={0.1}
               />
               <ServiceCard
                 imageUrl="images/rehabilation-2.png"
-                title="कार्य से वापसी कार्यक्रम"
-                description="कार्यस्थल चोटों के बाद कर्मचारियों को सुरक्षित और प्रभावी ढंग से काम पर वापस जाने में मदद करने के लिए डिज़ाइन किए गए कार्यक्रम।"
+                title="Return to Work Programs"
+                description="Programs designed to help employees return safely and effectively to work after workplace injuries."
                 delay={0.2}
               />
             </div>
@@ -272,26 +273,26 @@ const ServicesSection: React.FC = () => {
                 >
                   <i className="fa fa-baby" style={{ color: "#3a9efd" }}></i>
                 </span>
-                बाल चिकित्सा फिजियोथेरेपी
+                Pediatric Physiotherapy
               </div>
             </h4>
             <div className="row g-4">
               <ServiceCard
                 imageUrl="images/pediatric-1.png"
-                title="बाल विकासात्मक थेरेपी"
-                description="मोटर स्किल्स के विकास और बच्चों के लिए विकासात्मक मील के पत्थर को समर्थन देने के लिए विशेष रूप से डिज़ाइन किया गया।"
+                title="Pediatric Developmental Therapy"
+                description="Specially designed to support the development of motor skills and developmental milestones for children."
                 delay={0.1}
               />
               <ServiceCard
                 imageUrl="images/pediatric-2.png"
-                title="बाल न्यूरो पुनर्वास"
-                description="सेरेब्रल पाल्सी और अन्य न्यूरोलॉजिकल स्थितियों वाले बच्चों के लिए विशेष फिजियोथेरेपी समर्थन।"
+                title="Pediatric Neuro Rehabilitation"
+                description="Specialized physiotherapy support for children with cerebral palsy and other neurological conditions."
                 delay={0.2}
               />
               <ServiceCard
                 imageUrl="images/pediatric-3.png"
-                title="बाल अस्थि प्रबंधन"
-                description="बढ़ते बच्चों में हड्डियों और जोड़ों के मुद्दों के लिए विशेष समर्थन और उपचार।"
+                title="Pediatric Orthopedic Management"
+                description="Specialized support and treatment for bone and joint issues in growing children."
                 delay={0.3}
               />
             </div>
@@ -324,52 +325,31 @@ const ServicesSection: React.FC = () => {
                 >
                   <i className="fa fa-running" style={{ color: "#3a9efd" }}></i>
                 </span>
-                खेल फिजियोथेरेपी
+                Sports Physiotherapy
               </div>
             </h4>
             <div className="row">
               <ServiceCard
                 imageUrl="images/sports-1.png"
-                title="एथलीट पुनर्वास"
-                description="एथलीटों के लिए विशेष पुनर्वास सेवाएं जो प्रदर्शन बहाली और चोट की रोकथाम पर केंद्रित हैं।"
+                title="Athlete Rehabilitation"
+                description="Specialized rehabilitation services for athletes focusing on performance restoration and injury prevention."
                 delay={0.1}
               />
               <ServiceCard
                 imageUrl="images/sports-2.png"
-                title="खेल विशिष्ट प्रशिक्षण"
-                description="विशिष्ट खेलों के लिए अनुकूलित कंडीशनिंग और चोट की रोकथाम के कार्यक्रम।"
+                title="Sport-Specific Training"
+                description="Conditioning and injury prevention programs customized for specific sports."
                 delay={0.2}
               />
               <ServiceCard
                 imageUrl="images/sports-3.png"
-                title="प्रदर्शन सुधार"
-                description="एथलीटों के प्रदर्शन को अनुकूलित करने के लिए उन्नत तकनीकें और कार्यक्रम।"
+                title="Performance Enhancement"
+                description="Advanced techniques and programs to optimize athlete performance."
                 delay={0.3}
               />
             </div>
           </div>
         </div>
-
-        {/* <div className="row mt-5">
-          <div className="col-12 text-center">
-            <motion.a
-              href="/services"
-              className="btn btn-lg rounded-pill px-5 py-3"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              style={{
-                background: "linear-gradient(135deg, #3a9efd 0%, #0071e3 100%)",
-                color: "white",
-                border: "none",
-                boxShadow: "0 7px 15px rgba(58, 158, 253, 0.25)",
-                fontWeight: "600",
-                transition: "all 0.3s ease",
-              }}
-            >
-              सभी सेवाएं देखें <i className="ms-2 fa fa-arrow-right"></i>
-            </motion.a>
-          </div>
-        </div> */}
       </div>
     </section>
   );
@@ -447,7 +427,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
                 boxShadow: "0 3px 10px rgba(0,0,0,0.1)",
               }}
             >
-              और जानें
+              Learn More
             </motion.a>
           </div>
         </div>
@@ -492,7 +472,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
               transition: "all 0.3s ease",
             }}
           >
-            और जानें <i className="fa fa-arrow-right ms-1"></i>
+            Learn More <i className="fa fa-arrow-right ms-1"></i>
           </motion.a>
         </div>
       </div>

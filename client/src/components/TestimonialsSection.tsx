@@ -47,10 +47,10 @@ const TestimonialsSection: React.FC = () => {
       <div className="container">
         <div className="row mb-3">
           <div className="col-md-12 text-center">
-            <h2 className=" text-center font-secondary mb-3">खुश ग्राहक</h2>
+            <h2 className=" text-center font-secondary mb-3">Happy Clients</h2>
             <div className="heading-underline mx-auto"></div>
             <p className="text-muted text-3xl mt-3">
-              हमारे ग्राहकों का अनुभव जानें
+              Hear about our clients' experiences
             </p>
           </div>
         </div>
@@ -98,7 +98,7 @@ const TestimonialsSection: React.FC = () => {
                     <div className="person-image">
                       <img
                         src="/images/User-1.png"
-                        alt="सुनील कुमार"
+                        alt="Sunil Kumar"
                         className="img-fluid rounded-circle"
                       />
                     </div>
@@ -121,7 +121,7 @@ const TestimonialsSection: React.FC = () => {
                     <div className="person-image">
                       <img
                         src="images/User-2.png"
-                        alt="रविंदर कुशवाहा"
+                        alt="Ravinder Kushwaha"
                         className="img-fluid rounded-circle"
                       />
                     </div>
@@ -150,7 +150,7 @@ const TestimonialsSection: React.FC = () => {
                     <div className="person-image">
                       <img
                         src="images/User-3.png"
-                        alt="बिनोद कुमार"
+                        alt="Binod Kumar"
                         className="img-fluid rounded-circle"
                       />
                     </div>

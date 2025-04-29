@@ -5,7 +5,7 @@ import {
   registerDoctor,
   getUserDetails,
   getBasicUserInfo,
-  authFunction
+  authFunction,
 } from "../controllers/auth.controller.js";
 import { verifyToken } from "../middleware/auth.middleware.js";
 

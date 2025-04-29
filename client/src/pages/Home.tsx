@@ -57,9 +57,6 @@ const Home: React.FC = () => {
       {/* Hero Section */}
       <HeroSection />
 
-      {/* Quick Info Section */}
-      <QuickInfoSection />
-
       {/* Conditionally render Appointments section */}
       {shouldShowAppointments && (
         <div ref={appointmentsRef} id="appointments">
@@ -84,6 +81,9 @@ const Home: React.FC = () => {
 
       {/* Map Section */}
       <Map />
+
+      {/* Quick Info Section */}
+      <QuickInfoSection />
 
       {/* Footer */}
       <Footer />

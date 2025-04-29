@@ -327,7 +327,7 @@ const ServicesSection: React.FC = () => {
                 खेल फिजियोथेरेपी
               </div>
             </h4>
-            <div className="row g-4">
+            <div className="row">
               <ServiceCard
                 imageUrl="images/sports-1.png"
                 title="एथलीट पुनर्वास"
@@ -350,7 +350,7 @@ const ServicesSection: React.FC = () => {
           </div>
         </div>
 
-        <div className="row mt-5">
+        {/* <div className="row mt-5">
           <div className="col-12 text-center">
             <motion.a
               href="/services"
@@ -369,7 +369,7 @@ const ServicesSection: React.FC = () => {
               सभी सेवाएं देखें <i className="ms-2 fa fa-arrow-right"></i>
             </motion.a>
           </div>
-        </div>
+        </div> */}
       </div>
     </section>
   );

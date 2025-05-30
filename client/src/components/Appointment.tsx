@@ -20,7 +20,6 @@ import {
   Home,
   UserRound,
   Stethoscope,
-  FileText,
   ArrowRight,
 } from "lucide-react";
 import { format, addDays, isWeekend } from "date-fns";
@@ -38,7 +37,7 @@ interface Doctor {
 }
 
 const Appointment = () => {
-  // We still need to fetch doctors to find Dr. Prem's ID
+  // State variables
   const [selectedDoctor, setSelectedDoctor] = useState("");
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
   const [selectedTime, setSelectedTime] = useState("");
@@ -48,14 +47,15 @@ const Appointment = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const [currentStep, setCurrentStep] = useState(1);
-  // New fields for non-authenticated users
+
+  // User information
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const navigate = useNavigate();
   const { isSignedIn, userId } = useAuth();
 
+  // Available time slots
   const timeSlots = [
     "09:00",
     "09:30",
@@ -70,6 +70,8 @@ const Appointment = () => {
     "16:00",
     "16:30",
   ];
+
+  // Set initial values and fetch necessary data
   useEffect(() => {
     // Fetch doctors list from API to get Dr. Prem's ID
     const fetchDoctors = async () => {
@@ -125,13 +127,14 @@ const Appointment = () => {
     }
   };
 
+  // Check slot availability when date/time changes
   useEffect(() => {
-    // Check slot availability when doctor, date and time are selected
     if (selectedDoctor && selectedDate && selectedTime) {
       checkSlotAvailability();
     }
   }, [selectedDoctor, selectedDate, selectedTime]);
 
+  // Check if the selected time slot is available
   const checkSlotAvailability = async () => {
     try {
       const response = await authAxios.post(
@@ -142,7 +145,6 @@ const Appointment = () => {
           time: selectedTime,
         }
       );
-
       setIsSlotAvailable(response.data.message === "Slot is available");
     } catch (error) {
       console.error("Error checking availability:", error);
@@ -150,6 +152,7 @@ const Appointment = () => {
     }
   };
 
+  // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -165,6 +168,21 @@ const Appointment = () => {
         toast.error("Please enter a valid email address");
         return;
       }
+    }
+
+    if (!selectedDate) {
+      toast.error("Please select a date");
+      return;
+    }
+
+    if (!selectedTime) {
+      toast.error("Please select a time");
+      return;
+    }
+
+    if (!issue.trim()) {
+      toast.error("Please describe your issue");
+      return;
     }
 
     if (!isSlotAvailable) {
@@ -196,8 +214,6 @@ const Appointment = () => {
         bookingData
       );
 
-      console.log(response.data);
-
       if (response.status === 201) {
         toast("Appointment booked successfully", {
           description: "Your appointment has been successfully booked.",
@@ -205,6 +221,7 @@ const Appointment = () => {
         navigate("/");
         setSuccessMessage("Appointment booked successfully!");
       }
+
       // Reset form
       setSelectedDoctor("");
       setSelectedDate(undefined);
@@ -222,117 +239,10 @@ const Appointment = () => {
       setIsSubmitting(false);
     }
   };
-  // Function to determine if the current step is complete and we can move to the next step
-  const canProceedToNextStep = (step: number) => {
-    switch (step) {
-      case 1:
-        return Boolean(visitType);
-      case 2:
-        return selectedDate !== undefined;
-      case 3:
-        return selectedTime !== "" && isSlotAvailable;
-      case 4:
-        // For step 4, we need to check if all contact fields are filled for non-authenticated users
-        if (!isSignedIn) {
-          return Boolean(fullName && email && phoneNumber && issue.trim());
-        }
-        return Boolean(issue.trim());
-      default:
-        return false;
-    }
-  };
-  const nextStep = () => {
-    if (currentStep < 4 && canProceedToNextStep(currentStep)) {
-      setCurrentStep(currentStep + 1);
-    }
-  };
-
-  const prevStep = () => {
-    if (currentStep > 1) {
-      setCurrentStep(currentStep - 1);
-    }
-  };
-  // Appointment progress steps
-  const steps = [
-    { number: 1, label: "Visit Type", icon: <Home className="h-5 w-5" /> },
-    {
-      number: 2,
-      label: "Choose Date",
-      icon: <CalendarIcon className="h-5 w-5" />,
-    },
-    { number: 3, label: "Select Time", icon: <Clock className="h-5 w-5" /> },
-    {
-      number: 4,
-      label: "Your Details",
-      icon: <FileText className="h-5 w-5" />,
-    },
-  ];
 
   return (
     <div className="max-w-5xl mx-auto px-6 py-8">
-      <div className="text-center mb-8">
-        <h2 className="text-3xl font-bold text-[#2d405f] mb-3">
-          Appointment Booking
-        </h2>
-        <p className="text-[#5a6a85] max-w-2xl mx-auto">
-          Book appointments with our specialist doctors. Choose the day and time
-          according to your needs.
-        </p>
-      </div>
-
-      {/* Progress Tracker */}
-      <div className="mb-8 overflow-x-auto">
-        <div className="flex min-w-max justify-center items-center gap-1">
-          {steps.map((step, index) => (
-            <div key={step.number} className="flex items-center">
-              <div
-                className={`flex flex-col items-center ${
-                  currentStep >= step.number ? "cursor-pointer" : ""
-                }`}
-                onClick={() => {
-                  if (currentStep > step.number) {
-                    setCurrentStep(step.number);
-                  }
-                }}
-              >
-                <div
-                  className={`w-12 h-12 rounded-full flex items-center justify-center mb-2 transition-all ${
-                    currentStep > step.number
-                      ? "bg-[#3a9efd] text-white"
-                      : currentStep === step.number
-                      ? "bg-[#e9f5ff] text-[#3a9efd] border-2 border-[#3a9efd]"
-                      : "bg-gray-100 text-gray-400"
-                  }`}
-                >
-                  {currentStep > step.number ? (
-                    <Check className="h-6 w-6" />
-                  ) : (
-                    step.icon
-                  )}
-                </div>
-                <span
-                  className={`text-sm font-medium ${
-                    currentStep >= step.number
-                      ? "text-[#2d405f]"
-                      : "text-gray-400"
-                  }`}
-                >
-                  {step.label}
-                </span>
-              </div>
-
-              {index < steps.length - 1 && (
-                <div
-                  className={`w-12 h-1 mx-1 ${
-                    currentStep > index + 1 ? "bg-[#3a9efd]" : "bg-gray-200"
-                  }`}
-                ></div>
-              )}
-            </div>
-          ))}
-        </div>
-      </div>
-
+      {/* Success Message */}
       {successMessage && (
         <motion.div
           initial={{ opacity: 0, y: -20 }}
@@ -351,6 +261,7 @@ const Appointment = () => {
         </motion.div>
       )}
 
+      {/* Error Message */}
       {errorMessage && (
         <motion.div
           initial={{ opacity: 0, y: -20 }}
@@ -373,6 +284,7 @@ const Appointment = () => {
         transition={{ duration: 0.5 }}
       >
         <Card className="shadow-lg border-t-4 border-t-[#3a9efd] overflow-hidden">
+          {/* Card Header */}
           <CardHeader className="bg-gradient-to-r from-[#e9f5ff] to-white border-b pb-6">
             <div className="flex items-center gap-3">
               <div className="bg-[#3a9efd] p-3 rounded-lg text-white">
@@ -389,165 +301,145 @@ const Appointment = () => {
             </div>
           </CardHeader>
 
+          {/* Card Content */}
           <CardContent className="pt-8">
             <form onSubmit={handleSubmit} className="space-y-7">
-              {currentStep === 1 && (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 0.4 }}
-                  className="space-y-5"
-                >
-                  <h3 className="text-xl font-semibold text-[#2d405f] mb-4">
-                    Choose where you want to meet
-                  </h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {/* Visit Type Selection */}
+              <div className="space-y-4">
+                <h3 className="text-xl font-semibold text-[#2d405f] mb-4">
+                  Where would you like to meet?
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {/* Clinic Option */}
+                  <div
+                    className={`border-2 rounded-xl p-6 flex items-center gap-4 cursor-pointer transition-all hover:shadow-md ${
+                      visitType === "clinic"
+                        ? "border-[#3a9efd] bg-[#e9f5ff]/30"
+                        : "border-gray-200"
+                    }`}
+                    onClick={() => setVisitType("clinic")}
+                  >
                     <div
-                      className={`border-2 rounded-xl p-6 flex items-center gap-4 cursor-pointer transition-all hover:shadow-md ${
+                      className={`p-3 rounded-full ${
                         visitType === "clinic"
-                          ? "border-[#3a9efd] bg-[#e9f5ff]/30"
-                          : "border-gray-200"
+                          ? "bg-[#3a9efd] text-white"
+                          : "bg-gray-100 text-gray-500"
                       }`}
-                      onClick={() => setVisitType("clinic")}
                     >
-                      <div
-                        className={`p-3 rounded-full ${
-                          visitType === "clinic"
-                            ? "bg-[#3a9efd] text-white"
-                            : "bg-gray-100 text-gray-500"
-                        }`}
-                      >
-                        <MapPin className="h-6 w-6" />
-                      </div>
-                      <div>
-                        <h4 className="font-medium text-lg text-[#2d405f]">
-                          Meet at Clinic
-                        </h4>
-                        <p className="text-[#5a6a85] text-sm">
-                          Come to the clinic for consultation
-                        </p>
-                      </div>
+                      <MapPin className="h-6 w-6" />
                     </div>
-
-                    <div
-                      className={`border-2 rounded-xl p-6 flex items-center gap-4 cursor-pointer transition-all hover:shadow-md ${
-                        visitType === "home"
-                          ? "border-[#3a9efd] bg-[#e9f5ff]/30"
-                          : "border-gray-200"
-                      }`}
-                      onClick={() => setVisitType("home")}
-                    >
-                      <div
-                        className={`p-3 rounded-full ${
-                          visitType === "home"
-                            ? "bg-[#3a9efd] text-white"
-                            : "bg-gray-100 text-gray-500"
-                        }`}
-                      >
-                        <Home className="h-6 w-6" />
-                      </div>
-                      <div>
-                        <h4 className="font-medium text-lg text-[#2d405f]">
-                          Meet at Home
-                        </h4>
-                        <p className="text-[#5a6a85] text-sm">
-                          Doctor visits you at home
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </motion.div>
-              )}
-
-              {currentStep === 2 && (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 0.4 }}
-                  className="space-y-5"
-                >
-                  <h3 className="text-xl font-semibold text-[#2d405f] mb-4">
-                    Choose Date
-                  </h3>
-
-                  <div className="border-2 rounded-xl p-4 md:p-6 bg-white">
-                    <Calendar
-                      mode="single"
-                      selected={selectedDate}
-                      onSelect={setSelectedDate}
-                      initialFocus
-                      disabled={(date) =>
-                        date < new Date(new Date().setHours(0, 0, 0, 0)) ||
-                        date.getDay() === 0 ||
-                        date.getDay() === 6
-                      }
-                      className="mx-auto"
-                    />
-
-                    <div className="mt-4 flex flex-wrap gap-2 justify-center">
-                      {[1, 2, 3, 4].map((day) => {
-                        const date = addDays(new Date(), day);
-                        if (date.getDay() === 0 || date.getDay() === 6)
-                          return null;
-
-                        return (
-                          <button
-                            key={day}
-                            type="button"
-                            onClick={() => setSelectedDate(date)}
-                            className={`py-2 px-4 rounded-full flex flex-col items-center transition-all ${
-                              selectedDate &&
-                              format(selectedDate, "yyyy-MM-dd") ===
-                                format(date, "yyyy-MM-dd")
-                                ? "bg-[#3a9efd] text-white"
-                                : "bg-[#e9f5ff] text-[#3a9efd] hover:bg-[#3a9efd]/20"
-                            }`}
-                          >
-                            <span className="text-xs font-medium">
-                              {format(date, "EEE")}
-                            </span>
-                            <span className="text-lg font-semibold">
-                              {format(date, "d")}
-                            </span>
-                          </button>
-                        );
-                      })}
-                    </div>
-                  </div>
-
-                  {selectedDate && (
-                    <div className="bg-[#f0f7fc] p-4 rounded-lg flex items-center gap-3">
-                      <CalendarIcon className="h-5 w-5 text-[#3a9efd]" />
-                      <p>
-                        You have selected{" "}
-                        <span className="font-medium">
-                          {format(selectedDate, "EEEE")}
-                        </span>
-                        , {format(selectedDate, "PPP")}
+                    <div>
+                      <h4 className="font-medium text-lg text-[#2d405f]">
+                        Meet at Clinic
+                      </h4>
+                      <p className="text-[#5a6a85] text-sm">
+                        Come to the clinic for consultation
                       </p>
                     </div>
-                  )}
-                </motion.div>
-              )}
-
-              {currentStep === 3 && (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 0.4 }}
-                  className="space-y-5"
-                >
-                  <h3 className="text-xl font-semibold text-[#2d405f] mb-4">
-                    Choose Time
-                  </h3>
-
-                  <div className="bg-[#f0f7fc] p-4 rounded-lg flex items-center gap-3 mb-5">
-                    <CalendarIcon className="h-5 w-5 text-[#3a9efd]" />
-                    <p className="font-medium">
-                      {selectedDate && format(selectedDate, "EEEE, PPP")}
-                    </p>
                   </div>
 
+                  {/* Home Option */}
+                  <div
+                    className={`border-2 rounded-xl p-6 flex items-center gap-4 cursor-pointer transition-all hover:shadow-md ${
+                      visitType === "home"
+                        ? "border-[#3a9efd] bg-[#e9f5ff]/30"
+                        : "border-gray-200"
+                    }`}
+                    onClick={() => setVisitType("home")}
+                  >
+                    <div
+                      className={`p-3 rounded-full ${
+                        visitType === "home"
+                          ? "bg-[#3a9efd] text-white"
+                          : "bg-gray-100 text-gray-500"
+                      }`}
+                    >
+                      <Home className="h-6 w-6" />
+                    </div>
+                    <div>
+                      <h4 className="font-medium text-lg text-[#2d405f]">
+                        Meet at Home
+                      </h4>
+                      <p className="text-[#5a6a85] text-sm">
+                        Doctor visits you at home
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Date and Time Selection */}
+              <div className="space-y-6">
+                <h3 className="text-xl font-semibold text-[#2d405f] mb-4">
+                  When would you like to meet?
+                </h3>
+
+                {/* Calendar */}
+                <div className="border-2 rounded-xl p-4 md:p-6 bg-white">
+                  <Calendar
+                    mode="single"
+                    selected={selectedDate}
+                    onSelect={setSelectedDate}
+                    initialFocus
+                    disabled={(date) =>
+                      date < new Date(new Date().setHours(0, 0, 0, 0)) ||
+                      date.getDay() === 0 ||
+                      date.getDay() === 6
+                    }
+                    className="mx-auto"
+                  />
+
+                  {/* Quick Date Selection */}
+                  <div className="mt-4 flex flex-wrap gap-2 justify-center">
+                    {[1, 2, 3, 4].map((day) => {
+                      const date = addDays(new Date(), day);
+                      if (date.getDay() === 0 || date.getDay() === 6)
+                        return null;
+
+                      return (
+                        <button
+                          key={day}
+                          type="button"
+                          onClick={() => setSelectedDate(date)}
+                          className={`py-2 px-4 rounded-full flex flex-col items-center transition-all ${
+                            selectedDate &&
+                            format(selectedDate, "yyyy-MM-dd") ===
+                              format(date, "yyyy-MM-dd")
+                              ? "bg-[#3a9efd] text-white"
+                              : "bg-[#e9f5ff] text-[#3a9efd] hover:bg-[#3a9efd]/20"
+                          }`}
+                        >
+                          <span className="text-xs font-medium">
+                            {format(date, "EEE")}
+                          </span>
+                          <span className="text-lg font-semibold">
+                            {format(date, "d")}
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Date confirmation */}
+                {selectedDate && (
+                  <div className="bg-[#f0f7fc] p-4 rounded-lg flex items-center gap-3">
+                    <CalendarIcon className="h-5 w-5 text-[#3a9efd]" />
+                    <p>
+                      Selected date:{" "}
+                      <span className="font-medium">
+                        {format(selectedDate, "EEEE")}
+                      </span>
+                      , {format(selectedDate, "PPP")}
+                    </p>
+                  </div>
+                )}
+
+                {/* Time slots */}
+                <div className="mt-6">
+                  <h4 className="font-medium text-lg text-[#2d405f] mb-3">
+                    Select a time
+                  </h4>
                   <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
                     {timeSlots.map((time) => (
                       <button
@@ -565,278 +457,191 @@ const Appointment = () => {
                       </button>
                     ))}
                   </div>
+                </div>
 
-                  {selectedDoctor &&
-                    selectedDate &&
-                    selectedTime &&
-                    !isSlotAvailable && (
-                      <div className="bg-red-50 border border-red-200 p-4 rounded-lg flex items-center gap-3 mt-4">
-                        <AlertCircle className="h-5 w-5 text-red-500 flex-shrink-0" />
-                        <p className="text-red-600 text-sm">
-                          This slot is already booked. Please choose another
-                          time.
-                        </p>
-                      </div>
-                    )}
+                {/* Time slot availability messages */}
+                {selectedDoctor &&
+                  selectedDate &&
+                  selectedTime &&
+                  !isSlotAvailable && (
+                    <div className="bg-red-50 border border-red-200 p-4 rounded-lg flex items-center gap-3 mt-4">
+                      <AlertCircle className="h-5 w-5 text-red-500 flex-shrink-0" />
+                      <p className="text-red-600 text-sm">
+                        This slot is already booked. Please choose another time.
+                      </p>
+                    </div>
+                  )}
 
-                  {selectedDoctor &&
-                    selectedDate &&
-                    selectedTime &&
-                    isSlotAvailable && (
-                      <div className="bg-green-50 border border-green-200 p-4 rounded-lg flex items-center gap-3 mt-4">
-                        <Check className="h-5 w-5 text-green-500 flex-shrink-0" />
-                        <p className="text-green-700 text-sm">
-                          This slot is available!
-                        </p>
-                      </div>
-                    )}
-                </motion.div>
-              )}
+                {selectedDoctor &&
+                  selectedDate &&
+                  selectedTime &&
+                  isSlotAvailable && (
+                    <div className="bg-green-50 border border-green-200 p-4 rounded-lg flex items-center gap-3 mt-4">
+                      <Check className="h-5 w-5 text-green-500 flex-shrink-0" />
+                      <p className="text-green-700 text-sm">
+                        This slot is available!
+                      </p>
+                    </div>
+                  )}
+              </div>
 
-              {currentStep === 4 && (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 0.4 }}
-                  className="space-y-5"
-                >
-                  <h3 className="text-xl font-semibold text-[#2d405f] mb-4">
-                    Enter your details and describe your problem
-                  </h3>
+              {/* Contact Info and Problem Description */}
+              <div className="space-y-5">
+                <h3 className="text-xl font-semibold text-[#2d405f] mb-4">
+                  Your details
+                </h3>
 
-                  {/* Contact fields for non-authenticated users */}
-                  {!isSignedIn && (
-                    <div className="space-y-4 mb-6 bg-[#f0f7fc] p-5 rounded-lg">
-                      <h4 className="font-medium text-[#2d405f]">
-                        Contact Information
-                      </h4>
+                {/* Contact fields for non-authenticated users */}
+                {!isSignedIn && (
+                  <div className="space-y-4 mb-6 bg-[#f0f7fc] p-5 rounded-lg">
+                    <h4 className="font-medium text-[#2d405f]">
+                      Contact Information
+                    </h4>
 
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                          <Label htmlFor="full_name" className="text-[#5a6a85]">
-                            Full Name *
-                          </Label>
-                          <input
-                            id="full_name"
-                            value={fullName}
-                            onChange={(e) => setFullName(e.target.value)}
-                            className="w-full p-3 mt-1 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-[#3a9efd]"
-                            placeholder="Enter your full name"
-                            required
-                          />
-                        </div>
-                        <div>
-                          <Label
-                            htmlFor="phoneNumber"
-                            className="text-[#5a6a85]"
-                          >
-                            Phone Number *
-                          </Label>
-                          <input
-                            id="phoneNumber"
-                            type="tel"
-                            value={phoneNumber}
-                            onChange={(e) => setPhoneNumber(e.target.value)}
-                            className="w-full p-3 mt-1 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-[#3a9efd]"
-                            placeholder="Enter your phone number"
-                            required
-                          />
-                        </div>
-                      </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
-                        <Label htmlFor="email" className="text-[#5a6a85]">
-                          Email *
+                        <Label htmlFor="full_name" className="text-[#5a6a85]">
+                          Full Name *
                         </Label>
                         <input
-                          id="email"
-                          type="email"
-                          value={email}
-                          onChange={(e) => setEmail(e.target.value)}
+                          id="full_name"
+                          value={fullName}
+                          onChange={(e) => setFullName(e.target.value)}
                           className="w-full p-3 mt-1 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-[#3a9efd]"
-                          placeholder="Enter your email address"
+                          placeholder="Enter your full name"
+                          required
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="phoneNumber" className="text-[#5a6a85]">
+                          Phone Number *
+                        </Label>
+                        <input
+                          id="phoneNumber"
+                          type="tel"
+                          value={phoneNumber}
+                          onChange={(e) => setPhoneNumber(e.target.value)}
+                          className="w-full p-3 mt-1 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-[#3a9efd]"
+                          placeholder="Enter your phone number"
                           required
                         />
                       </div>
                     </div>
-                  )}
-                  <div>
-                    <Label htmlFor="issue" className="text-[#5a6a85]">
-                      Describe your problem *
-                    </Label>
-                    <Textarea
-                      id="issue"
-                      value={issue}
-                      onChange={(e) => setIssue(e.target.value)}
-                      placeholder="Provide a brief description of your symptoms or concerns for which you want consultation."
-                      rows={8}
-                      className="min-h-[200px] resize-none border-slate-300 hover:border-[#3a9efd] focus:ring-1 focus:ring-[#3a9efd] rounded-lg"
-                      required
-                    />
+                    <div>
+                      <Label htmlFor="email" className="text-[#5a6a85]">
+                        Email *
+                      </Label>
+                      <input
+                        id="email"
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className="w-full p-3 mt-1 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-[#3a9efd]"
+                        placeholder="Enter your email address"
+                        required
+                      />
+                    </div>
                   </div>
-                  <div className="bg-[#f0f7fc] p-5 rounded-lg space-y-3">
-                    <h4 className="font-medium text-[#2d405f]">
-                      Your Appointment Summary
-                    </h4>
+                )}
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <div className="flex items-start gap-2">
-                        <UserRound className="h-5 w-5 text-[#3a9efd] mt-0.5" />
-                        <div>
-                          <p className="text-sm text-[#5a6a85]">Doctor</p>
-                          <p className="font-medium text-[#2d405f]">Dr. Prem</p>
-                        </div>
-                      </div>
+                {/* Problem description */}
+                <div>
+                  <Label htmlFor="issue" className="text-[#5a6a85]">
+                    Describe your problem *
+                  </Label>
+                  <Textarea
+                    id="issue"
+                    value={issue}
+                    onChange={(e) => setIssue(e.target.value)}
+                    placeholder="Provide a brief description of your symptoms or concerns for which you want consultation."
+                    rows={5}
+                    className="min-h-[120px] resize-none border-slate-300 hover:border-[#3a9efd] focus:ring-1 focus:ring-[#3a9efd] rounded-lg"
+                    required
+                  />
+                </div>
+              </div>
 
-                      <div className="flex items-start gap-2">
-                        <CalendarIcon className="h-5 w-5 text-[#3a9efd] mt-0.5" />
-                        <div>
-                          <p className="text-sm text-[#5a6a85]">Date</p>
-                          <p className="font-medium text-[#2d405f]">
-                            {selectedDate && format(selectedDate, "PPP")}
-                          </p>
-                        </div>
-                      </div>
+              {/* Appointment Summary */}
+              <div className="bg-[#f0f7fc] p-5 rounded-lg space-y-3">
+                <h4 className="font-medium text-[#2d405f]">
+                  Your Appointment Summary
+                </h4>
 
-                      <div className="flex items-start gap-2">
-                        <Clock className="h-5 w-5 text-[#3a9efd] mt-0.5" />
-                        <div>
-                          <p className="text-sm text-[#5a6a85]">Time</p>
-                          <p className="font-medium text-[#2d405f]">
-                            {selectedTime}
-                          </p>
-                        </div>
-                      </div>
-
-                      <div className="flex items-start gap-2">
-                        {visitType === "clinic" ? (
-                          <MapPin className="h-5 w-5 text-[#3a9efd] mt-0.5" />
-                        ) : (
-                          <Home className="h-5 w-5 text-[#3a9efd] mt-0.5" />
-                        )}
-                        <div>
-                          <p className="text-sm text-[#5a6a85]">Visit Type</p>
-                          <p className="font-medium text-[#2d405f]">
-                            {visitType === "clinic"
-                              ? "Meet at Clinic"
-                              : "Meet at Home"}
-                          </p>
-                        </div>
-                      </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="flex items-start gap-2">
+                    <UserRound className="h-5 w-5 text-[#3a9efd] mt-0.5" />
+                    <div>
+                      <p className="text-sm text-[#5a6a85]">Doctor</p>
+                      <p className="font-medium text-[#2d405f]">Dr. Prem</p>
                     </div>
                   </div>
 
-                  <button
-                    type="submit"
-                    style={{
-                      width: "100%",
-                      marginTop: "24px",
-                      height: "48px",
-                      fontSize: "16px",
-                      fontWeight: "500",
-                      backgroundColor: "#3a9efd",
-                      color: "#ffffff",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      gap: "8px",
-                      borderRadius: "6px",
-                      border: "none",
-                      boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
-                      cursor:
-                        isSubmitting ||
-                        !isSlotAvailable ||
-                        !selectedDate ||
-                        !selectedTime ||
-                        !issue.trim() ||
-                        (!isSignedIn &&
-                          (!fullName.trim() ||
-                            !email.trim() ||
-                            !phoneNumber.trim()))
-                          ? "not-allowed"
-                          : "pointer",
-                      opacity:
-                        isSubmitting ||
-                        !isSlotAvailable ||
-                        !selectedDate ||
-                        !selectedTime ||
-                        !issue.trim() ||
-                        (!isSignedIn &&
-                          (!fullName.trim() ||
-                            !email.trim() ||
-                            !phoneNumber.trim()))
-                          ? "0.7"
-                          : "1",
-                    }}
-                    disabled={
-                      isSubmitting ||
-                      !isSlotAvailable ||
-                      !selectedDate ||
-                      !selectedTime ||
-                      !issue.trim() ||
-                      (!isSignedIn &&
-                        (!fullName.trim() ||
-                          !email.trim() ||
-                          !phoneNumber.trim()))
-                    }
-                  >
-                    {isSubmitting ? (
-                      <span className="flex items-center gap-2">
-                        <span className="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full"></span>
-                        Processing...
-                      </span>
-                    ) : (
-                      <span className="flex items-center gap-2">
-                        Book Appointment
-                        <ArrowRight className="h-5 w-5" />
-                      </span>
-                    )}
-                  </button>
-                </motion.div>
-              )}
+                  <div className="flex items-start gap-2">
+                    <CalendarIcon className="h-5 w-5 text-[#3a9efd] mt-0.5" />
+                    <div>
+                      <p className="text-sm text-[#5a6a85]">Date</p>
+                      <p className="font-medium text-[#2d405f]">
+                        {selectedDate
+                          ? format(selectedDate, "PPP")
+                          : "Not selected"}
+                      </p>
+                    </div>
+                  </div>
 
-              {/* Navigation Buttons */}
-              <div
-                className={`flex justify-between pt-5 ${
-                  currentStep === 4 ? "hidden" : "block"
-                }`}
-              >
-                <button
-                  type="button"
-                  onClick={prevStep}
-                  style={{
-                    padding: "10px 20px",
-                    borderRadius: "6px",
-                    border: "1px solid #d1d5db",
-                    backgroundColor: "#ffffff",
-                    color: "#374151",
-                    fontWeight: "500",
-                    visibility: currentStep === 1 ? "hidden" : "visible",
-                    cursor: "pointer",
-                  }}
-                >
-                  Back
-                </button>
-                <button
-                  type="button"
-                  onClick={nextStep}
-                  disabled={!canProceedToNextStep(currentStep)}
-                  style={{
-                    padding: "10px 20px",
-                    borderRadius: "6px",
-                    backgroundColor: "#3a9efd",
-                    color: "#ffffff",
-                    fontWeight: "500",
-                    border: "none",
-                    boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
-                    cursor: canProceedToNextStep(currentStep)
-                      ? "pointer"
-                      : "not-allowed",
-                    opacity: canProceedToNextStep(currentStep) ? "1" : "0.7",
-                  }}
-                >
-                  Next
-                </button>
+                  <div className="flex items-start gap-2">
+                    <Clock className="h-5 w-5 text-[#3a9efd] mt-0.5" />
+                    <div>
+                      <p className="text-sm text-[#5a6a85]">Time</p>
+                      <p className="font-medium text-[#2d405f]">
+                        {selectedTime || "Not selected"}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-2">
+                    {visitType === "clinic" ? (
+                      <MapPin className="h-5 w-5 text-[#3a9efd] mt-0.5" />
+                    ) : (
+                      <Home className="h-5 w-5 text-[#3a9efd] mt-0.5" />
+                    )}
+                    <div>
+                      <p className="text-sm text-[#5a6a85]">Visit Type</p>
+                      <p className="font-medium text-[#2d405f]">
+                        {visitType === "clinic"
+                          ? "Meet at Clinic"
+                          : "Meet at Home"}
+                      </p>
+                    </div>
+                  </div>
+                </div>
               </div>
+
+              {/* Submit Button */}
+              <button
+                type="submit"
+                className="w-full bg-[#3a9efd] text-white rounded-md py-3 flex items-center justify-center gap-2 hover:bg-[#2e8fe8] transition-colors font-medium disabled:opacity-70 disabled:cursor-not-allowed"
+                disabled={
+                  isSubmitting ||
+                  !isSlotAvailable ||
+                  !selectedDate ||
+                  !selectedTime ||
+                  !issue.trim() ||
+                  (!isSignedIn &&
+                    (!fullName.trim() || !email.trim() || !phoneNumber.trim()))
+                }
+              >
+                {isSubmitting ? (
+                  <span className="flex items-center gap-2">
+                    <span className="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full"></span>
+                    Processing...
+                  </span>
+                ) : (
+                  <span className="flex items-center gap-2">
+                    Book Appointment
+                    <ArrowRight className="h-5 w-5" />
+                  </span>
+                )}
+              </button>
             </form>
           </CardContent>
         </Card>

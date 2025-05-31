@@ -29,47 +29,47 @@ import { useAuth } from "@/contexts/AuthContext";
 import { authAxios } from "@/lib/authUtils";
 import { motion } from "framer-motion";
 
-// Add custom CSS for the booking button
-const buttonStyles = `
-  .booking-button {
-    background-color: #ff3333 !important;
-    color: white !important;
-    font-weight: bold !important;
-    font-size: 18px !important;
-    padding: 16px 30px !important;
-    border-radius: 8px !important;
-    border: 2px solid #ff3333 !important;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2) !important;
-    margin-top: 20px !important;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3) !important;
-    position: relative !important;
-    z-index: 10 !important;
-  }
-  
-  .booking-button:hover {
-    background-color: #e60000 !important;
-    transform: translateY(-2px) !important;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3) !important;
-  }
-  
-  .booking-button:active {
-    transform: translateY(1px) !important;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2) !important;
-  }
-  
-  .booking-button:disabled {
-    background-color: #ff9999 !important;
-    border-color: #ff9999 !important;
-    color: white !important;
-    cursor: not-allowed !important;
-    opacity: 0.8 !important;
-  }
-  
-  .booking-button span {
-    color: white !important;
-    font-weight: bold !important;
-  }
-`;
+// // Add custom CSS for the booking button
+// const buttonStyles = `
+//   .booking-button {
+//     background-color: #ff3333 !important;
+//     color: white !important;
+//     font-weight: bold !important;
+//     font-size: 18px !important;
+//     padding: 16px 30px !important;
+//     border-radius: 8px !important;
+//     border: 2px solid #ff3333 !important;
+//     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2) !important;
+//     margin-top: 20px !important;
+//     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3) !important;
+//     position: relative !important;
+//     z-index: 10 !important;
+//   }
+
+//   .booking-button:hover {
+//     background-color: #e60000 !important;
+//     transform: translateY(-2px) !important;
+//     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3) !important;
+//   }
+
+//   .booking-button:active {
+//     transform: translateY(1px) !important;
+//     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2) !important;
+//   }
+
+//   .booking-button:disabled {
+//     background-color: #ff9999 !important;
+//     border-color: #ff9999 !important;
+//     color: white !important;
+//     cursor: not-allowed !important;
+//     opacity: 0.8 !important;
+//   }
+
+//   .booking-button span {
+//     color: white !important;
+//     font-weight: bold !important;
+//   }
+// `;
 
 // Define the Doctor interface
 interface Doctor {

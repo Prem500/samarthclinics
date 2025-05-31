@@ -94,12 +94,11 @@ const ServicesSection: React.FC = () => {
         </div>
 
         {/* Specialized Service Categories */}
-        <div className="mt-5 pt-5 border-top">
+        {/* <div className="mt-5 pt-5 border-top">
           <h3 className="text-center mb-5 fw-bold" style={{ color: "#2d405f" }}>
             What We Treat
           </h3>
 
-          {/* Orthopedic Physiotherapy Category */}
           <div className="service-category mb-5">
             <h4
               className="category-title mb-4 pb-2"
@@ -136,12 +135,7 @@ const ServicesSection: React.FC = () => {
                 description="Specialized treatments for bone, muscle, and joint injuries and conditions that improve your mobility and quality of life."
                 delay={0.1}
               />
-              {/* <ServiceCard
-                imageUrl="images/orthopedic-2.png"
-                title="Post-Surgical Rehabilitation"
-                description="Specialized post-surgery care ensuring rapid recovery and optimal function."
-                delay={0.2}
-              /> */}
+
               <ServiceCard
                 imageUrl="images/orthopedic-3.png"
                 title="Shoulder Rehabilitation"
@@ -151,53 +145,8 @@ const ServicesSection: React.FC = () => {
             </div>
           </div>
 
-          {/* Neurological Physiotherapy Category
-          <div className="service-category mb-5">
-            <h4
-              className="category-title mb-4 pb-2"
-              style={{
-                borderBottom: "2px solid #e9f5ff",
-                paddingBottom: "10px",
-                color: "#3a9efd",
-                fontSize: "1.3rem",
-                fontWeight: "600",
-              }}
-            >
-              <div className="d-flex align-items-center">
-                <span
-                  className="category-icon me-3"
-                  style={{
-                    backgroundColor: "#e9f5ff",
-                    height: "40px",
-                    width: "40px",
-                    borderRadius: "50%",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <i className="fa fa-brain" style={{ color: "#3a9efd" }}></i>
-                </span>
-                Neurological Physiotherapy
-              </div>
-            </h4>
-            <div className="row g-4">
-              <ServiceCard
-                imageUrl="images/neurological-1.png"
-                title="Stroke Rehabilitation"
-                description="Specially designed treatments and exercises to restore movement and functional abilities after stroke."
-                delay={0.1}
-              />
-              <ServiceCard
-                imageUrl="images/neurological-2.png"
-                title="Neurological Condition Management"
-                description="Support and management for Parkinson's, Multiple Sclerosis and other neurological conditions."
-                delay={0.2}
-              />
-            </div>
-          </div> */}
 
-          {/* Rehabilitation Category */}
+
           <div className="service-category mb-5">
             <h4
               className="category-title mb-4 pb-2"
@@ -246,7 +195,6 @@ const ServicesSection: React.FC = () => {
             </div>
           </div>
 
-          {/* Pediatric Physiotherapy Category */}
           <div className="service-category mb-5">
             <h4
               className="category-title mb-4 pb-2"
@@ -298,7 +246,6 @@ const ServicesSection: React.FC = () => {
             </div>
           </div>
 
-          {/* Sports Physiotherapy Category */}
           <div className="service-category mb-5">
             <h4
               className="category-title mb-4 pb-2"
@@ -349,7 +296,7 @@ const ServicesSection: React.FC = () => {
               />
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
     </section>
   );

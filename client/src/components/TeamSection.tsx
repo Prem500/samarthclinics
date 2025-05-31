@@ -12,8 +12,7 @@ const TeamSection: React.FC = () => {
             Our qualified medical professionals are dedicated to providing the
             highest quality care
           </p>
-        </div>
-
+        </div>{" "}
         <Row className="g-4 justify-content-center">
           <Col md={8} lg={6} xl={4} data-aos="zoom-in" data-aos-delay="100">
             <div className="card team-card h-100 border-0 shadow-sm">
@@ -22,13 +21,14 @@ const TeamSection: React.FC = () => {
                   className="team-image-container mb-4 mx-auto position-relative"
                   style={{ maxWidth: "250px" }}
                 >
+                  {" "}
                   <img
-                    src="/images/doctor.png"
-                    alt="Team Member"
+                    src="/images/doctor-1.jpg"
+                    alt="Dr. Prem Prakash"
                     width={250}
                     height={250}
-                    className="img-fluid rounded-circle"
-                    style={{ objectFit: "cover" }}
+                    className="img-fluid"
+                    style={{ objectFit: "contain" }}
                   />
                 </div>
                 <h3 className="h4 fw-bold mb-2">Dr. Prem Prakash</h3>
@@ -43,7 +43,33 @@ const TeamSection: React.FC = () => {
             </div>
           </Col>
 
-          {/* You can add more team members in the same format if needed */}
+          <Col md={8} lg={6} xl={4} data-aos="zoom-in" data-aos-delay="200">
+            <div className="card team-card h-100 border-0 shadow-sm">
+              <div className="text-center p-4">
+                <div
+                  className="team-image-container mb-4 mx-auto position-relative"
+                  style={{ maxWidth: "250px" }}
+                >
+                  {" "}
+                  <img
+                    src="/images/doctor-2.jpg"
+                    alt="Dr. Srikrishna"
+                    width={250}
+                    height={250}
+                    className="img-fluid"
+                    style={{ objectFit: "contain" }}
+                  />
+                </div>
+                <h3 className="h4 fw-bold mb-2">Dr. Nikitha Chouhan</h3>
+                <p className="text-muted mb-3">Physiotherapist</p>
+                <p className="small text-muted">
+                  Dr Nikita Chauhan specialized in post-surgical and orthopedic
+                  rehabilitation, pediatric and geriatric rehabilitation and
+                  patient education and counselling.
+                </p>
+              </div>
+            </div>
+          </Col>
         </Row>
       </Container>
 

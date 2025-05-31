@@ -5,10 +5,10 @@ import "aos/dist/aos.css";
 import TopBar from "@/components/TopBar";
 import HeroSection from "@/components/HeroSection";
 import QuickInfoSection from "@/components/QuickInfoSection";
-import ServicesSection from "@/components/ServicesSection";
 import TeamSection from "@/components/TeamSection";
 import WhyChooseUsSection from "@/components/WhyChooseUsSection";
 import TestimonialsSection from "@/components/TestimonialsSection";
+import VisitUsSection from "@/components/VisitUsSection";
 // import CTASection from "@/components/CTASection";
 import Footer from "@/components/Footer";
 import Map from "@/components/Map";
@@ -53,41 +53,27 @@ const Home: React.FC = () => {
     <div>
       {/* Header */}
       <TopBar />
-
       {/* Hero Section */}
-      <HeroSection />
-
-      {/* Conditionally render Appointments section */}
+      <HeroSection /> {/* Conditionally render Appointments section */}
       {shouldShowAppointments && (
         <div ref={appointmentsRef} id="appointments">
           <Appointments homepage={true} />
         </div>
       )}
-
-      {/* Services Section */}
-      <ServicesSection />
-
+      {/* Visit Us Section - specialized treatments */}
+      <VisitUsSection />
       {/* Team Section */}
       <TeamSection />
-
       {/* Why Choose Us Section */}
       <WhyChooseUsSection />
-
       {/* Testimonials Section */}
       <TestimonialsSection />
-
-      {/* CTA Section */}
-      {/* <CTASection /> */}
-
       {/* Map Section */}
       <Map />
-
       {/* Quick Info Section */}
       <QuickInfoSection />
-
       {/* Footer */}
       <Footer />
-
       {/* WhatsApp Sticky Widget */}
       <a
         href="https://wa.me/+917004119766?text=Hello Doctor, I would like to get treatment from you!"

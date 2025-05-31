@@ -9,6 +9,7 @@
 @import url("./css/bootstrap/bootstrap-reboot.css");
 @import url("./css/bootstrap/bootstrap-grid.css");
 @import url("./css/bootstrap/bootstrap.css");
+@import url("./css/custom-buttons.css"); /* Added custom button styles */
 
 @import url("./scss/style.scss");
 

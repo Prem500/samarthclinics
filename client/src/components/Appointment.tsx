@@ -29,6 +29,48 @@ import { useAuth } from "@/contexts/AuthContext";
 import { authAxios } from "@/lib/authUtils";
 import { motion } from "framer-motion";
 
+// Add custom CSS for the booking button
+const buttonStyles = `
+  .booking-button {
+    background-color: #ff3333 !important;
+    color: white !important;
+    font-weight: bold !important;
+    font-size: 18px !important;
+    padding: 16px 30px !important;
+    border-radius: 8px !important;
+    border: 2px solid #ff3333 !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2) !important;
+    margin-top: 20px !important;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3) !important;
+    position: relative !important;
+    z-index: 10 !important;
+  }
+  
+  .booking-button:hover {
+    background-color: #e60000 !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3) !important;
+  }
+  
+  .booking-button:active {
+    transform: translateY(1px) !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2) !important;
+  }
+  
+  .booking-button:disabled {
+    background-color: #ff9999 !important;
+    border-color: #ff9999 !important;
+    color: white !important;
+    cursor: not-allowed !important;
+    opacity: 0.8 !important;
+  }
+  
+  .booking-button span {
+    color: white !important;
+    font-weight: bold !important;
+  }
+`;
+
 // Define the Doctor interface
 interface Doctor {
   _id: string;
@@ -367,7 +409,6 @@ const Appointment = () => {
                   </div>
                 </div>
               </div>
-
               {/* Date and Time Selection */}
               <div className="space-y-6">
                 <h3 className="text-xl font-semibold text-[#2d405f] mb-4">
@@ -484,7 +525,6 @@ const Appointment = () => {
                     </div>
                   )}
               </div>
-
               {/* Contact Info and Problem Description */}
               <div className="space-y-5">
                 <h3 className="text-xl font-semibold text-[#2d405f] mb-4">
@@ -560,7 +600,6 @@ const Appointment = () => {
                   />
                 </div>
               </div>
-
               {/* Appointment Summary */}
               <div className="bg-[#f0f7fc] p-5 rounded-lg space-y-3">
                 <h4 className="font-medium text-[#2d405f]">
@@ -614,12 +653,30 @@ const Appointment = () => {
                     </div>
                   </div>
                 </div>
-              </div>
-
+              </div>{" "}
               {/* Submit Button */}
               <button
                 type="submit"
-                className="w-full bg-[#3a9efd] text-white rounded-md py-3 flex items-center justify-center gap-2 hover:bg-[#2e8fe8] transition-colors font-medium disabled:opacity-70 disabled:cursor-not-allowed"
+                style={{
+                  backgroundColor: "#ff3333",
+                  color: "white",
+                  fontWeight: "bold",
+                  fontSize: "18px",
+                  padding: "16px 30px",
+                  borderRadius: "8px",
+                  border: "2px solid #ff3333",
+                  boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+                  marginTop: "20px",
+                  textShadow: "1px 1px 2px rgba(0, 0, 0, 0.3)",
+                  position: "relative",
+                  zIndex: "10",
+                  width: "100%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: "10px",
+                  transition: "all 0.3s ease",
+                }}
                 disabled={
                   isSubmitting ||
                   !isSlotAvailable ||
@@ -631,14 +688,29 @@ const Appointment = () => {
                 }
               >
                 {isSubmitting ? (
-                  <span className="flex items-center gap-2">
-                    <span className="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full"></span>
+                  <span
+                    style={{
+                      color: "white",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "10px",
+                    }}
+                  >
+                    <span className="animate-spin h-6 w-6 border-2 border-white border-t-transparent rounded-full"></span>
                     Processing...
                   </span>
                 ) : (
-                  <span className="flex items-center gap-2">
+                  <span
+                    style={{
+                      color: "white",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "10px",
+                      fontSize: "18px",
+                    }}
+                  >
                     Book Appointment
-                    <ArrowRight className="h-5 w-5" />
+                    <ArrowRight className="h-6 w-6" />
                   </span>
                 )}
               </button>

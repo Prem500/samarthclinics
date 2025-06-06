@@ -22,7 +22,7 @@ import {
   Stethoscope,
   ArrowRight,
 } from "lucide-react";
-import { format, addDays, isWeekend } from "date-fns";
+import { format, addDays } from "date-fns";
 import { toast } from "sonner";
 import { useNavigate } from "react-router";
 import { useAuth } from "@/contexts/AuthContext";
@@ -63,12 +63,20 @@ const Appointment = () => {
     "10:30",
     "11:00",
     "11:30",
+    "12:00",
+    "12:30",
     "14:00",
     "14:30",
     "15:00",
     "15:30",
     "16:00",
     "16:30",
+    "17:00",
+    "17:30",
+    "18:00",
+    "18:30",
+    "19:00",
+    "19:30",
   ];
 
   // Set initial values and fetch necessary data
@@ -95,14 +103,11 @@ const Appointment = () => {
         console.error("Error fetching doctors:", error);
       }
     };
-
     fetchDoctors();
 
-    // Set default date to tomorrow if it's not a weekend
+    // Set default date to tomorrow
     let nextDay = addDays(new Date(), 1);
-    while (isWeekend(nextDay)) {
-      nextDay = addDays(nextDay, 1);
-    }
+    // Removed weekend check to allow selecting weekend days as default
     setSelectedDate(nextDay);
 
     // If user is signed in, pre-fill user details
@@ -270,7 +275,9 @@ const Appointment = () => {
         >
           <Alert className="mb-4 sm:mb-6 bg-red-50 border-red-200 shadow-sm">
             <AlertCircle className="h-4 w-4 sm:h-5 sm:w-5 text-red-600" />
-            <AlertTitle className="text-red-800 font-medium text-sm sm:text-base">Error</AlertTitle>
+            <AlertTitle className="text-red-800 font-medium text-sm sm:text-base">
+              Error
+            </AlertTitle>
             <AlertDescription className="text-red-700 text-xs sm:text-sm">
               {errorMessage}
             </AlertDescription>
@@ -375,28 +382,26 @@ const Appointment = () => {
 
                 {/* Calendar */}
                 <div className="border-2 rounded-xl p-2 sm:p-4 md:p-6 bg-white overflow-auto">
+                  {" "}
                   <div className="max-w-full overflow-auto">
                     <Calendar
                       mode="single"
                       selected={selectedDate}
                       onSelect={setSelectedDate}
                       initialFocus
-                      disabled={(date) =>
-                        date < new Date(new Date().setHours(0, 0, 0, 0)) ||
-                        date.getDay() === 0 ||
-                        date.getDay() === 6
+                      disabled={
+                        (date) =>
+                          date < new Date(new Date().setHours(0, 0, 0, 0))
+                        // Removed weekend restrictions to allow booking on Saturday and Sunday
                       }
                       className="mx-auto scale-[0.85] sm:scale-100"
                     />
-                  </div>
-
+                  </div>{" "}
                   {/* Quick Date Selection */}
                   <div className="mt-3 sm:mt-4 flex flex-wrap gap-1 sm:gap-2 justify-center">
                     {[1, 2, 3, 4].map((day) => {
                       const date = addDays(new Date(), day);
-                      if (date.getDay() === 0 || date.getDay() === 6)
-                        return null;
-
+                      // Removed weekend check to allow selecting weekend days
                       return (
                         <button
                           key={day}
@@ -454,7 +459,9 @@ const Appointment = () => {
                         onClick={() => setSelectedTime(time)}
                       >
                         <Clock className="h-3 w-3 sm:h-4 sm:w-4" />
-                        <span className="font-medium text-xs sm:text-sm">{time}</span>
+                        <span className="font-medium text-xs sm:text-sm">
+                          {time}
+                        </span>
                       </button>
                     ))}
                   </div>
@@ -500,7 +507,10 @@ const Appointment = () => {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
                       <div>
-                        <Label htmlFor="full_name" className="text-[#5a6a85] text-xs sm:text-sm">
+                        <Label
+                          htmlFor="full_name"
+                          className="text-[#5a6a85] text-xs sm:text-sm"
+                        >
                           Full Name *
                         </Label>
                         <input
@@ -513,7 +523,10 @@ const Appointment = () => {
                         />
                       </div>
                       <div>
-                        <Label htmlFor="phoneNumber" className="text-[#5a6a85] text-xs sm:text-sm">
+                        <Label
+                          htmlFor="phoneNumber"
+                          className="text-[#5a6a85] text-xs sm:text-sm"
+                        >
                           Phone Number *
                         </Label>
                         <input
@@ -528,7 +541,10 @@ const Appointment = () => {
                       </div>
                     </div>
                     <div>
-                      <Label htmlFor="email" className="text-[#5a6a85] text-xs sm:text-sm">
+                      <Label
+                        htmlFor="email"
+                        className="text-[#5a6a85] text-xs sm:text-sm"
+                      >
                         Email *
                       </Label>
                       <input
@@ -546,7 +562,10 @@ const Appointment = () => {
 
                 {/* Problem description */}
                 <div>
-                  <Label htmlFor="issue" className="text-[#5a6a85] text-xs sm:text-sm">
+                  <Label
+                    htmlFor="issue"
+                    className="text-[#5a6a85] text-xs sm:text-sm"
+                  >
                     Describe your problem *
                   </Label>
                   <Textarea

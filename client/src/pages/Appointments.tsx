@@ -95,11 +95,11 @@ const Appointments = ({ homepage = false }: { homepage?: boolean }) => {
   // Show loading state
   if (isLoading) {
     return (
-      <section id="appointments" className="py-5 bg-gray-50">
-        <div className="container text-center">
-          <div className="flex justify-center items-center p-8">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-            <p className="ml-4 text-lg text-gray-600">
+      <section id="appointments" className="py-3 sm:py-5 bg-gray-50">
+        <div className="container text-center px-3">
+          <div className="flex justify-center items-center p-4 sm:p-8">
+            <div className="animate-spin rounded-full h-8 w-8 sm:h-12 sm:w-12 border-b-2 border-primary"></div>
+            <p className="ml-3 sm:ml-4 text-base sm:text-lg text-gray-600">
               Loading your appointments...
             </p>
           </div>
@@ -111,13 +111,13 @@ const Appointments = ({ homepage = false }: { homepage?: boolean }) => {
   // Show error state if there was a problem
   if (error) {
     return (
-      <section id="appointments" className="py-5 bg-gray-50">
-        <div className="container">
-          <div className="max-w-xl mx-auto p-6 bg-white rounded-lg shadow-md">
-            <div className="text-center mb-4">
+      <section id="appointments" className="py-3 sm:py-5 bg-gray-50">
+        <div className="container px-3">
+          <div className="max-w-xl mx-auto p-4 sm:p-6 bg-white rounded-lg shadow-md">
+            <div className="text-center mb-3 sm:mb-4">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="h-16 w-16 text-red-500 mx-auto"
+                className="h-12 w-12 sm:h-16 sm:w-16 text-red-500 mx-auto"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -129,15 +129,17 @@ const Appointments = ({ homepage = false }: { homepage?: boolean }) => {
                   d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                 />
               </svg>
-              <p className="text-red-500 text-lg mt-4">{error}</p>
+              <p className="text-red-500 text-base sm:text-lg mt-3 sm:mt-4">
+                {error}
+              </p>
             </div>
             <button
               onClick={() => fetchRole()}
-              className="w-full py-3 px-4 bg-primary text-white rounded hover:bg-primary-dark transition duration-300 flex items-center justify-center"
+              className="w-full py-2 sm:py-3 px-4 bg-primary text-white rounded hover:bg-primary-dark transition duration-300 flex items-center justify-center text-sm sm:text-base"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5 mr-2"
+                className="h-4 w-4 sm:h-5 sm:w-5 mr-2"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -160,43 +162,16 @@ const Appointments = ({ homepage = false }: { homepage?: boolean }) => {
   return (
     <section
       id="appointments"
-      className={`py-10 ${homepage ? "bg-gray-50" : ""}`}
+      className={`py-5 sm:py-10 ${homepage ? "bg-gray-50" : ""}`}
     >
-      <div className="container">
-        {/* <div className="text-center mb-8"> */}
-        {/* <h2 className="section-title text-3xl font-bold text-gray-800 mb-2">
-            {homepage ? "Book an Appointment" : "Your Appointments"}
-          </h2> */}
-        {/* <div className="w-24 h-1 bg-primary mx-auto mb-4"></div> */}
-        {/* <p className="section-subtitle text-gray-600 max-w-xl mx-auto">
-            {homepage
-              ? "Schedule your next consultation with our expert physiotherapists"
-              : "View, schedule and manage your appointments with our clinic"}
-          </p> */}
-        {/* </div> */}
-
-        {/* {homepage && !userId && (
-          // <div className="max-w-md mx-auto mb-6 p-4 bg-blue-50 border-l-4 border-blue-500 rounded-md">
-          //   <div className="flex">
-          //     <div className="flex-shrink-0">
-          //       <svg
-          //         className="h-5 w-5 text-blue-500"
-          //         xmlns="http://www.w3.org/2000/svg"
-          //         viewBox="0 0 20 20"
-          //         fill="currentColor"
-          //       >
-          //         <path
-          //           fillRule="evenodd"
-          //           d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
-          //           clipRule="evenodd"
-          //         />
-          //       </svg>
-          //     </div>
-          //   </div>
-          // </div>
-        )} */}
-
-        <div className={homepage ? "bg-white rounded-lg shadow-md p-6" : ""}>
+      <div className="container px-3">
+        <div
+          className={
+            homepage
+              ? "bg-white rounded-lg shadow-md p-2 sm:p-6 overflow-hidden"
+              : ""
+          }
+        >
           {homepage || role === "user" || role === null ? (
             <Appointment />
           ) : (

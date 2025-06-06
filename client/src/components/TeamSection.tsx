@@ -60,8 +60,8 @@ const TeamSection: React.FC = () => {
                     style={{ objectFit: "contain" }}
                   />
                 </div>
-                <h3 className="h4 fw-bold mb-2">Dr. Nikitha Chouhan</h3>
-                <p className="text-muted mb-3">Physiotherapist</p>
+                <h3 className="h4 fw-bold mb-2">Dr. Nikita Chauhan</h3>
+                <p className="text-muted mb-3">Consultant Physiotherapist</p>
                 <p className="small text-muted">
                   Dr Nikita Chauhan specialized in post-surgical and orthopedic
                   rehabilitation, pediatric and geriatric rehabilitation and

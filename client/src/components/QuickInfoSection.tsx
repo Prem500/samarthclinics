@@ -288,7 +288,7 @@ const QuickInfoSection: React.FC = () => {
                 </div>
               </div>
               <span className="excerpt mt-2" style={styles.excerpt}>
-                Mon-Sun 10:00 AM - 06:00 PM
+                Mon-Sun 10:00 AM - 08:00 PM
               </span>
               <a
                 href="#appointments"

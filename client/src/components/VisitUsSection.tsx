@@ -44,14 +44,14 @@ const VisitUsSection: React.FC = () => {
     {
       id: "post-operative",
       title: "Post Operative Management",
-      image: "images/rehabilation-1.png",
+      image: "images/po.png",
       description:
         "Personalized rehabilitation programs for optimal post-surgery recovery.",
     },
     {
       id: "neuropathic",
       title: "Neuropathic Pain Management",
-      image: "images/neurological-2.png",
+      image: "images/neurological-1.png",
       description:
         "Advanced techniques to alleviate nerve pain and related symptoms.",
     },
@@ -65,21 +65,21 @@ const VisitUsSection: React.FC = () => {
     {
       id: "stroke",
       title: "Stroke & Spinal Cord Injury Rehabilitation",
-      image: "images/neurological-1.png",
+      image: "images/sp.png",
       description:
         "Specialized rehabilitation services for neurological recovery and function improvement.",
     },
     {
       id: "pediatrics",
       title: "Pediatric Physiotherapy Rehabilitation",
-      image: "images/pediatric-1.png",
+      image: "images/pediatric-3.png",
       description:
         "Child-focused therapies addressing developmental and neurological conditions.",
     },
     {
       id: "sports",
       title: "Sports Physiotherapy Management",
-      image: "images/sports-1.png",
+      image: "images/sports-2.png",
       description:
         "Performance enhancement and injury rehabilitation for athletes and active individuals.",
     },

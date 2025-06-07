@@ -90,11 +90,11 @@ export const CreateBooking = async (req, res) => {
     date,
     time,
     doctor,
-    issue,
-    visitType,
     email,
     phoneNumber,
     full_name,
+    age,
+    address,
     user,
   } = req.body;
 
@@ -113,10 +113,12 @@ export const CreateBooking = async (req, res) => {
         userId = existingUser._id;
 
         // Update user info if new data is provided
-        if (full_name || phoneNumber) {
+        if (full_name || phoneNumber || age || address) {
           const updateData = {};
           if (full_name) updateData.full_name = full_name;
           if (phoneNumber) updateData.phoneNumber = phoneNumber;
+          if (age) updateData.age = age;
+          if (address) updateData.address = address;
 
           await User.findByIdAndUpdate(userId, updateData);
         }
@@ -126,6 +128,8 @@ export const CreateBooking = async (req, res) => {
           email,
           full_name,
           phoneNumber,
+          age,
+          address,
           role: "user", // Default role
         });
 
@@ -142,8 +146,6 @@ export const CreateBooking = async (req, res) => {
       time,
       user: userId,
       doctor,
-      issue,
-      visitType,
     });
 
     await newBooking.save();

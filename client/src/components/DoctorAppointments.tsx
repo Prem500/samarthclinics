@@ -56,6 +56,8 @@ interface UserDetails {
   email: string;
   phoneNumber?: string;
   full_name: string;
+  age?: number;
+  address?: string;
 }
 
 interface Booking {
@@ -64,7 +66,6 @@ interface Booking {
   date: string;
   time: string;
   user: UserDetails; // This is now an object, not just an ID
-  issue: string;
   status: "scheduled" | "completed" | "cancelled" | "pending" | "confirmed";
   createdAt: string;
   updatedAt: string;
@@ -184,7 +185,6 @@ const DoctorAppointments = () => {
           booking.status === "completed" || booking.status === "confirmed"
       );
     }
-
     if (searchTerm) {
       const term = searchTerm.toLowerCase();
       filtered = filtered.filter((booking) => {
@@ -193,7 +193,7 @@ const DoctorAppointments = () => {
           booking.user?.full_name?.toLowerCase().includes(term) ||
           booking.user?.phoneNumber?.includes(term) ||
           booking.user?.email?.toLowerCase().includes(term) ||
-          booking.issue?.toLowerCase().includes(term)
+          booking.user?.address?.toLowerCase().includes(term)
         );
       });
     }
@@ -312,7 +312,11 @@ const DoctorAppointments = () => {
 
           <Popover>
             <PopoverTrigger asChild>
-              <Button variant="outline" className="w-full sm:w-auto">
+              {" "}
+              <Button
+                variant="outline"
+                className="w-full sm:w-auto universal-button-outline"
+              >
                 <Filter className="mr-2 h-4 w-4" />
                 {dateFilter ? format(dateFilter, "PPP") : "Filter by date"}
               </Button>
@@ -354,12 +358,14 @@ const DoctorAppointments = () => {
       ) : (
         <div className="overflow-x-auto">
           <Table>
+            {" "}
             <TableHeader>
               <TableRow>
                 <TableHead>Patient</TableHead>
                 <TableHead>Date & Time</TableHead>
                 <TableHead>Contact</TableHead>
-                <TableHead>Issue</TableHead>
+                <TableHead>Age</TableHead>
+                <TableHead>Address</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
               </TableRow>
@@ -399,11 +405,23 @@ const DoctorAppointments = () => {
                           {booking.user?.email || "N/A"}
                         </span>
                       </div>
+                    </TableCell>{" "}
+                    <TableCell>
+                      <div className="text-sm">
+                        {booking.user?.age || "N/A"}
+                      </div>
                     </TableCell>
                     <TableCell>
-                      <div className="max-w-xs truncate" title={booking.issue}>
-                        {booking.issue?.substring(0, 50) || "No description"}
-                        {booking.issue?.length > 50 ? "..." : ""}
+                      <div
+                        className="max-w-xs truncate"
+                        title={booking.user?.address}
+                      >
+                        {booking.user?.address?.substring(0, 50) ||
+                          "No address provided"}
+                        {booking.user?.address &&
+                        booking.user.address.length > 50
+                          ? "..."
+                          : ""}
                       </div>
                     </TableCell>
                     <TableCell>{getStatusBadge(booking.status)}</TableCell>
@@ -455,8 +473,7 @@ const DoctorAppointments = () => {
                   value={selectedBooking.user?.full_name || "Unknown Patient"}
                   disabled
                 />
-              </div>
-
+              </div>{" "}
               <div>
                 <Label>Status</Label>
                 <Select
@@ -478,18 +495,18 @@ const DoctorAppointments = () => {
                   </SelectContent>
                 </Select>
               </div>
-
               <div>
-                <Label>Notes about patient issue</Label>
-                <textarea
-                  className="w-full min-h-[80px] p-2 border rounded-md"
-                  value={selectedBooking.issue}
-                  onChange={(e) =>
-                    setSelectedBooking({
-                      ...selectedBooking,
-                      issue: e.target.value,
-                    })
-                  }
+                <Label>Patient Age</Label>
+                <Input
+                  value={selectedBooking.user?.age?.toString() || "N/A"}
+                  disabled
+                />
+              </div>
+              <div>
+                <Label>Patient Address</Label>
+                <Input
+                  value={selectedBooking.user?.address || "No address provided"}
+                  disabled
                 />
               </div>
             </div>
@@ -522,14 +539,16 @@ const DoctorAppointments = () => {
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="mx-auto w-full">
+            {" "}
             <Button
               variant="outline"
               onClick={() => setIsConfirmDialogOpen(false)}
+              className="universal-button-outline"
             >
               Cancel
             </Button>
             <Button
-              className="text-red-500 bg-gray-100"
+              className="bg-red-500 text-white hover:bg-red-600"
               onClick={() =>
                 selectedBooking && handleDeleteBooking(selectedBooking._id)
               }

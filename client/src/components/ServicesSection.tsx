@@ -364,15 +364,12 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
               transition: "opacity 0.3s ease",
             }}
           >
+            {" "}
             <motion.a
               href="#"
-              className="btn btn-light btn-sm rounded-pill px-3"
+              className="btn btn-light btn-sm rounded-pill px-3 universal-button-outline"
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
-              style={{
-                fontWeight: "500",
-                boxShadow: "0 3px 10px rgba(0,0,0,0.1)",
-              }}
             >
               Learn More
             </motion.a>

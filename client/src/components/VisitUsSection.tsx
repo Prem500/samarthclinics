@@ -229,17 +229,10 @@ const VisitUsSection: React.FC = () => {
                     }}
                   >
                     {category.description}
-                  </p>
+                  </p>{" "}
                   <a
                     href={`/services#${category.id}`}
-                    className="treatment-link d-inline-flex align-items-center"
-                    style={{
-                      color: "#3a9efd",
-                      textDecoration: "none",
-                      fontWeight: "500",
-                      fontSize: "0.95rem",
-                      transition: "all 0.3s ease",
-                    }}
+                    className="treatment-link d-inline-flex align-items-center universal-button-outline"
                   >
                     Learn More
                     <i

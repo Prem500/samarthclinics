@@ -27,6 +27,14 @@ const userSchema = new mongoose.Schema(
     full_name: {
       type: String,
     },
+    age: {
+      type: Number,
+      required: false,
+    },
+    address: {
+      type: String,
+      required: false,
+    },
     prescriptions: [
       {
         type: mongoose.Schema.Types.ObjectId,

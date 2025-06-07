@@ -208,7 +208,6 @@ const DoctorAuth = () => {
                       </FormItem>
                     )}
                   />
-
                   <FormField
                     control={loginForm.control}
                     name="password"
@@ -238,9 +237,12 @@ const DoctorAuth = () => {
                         <FormMessage />
                       </FormItem>
                     )}
-                  />
-
-                  <Button type="submit" className="w-full" disabled={isLoading}>
+                  />{" "}
+                  <Button
+                    type="submit"
+                    className="w-full universal-button"
+                    disabled={isLoading}
+                  >
                     {isLoading ? (
                       <div className="flex items-center">
                         <span className="mr-2">Signing in</span>
@@ -276,7 +278,6 @@ const DoctorAuth = () => {
                       </FormItem>
                     )}
                   />
-
                   <FormField
                     control={registerForm.control}
                     name="email"
@@ -294,7 +295,6 @@ const DoctorAuth = () => {
                       </FormItem>
                     )}
                   />
-
                   <FormField
                     control={registerForm.control}
                     name="phoneNumber"
@@ -308,7 +308,6 @@ const DoctorAuth = () => {
                       </FormItem>
                     )}
                   />
-
                   <FormField
                     control={registerForm.control}
                     name="password"
@@ -339,7 +338,6 @@ const DoctorAuth = () => {
                       </FormItem>
                     )}
                   />
-
                   <FormField
                     control={registerForm.control}
                     name="confirmPassword"
@@ -371,9 +369,12 @@ const DoctorAuth = () => {
                         <FormMessage />
                       </FormItem>
                     )}
-                  />
-
-                  <Button type="submit" className="w-full" disabled={isLoading}>
+                  />{" "}
+                  <Button
+                    type="submit"
+                    className="w-full universal-button"
+                    disabled={isLoading}
+                  >
                     {isLoading ? (
                       <div className="flex items-center">
                         <span className="mr-2">Creating Account</span>

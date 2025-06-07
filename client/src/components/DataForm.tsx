@@ -89,9 +89,9 @@ const DataForm = () => {
               )}
             />
           </div>
-        </Form>
+        </Form>{" "}
         <Button
-          className="w-full rounded mt-2"
+          className="w-full rounded mt-2 universal-button"
           type="submit"
           onClick={form.handleSubmit(onSubmit)}
         >

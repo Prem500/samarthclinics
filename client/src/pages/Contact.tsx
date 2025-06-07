@@ -68,9 +68,10 @@ const Contact = () => {
                 style={{ marginTop: "-150px" }}
               >
                 <p data-aos="fade-up" data-aos-delay="100">
+                  {" "}
                   <a
                     href="https://docs.google.com/forms/d/e/1FAIpQLSffoTrMEMzFGiZF8QtC4zgejMu7LZ-0nlj7MUa1MlK7j5p5jA/viewform?embedded=true"
-                    className="btn btn-primary btn-pill"
+                    className="btn btn-primary btn-pill universal-button"
                   >
                     अपॉइंटमेंट बुक करें
                   </a>
@@ -97,9 +98,10 @@ const Contact = () => {
                 <h3 className="h5 text-black mb-3">अधिक जानकारी</h3>
                 <p>.</p>
                 <p>
+                  {" "}
                   <a
                     href="https://instagram.com/dr._prem__prakash?igshid=OGQ5ZDc2ODk2ZA=="
-                    className="btn btn-primary px-4 py-2 text-white btn-pill btn-sm"
+                    className="btn btn-primary px-4 py-2 text-white btn-pill btn-sm universal-button"
                   >
                     और जानें
                   </a>
@@ -124,9 +126,10 @@ const Contact = () => {
             </div>
             <div className="col-lg-4">
               <p className="mb-0">
+                {" "}
                 <a
                   href="https://docs.google.com/forms/d/e/1FAIpQLSffoTrMEMzFGiZF8QtC4zgejMu7LZ-0nlj7MUa1MlK7j5p5jA/viewform?embedded=true"
-                  className="btn btn-outline-white text-white btn-md btn-pill px-5 font-weight-bold btn-block"
+                  className="btn btn-outline-white text-white btn-md btn-pill px-5 font-weight-bold btn-block universal-button"
                 >
                   संपर्क करें
                 </a>
@@ -220,9 +223,9 @@ const Contact = () => {
                     placeholder="ईमेल दर्ज करें"
                     aria-label="ईमेल दर्ज करें"
                     aria-describedby="button-addon2"
-                  />
+                  />{" "}
                   <button
-                    className="btn btn-primary text-white"
+                    className="btn btn-primary text-white universal-button"
                     type="button"
                     id="button-addon2"
                   >

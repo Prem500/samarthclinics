@@ -155,11 +155,12 @@ const TopBar = () => {
               </div>
             ) : (
               <div className="space-y-3">
+                {" "}
                 <Button
                   onClick={() => {
                     window.location.href = "/admin-firewall";
                   }}
-                  className="w-full"
+                  className="w-full universal-button"
                   variant="default"
                 >
                   Doctor Login
@@ -271,17 +272,13 @@ const TopBar = () => {
                   ) : (
                     <>
                       <li className="px-1" style={{ padding: "10px 0" }}>
+                        {" "}
                         <Button
                           onClick={() => {
                             window.location.href = "/admin-firewall";
                           }}
                           variant={"outline"}
-                          style={{
-                            color: "#3a9efd",
-                            textDecoration: "none",
-                            borderColor: "#3a9efd",
-                          }}
-                          className="flex gap-2 items-center"
+                          className="flex gap-2 items-center universal-button-outline hover:bg-gray-50"
                         >
                           <UserCog size={16} />
                           Doctor Login

@@ -283,12 +283,12 @@ const Dashboard: React.FC = () => {
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-3xl font-bold text-gray-800 mb-6">
           Welcome, Dr. {doctorName}
-        </h1>
+        </h1>{" "}
         <button
           onClick={() => {
             window.location.href = "/";
           }}
-          className=""
+          className="universal-button-outline"
         >
           Go Back
         </button>
@@ -440,10 +440,10 @@ const Dashboard: React.FC = () => {
             {activeTab === "appointments"
               ? "Recent Appointments"
               : "Recent Prescriptions"}
-          </h2>
+          </h2>{" "}
           <button
             onClick={handleRetry}
-            className="text-sm text-blue-600 hover:text-blue-800 flex items-center"
+            className="text-sm text-blue-600 hover:text-blue-800 flex items-center universal-button-outline"
           >
             <svg
               className="w-4 h-4 mr-1"
@@ -477,10 +477,10 @@ const Dashboard: React.FC = () => {
               </div>
             ) : error.appointments ? (
               <div className="p-6 text-center">
-                <div className="text-red-500 mb-4">{error.appointments}</div>
+                <div className="text-red-500 mb-4">{error.appointments}</div>{" "}
                 <button
                   onClick={fetchAppointments}
-                  className="rounded bg-blue-500 text-white px-4 py-2"
+                  className="rounded universal-button"
                 >
                   Try Again
                 </button>
@@ -625,10 +625,10 @@ const Dashboard: React.FC = () => {
               </div>
             ) : error.prescriptions ? (
               <div className="p-6 text-center">
-                <div className="text-red-500 mb-4">{error.prescriptions}</div>
+                <div className="text-red-500 mb-4">{error.prescriptions}</div>{" "}
                 <button
                   onClick={fetchPrescriptions}
-                  className="rounded bg-blue-500 text-white px-4 py-2"
+                  className="rounded universal-button"
                 >
                   Try Again
                 </button>

@@ -16,9 +16,10 @@ const CTASection: React.FC = () => {
           </div>
           <div className="col-lg-4">
             <p className="mb-0">
+              {" "}
               <a
                 href="https://docs.google.com/forms/d/e/1FAIpQLSffoTrMEMzFGiZF8QtC4zgejMu7LZ-0nlj7MUa1MlK7j5p5jA/viewform?embedded=true"
-                className="btn btn-outline-white text-white btn-md btn-pill px-5 font-weight-bold btn-block"
+                className="btn btn-outline-white text-white btn-md btn-pill px-5 font-weight-bold btn-block universal-button"
               >
                 संपर्क करें
               </a>

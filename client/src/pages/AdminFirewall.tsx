@@ -126,9 +126,12 @@ const AdminFirewall = () => {
                     <FormMessage />
                   </FormItem>
                 )}
-              />
-
-              <Button type="submit" className="w-full" disabled={isLoading}>
+              />{" "}
+              <Button
+                type="submit"
+                className="w-full universal-button"
+                disabled={isLoading}
+              >
                 {isLoading ? (
                   <div className="flex items-center">
                     <span className="mr-2">Verifying</span>

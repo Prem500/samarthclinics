@@ -166,7 +166,7 @@ export const authFunction = async (req, res) => {
 };
 
 export const getBasicUserInfo = async (req, res) => {
-  const { email, phoneNumber, full_name } = req.body;
+  const { email, phoneNumber, full_name, age, address } = req.body;
   try {
     const user = await User.findOne({
       email,
@@ -178,6 +178,8 @@ export const getBasicUserInfo = async (req, res) => {
         phoneNumber,
         role: "user",
         full_name,
+        age,
+        address,
       });
 
       await newUser
@@ -216,7 +218,8 @@ export const getUserDetails = async (req, res) => {
 
 export const register = async (req, res) => {
   try {
-    const { email, password, full_name, phoneNumber, role } = req.body;
+    const { email, password, full_name, phoneNumber, role, age, address } =
+      req.body;
 
     // Validate required fields
     if (!email || !password || !full_name) {
@@ -244,6 +247,8 @@ export const register = async (req, res) => {
       full_name,
       phoneNumber,
       role: role || "user",
+      age,
+      address,
     });
 
     await newUser.save();

@@ -115,10 +115,10 @@ const DEFAULT_MEDICATION: Medication = {
 
 const Prescriptions = () => {
   const [searchParams] = useSearchParams();
-  const [doctors, setDoctors] = useState<any[]>([]);
+  const [_doctors, setDoctors] = useState<any[]>([]);
   const [physicalExaminer, setPhysicalExaminer] = useState<string>("");
   const [investigation, setInvestigation] = useState<string>("");
-  const [patients, setPatients] = useState<Patient[]>([]);
+  const [_patients, setPatients] = useState<Patient[]>([]);
   const [prescriptions, setPrescriptions] = useState<Prescription[]>([]);
   const [filteredPrescriptions, setFilteredPrescriptions] = useState<
     Prescription[]

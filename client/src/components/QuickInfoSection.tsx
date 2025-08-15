@@ -114,7 +114,7 @@ const QuickInfoSection: React.FC = () => {
         stiffness: 100,
       },
     },
-  };
+  } as const;
 
   const titleVariants = {
     hidden: { y: -20, opacity: 0 },
@@ -126,7 +126,7 @@ const QuickInfoSection: React.FC = () => {
         stiffness: 100,
       },
     },
-  };
+  } as const;
 
   return (
     <div className="block-quick-info-2" id="contact" style={styles.section}>
@@ -135,7 +135,7 @@ const QuickInfoSection: React.FC = () => {
           className="text-center mb-5"
           initial="hidden"
           animate="visible"
-          variants={titleVariants}
+          variants={titleVariants as any}
         >
           <h2 style={styles.sectionTitle}>Get In Touch</h2>
           <div style={styles.divider}></div>
@@ -156,7 +156,7 @@ const QuickInfoSection: React.FC = () => {
             <motion.div
               className="d-flex quick-info-2 flex-column"
               style={styles.infoBox}
-              variants={itemVariants}
+              variants={itemVariants as any}
               whileHover={{
                 y: -8,
                 boxShadow: "0 10px 30px rgba(0,0,0,0.12)",
@@ -193,7 +193,7 @@ const QuickInfoSection: React.FC = () => {
             <motion.div
               className="d-flex quick-info-2 flex-column"
               style={styles.infoBox}
-              variants={itemVariants}
+              variants={itemVariants as any}
               whileHover={{
                 y: -8,
                 boxShadow: "0 10px 30px rgba(0,0,0,0.12)",
@@ -230,7 +230,7 @@ const QuickInfoSection: React.FC = () => {
             <motion.div
               className="d-flex quick-info-2 flex-column"
               style={styles.infoBox}
-              variants={itemVariants}
+              variants={itemVariants as any}
               whileHover={{
                 y: -8,
                 boxShadow: "0 10px 30px rgba(0,0,0,0.12)",
@@ -270,7 +270,7 @@ const QuickInfoSection: React.FC = () => {
             <motion.div
               className="d-flex quick-info-2 flex-column"
               style={styles.infoBox}
-              variants={itemVariants}
+              variants={itemVariants as any}
               whileHover={{
                 y: -8,
                 boxShadow: "0 10px 30px rgba(0,0,0,0.12)",

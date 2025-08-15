@@ -53,13 +53,13 @@ const Appointment = () => {
   const [selectedDoctor, setSelectedDoctor] = useState("");
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [successMessage, setSuccessMessage] = useState("");
+  const [_successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [doctorInfo, setDoctorInfo] = useState<Doctor | null>(null);
   
   // Prescription tracking for revisits
-  const [patientPrescriptions, setPatientPrescriptions] = useState<Prescription[]>([]);
+  const [_patientPrescriptions, setPatientPrescriptions] = useState<Prescription[]>([]);
   const [loadingPrescriptions, setLoadingPrescriptions] = useState(false);
   const [latestPrescription, setLatestPrescription] = useState<Prescription | null>(null);
   const [isRevisit, setIsRevisit] = useState(false);

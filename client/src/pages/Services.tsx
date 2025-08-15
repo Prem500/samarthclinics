@@ -87,7 +87,7 @@ const Services = () => {
     return () => typed.current?.destroy();
   }, []);
 
-  const ServiceCard = ({ service, colClass = "col-md-4 mb-4" }) => (
+  const ServiceCard = ({ service, colClass = "col-md-4 mb-4" }: { service: any, colClass?: string }) => (
     <div className={colClass}>
       <div className="block-service-1-card h-100">
         <a href="#" className="thumbnail-link d-block mb-4">
@@ -102,7 +102,7 @@ const Services = () => {
     </div>
   );
 
-  const ServiceSection = ({ icon, title, desc }) => (
+  const ServiceSection = ({ icon, title, desc }: { icon: string, title: string, desc: string }) => (
     <div className="col-md-6 col-lg-4 mb-4 mb-lg-4">
       <div className="block-service-2 d-flex">
         <div className="icon"><span className={icon}></span></div>

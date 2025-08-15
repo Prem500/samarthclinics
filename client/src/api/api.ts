@@ -203,8 +203,8 @@ export const prescriptionAPI = {
 
 // Booking API
 export const bookingAPI = {
-  getBookings: (doctorId: string): Promise<AxiosResponse<Booking[]>> =>
-    api.get(`/booking/${doctorId}`),
+  getBookings: (doctorId?: string): Promise<AxiosResponse<Booking[]>> =>
+    doctorId ? api.get(`/booking/${doctorId}`) : api.get(`/booking/all`),
   getBooking: (id: string): Promise<AxiosResponse<Booking>> =>
     api.get(`/booking/single/${id}`),
   createBooking: (

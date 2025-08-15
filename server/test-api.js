@@ -17,7 +17,7 @@ const testAPIs = async () => {
     // Login to get token
     const loginRes = await axios.post(`${API_URL}/auth/login`, {
       email: "admin@admin.com", // Use a valid email from your database
-      password: "admin123", // Use a valid password
+      password: "prem", // Use a valid password
     });
 
     token = loginRes.data.token;

@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 import { ObjectId } from "mongodb";
 
 // Environment variable for admin password (fallback for development)
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "admin123";
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "prem";
 
 // Admin firewall verification
 export const verifyAdminPassword = async (req, res) => {

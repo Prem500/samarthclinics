@@ -2,6 +2,7 @@ import AOS from "aos";
 import jQuery from "jquery";
 import "magnific-popup";
 import "../css/magnific-popup.css";
+// Import rangeslider.js or disable the function
 
 AOS.init({
   duration: 800,
@@ -171,70 +172,80 @@ jQuery(document).ready(function ($) {
   siteMagnificPopup();
 
   var siteCarousel = function () {
-    if ($(".owl-carousel-2").length > 0) {
-      $(".owl-carousel-2").owlCarousel({
-        center: false,
-        items: 1,
-        loop: true,
-        stagePadding: 0,
-        margin: 30,
-        autoplay: true,
-        nav: true,
-        navText: [
-          '<span class="icon-arrow_back">',
-          '<span class="icon-arrow_forward">',
-        ],
-        responsive: {
-          600: {
-            nav: true,
-            items: 1,
+    // Check if owlCarousel plugin is available before trying to use it
+    if (typeof $.fn.owlCarousel === 'function') {
+      if ($(".owl-carousel-2").length > 0) {
+        $(".owl-carousel-2").owlCarousel({
+          center: false,
+          items: 1,
+          loop: true,
+          stagePadding: 0,
+          margin: 30,
+          autoplay: true,
+          nav: true,
+          navText: [
+            '<span class="icon-arrow_back">',
+            '<span class="icon-arrow_forward">',
+          ],
+          responsive: {
+            600: {
+              nav: true,
+              items: 1,
+            },
+            1000: {
+              stagePadding: 0,
+              nav: true,
+              items: 2,
+            },
+            1200: {
+              stagePadding: 0,
+              nav: true,
+              items: 2,
+            },
           },
-          1000: {
-            stagePadding: 0,
-            nav: true,
-            items: 2,
-          },
-          1200: {
-            stagePadding: 0,
-            nav: true,
-            items: 2,
-          },
-        },
-      });
-    }
+        });
+      }
 
-    $(".slide-one-item").owlCarousel({
-      center: false,
-      items: 1,
-      loop: true,
-      stagePadding: 0,
-      margin: 0,
-      smartSpeed: 1000,
-      autoplay: true,
-      pauseOnHover: false,
-      nav: true,
-      navText: [
-        '<span class="icon-keyboard_arrow_left">',
-        '<span class="icon-keyboard_arrow_right">',
-      ],
-    });
+      if ($(".slide-one-item").length > 0) {
+        $(".slide-one-item").owlCarousel({
+          center: false,
+          items: 1,
+          loop: true,
+          stagePadding: 0,
+          margin: 0,
+          smartSpeed: 1000,
+          autoplay: true,
+          pauseOnHover: false,
+          nav: true,
+          navText: [
+            '<span class="icon-keyboard_arrow_left">',
+            '<span class="icon-keyboard_arrow_right">',
+          ],
+        });
+      }
+    } else {
+      console.warn('owlCarousel plugin not loaded - skipping carousel initialization');
+    }
   };
   siteCarousel();
 
   var siteStellar = function () {
-    $(window).stellar({
-      responsive: false,
-      parallaxBackgrounds: true,
-      parallaxElements: true,
-      horizontalScrolling: false,
-      hideDistantElements: false,
-      scrollProperty: "scroll",
-    });
+    if (typeof $.fn.stellar === 'function') {
+      $(window).stellar({
+        responsive: false,
+        parallaxBackgrounds: true,
+        parallaxElements: true,
+        horizontalScrolling: false,
+        hideDistantElements: false,
+        scrollProperty: "scroll",
+      });
+    }
   };
   siteStellar();
 
   var siteCountDown = function () {
-    $("#date-countdown").countdown("2020/10/10", function (event) {
+    if (typeof $.fn.countdown === 'function' && $("#date-countdown").length > 0) {
+      $("#date-countdown").countdown("2020/10/10", function (event) {
       var $this = $(this).html(
         event.strftime(
           "" +
@@ -245,7 +256,8 @@ jQuery(document).ready(function ($) {
             '<span class="countdown-block"><span class="label">%S</span> sec</span>'
         )
       );
-    });
+      });
+    }
   };
   siteCountDown();
 
@@ -257,17 +269,22 @@ jQuery(document).ready(function ($) {
   siteDatePicker();
 
   var siteRangeSlider = function () {
-    $('input[type="range"]').rangeslider({
-      polyfill: false,
-      onInit: function () {
-        this.output = $('<div class="range-output" />')
-          .insertAfter(this.$range)
-          .html(this.$element.val());
-      },
-      onSlide: function (position, value) {
-        this.output.html(value);
-      },
-    });
+    // Check if rangeslider plugin is available before trying to use it
+    if (typeof $.fn.rangeslider === 'function') {
+      $('input[type="range"]').rangeslider({
+        polyfill: false,
+        onInit: function () {
+          this.output = $('<div class="range-output" />')
+            .insertAfter(this.$range)
+            .html(this.$element.val());
+        },
+        onSlide: function (position, value) {
+          this.output.html(value);
+        },
+      });
+    } else {
+      console.warn('rangeslider plugin not loaded - native HTML5 range input will be used');
+    }
   };
   siteRangeSlider();
 

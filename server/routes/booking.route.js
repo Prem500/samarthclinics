@@ -5,6 +5,7 @@ import {
   GetBooking,
   getBookingId,
   GetBookings,
+  GetAllBookings,
   GetUserBookings,
   slotAvailability,
   UpdateBooking,
@@ -28,6 +29,7 @@ router.delete("/delete/:id", DeleteBooking);
 router.post("/:doctorId/details/:userId", getBookingId);
 
 // Doctor-only routes
+router.get("/all", isDoctor, GetAllBookings);
 router.get("/:id", isDoctor, GetBookings);
 
 export default router;

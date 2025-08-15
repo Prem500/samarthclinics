@@ -7,6 +7,31 @@ const TopBar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [isSignedIn, setIsSignedIn] = useState(false);
   const [userRole, setUserRole] = useState<string | null>(null);
+  
+  // Handle smooth scroll for navigation links
+  const handleSmoothScroll = (e: React.MouseEvent<HTMLAnchorElement>, targetId: string) => {
+    // Only apply smooth scroll on homepage
+    const isHomePage = window.location.pathname === "/" || window.location.pathname === "";
+    
+    if (isHomePage) {
+      e.preventDefault();
+      const targetElement = document.getElementById(targetId);
+      
+      if (targetElement) {
+        // Close mobile menu if it's open
+        if (menuOpen) {
+          setMenuOpen(false);
+          document.body.classList.remove("overflow-hidden");
+        }
+        
+        // Scroll to the target element smoothly
+        targetElement.scrollIntoView({ 
+          behavior: "smooth",
+          block: "start"
+        });
+      }
+    }
+  };
 
   useEffect(() => {
     // Check authentication status
@@ -83,7 +108,7 @@ const TopBar = () => {
                 <a
                   href="#home"
                   className="block py-3 px-4 rounded-md hover:bg-gray-100 transition-colors text-gray-800 font-medium"
-                  onClick={handleMenuToggle}
+                  onClick={(e) => handleSmoothScroll(e, 'home')}
                 >
                   Home
                 </a>
@@ -92,7 +117,7 @@ const TopBar = () => {
                 <a
                   href="#services"
                   className="block py-3 px-4 rounded-md hover:bg-gray-100 transition-colors text-gray-800 font-medium"
-                  onClick={handleMenuToggle}
+                  onClick={(e) => handleSmoothScroll(e, 'services')}
                 >
                   Services
                 </a>
@@ -101,25 +126,17 @@ const TopBar = () => {
                 <a
                   href="#about"
                   className="block py-3 px-4 rounded-md hover:bg-gray-100 transition-colors text-gray-800 font-medium"
-                  onClick={handleMenuToggle}
+                  onClick={(e) => handleSmoothScroll(e, 'about')}
                 >
                   About Us
                 </a>
               </li>
-              <li>
-                <a
-                  href="#blog"
-                  className="block py-3 px-4 rounded-md hover:bg-gray-100 transition-colors text-gray-800 font-medium"
-                  onClick={handleMenuToggle}
-                >
-                  Blog
-                </a>
-              </li>
+              
               <li>
                 <a
                   href="#contact"
                   className="block py-3 px-4 rounded-md hover:bg-gray-100 transition-colors text-gray-800 font-medium"
-                  onClick={handleMenuToggle}
+                  onClick={(e) => handleSmoothScroll(e, 'contact')}
                 >
                   Contact Us
                 </a>
@@ -176,7 +193,11 @@ const TopBar = () => {
           <div className="row align-items-center">
             <div className="col-8 col-xl-4">
               <h1 className="mb-0 site-logo">
-                <a href="#home" className="text-white mb-0 font-bold">
+                <a 
+                  href="#home" 
+                  className="text-white mb-0 font-bold"
+                  onClick={(e) => handleSmoothScroll(e, 'home')}
+                >
                   Samarth Clinic<span className="text-primary">.</span>
                 </a>
               </h1>
@@ -206,6 +227,7 @@ const TopBar = () => {
                     <a
                       href="#home"
                       className="text-[#2d405f] hover:text-[#3a9efd] transition-colors"
+                      onClick={(e) => handleSmoothScroll(e, 'home')}
                     >
                       <span>Home</span>
                     </a>
@@ -214,6 +236,7 @@ const TopBar = () => {
                     <a
                       href="#services"
                       className="text-[#2d405f] hover:text-[#3a9efd] transition-colors"
+                      onClick={(e) => handleSmoothScroll(e, 'services')}
                     >
                       <span>Services</span>
                     </a>
@@ -222,22 +245,17 @@ const TopBar = () => {
                     <a
                       href="#about"
                       className="text-[#2d405f] hover:text-[#3a9efd] transition-colors"
+                      onClick={(e) => handleSmoothScroll(e, 'about')}
                     >
                       <span>About Us</span>
                     </a>
                   </li>
-                  <li>
-                    <a
-                      href="#blog"
-                      className="text-[#2d405f] hover:text-[#3a9efd] transition-colors"
-                    >
-                      <span>Blog</span>
-                    </a>
-                  </li>
+              
                   <li>
                     <a
                       href="#contact"
                       className="text-[#2d405f] hover:text-[#3a9efd] transition-colors"
+                      onClick={(e) => handleSmoothScroll(e, 'contact')}
                     >
                       <span>Contact Us</span>
                     </a>

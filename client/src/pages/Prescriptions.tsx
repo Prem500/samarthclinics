@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { toast } from "sonner";
+import { useSearchParams } from "react-router";
 import {
   Card,
   CardContent,
@@ -18,13 +19,7 @@ import { Button } from "../components/ui/button";
 import { Textarea } from "../components/ui/textarea";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../components/ui/select";
+
 import {
   CalendarIcon,
   CopyIcon,
@@ -46,12 +41,7 @@ import { Calendar } from "../components/ui/calendar";
 import { cn } from "../lib/utils";
 import { useAuth } from "@/contexts/AuthContext";
 import { fetchAppointmentId } from "@/lib/handler";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "../components/ui/accordion";
+
 import {
   Dialog,
   DialogContent,
@@ -124,6 +114,7 @@ const DEFAULT_MEDICATION: Medication = {
 };
 
 const Prescriptions = () => {
+  const [searchParams] = useSearchParams();
   const [doctors, setDoctors] = useState<any[]>([]);
   const [physicalExaminer, setPhysicalExaminer] = useState<string>("");
   const [investigation, setInvestigation] = useState<string>("");
@@ -133,7 +124,20 @@ const Prescriptions = () => {
     Prescription[]
   >([]);
   const [loading, setLoading] = useState(true);
-  const [selectedPatient, setSelectedPatient] = useState<string>("");
+  
+
+  
+  // Get URL parameters for pre-populating patient data
+  const patientIdFromUrl = searchParams.get("patientId");
+  const patientNameFromUrl = searchParams.get("patientName");
+  const patientEmailFromUrl = searchParams.get("patientEmail");
+  const patientPhoneFromUrl = searchParams.get("patientPhone");
+  const patientAgeFromUrl = searchParams.get("patientAge");
+  const patientAddressFromUrl = searchParams.get("patientAddress");
+  const appointmentIdFromUrl = searchParams.get("appointmentId");
+  const editPrescriptionId = searchParams.get("edit");
+  
+
   const [prescriptionText, setPrescriptionText] = useState<string>("");
   const [diagnosis, setDiagnosis] = useState<string>("");
   const [notes, setNotes] = useState<string>("");
@@ -150,6 +154,8 @@ const Prescriptions = () => {
   const [selectedPrescription, setSelectedPrescription] =
     useState<Prescription | null>(null);
   const [isPrintDialogOpen, setIsPrintDialogOpen] = useState(false);
+  const [patientPrescriptions, setPatientPrescriptions] = useState<Prescription[]>([]);
+  const [loadingPatientHistory, setLoadingPatientHistory] = useState(false);
 
   const { userId } = useAuth();
   const isLoaded = true; // Since our authentication state is immediately available
@@ -285,6 +291,171 @@ const Prescriptions = () => {
     }
   }, [searchTerm, prescriptions]);
 
+  // Save patient details from URL parameters
+  useEffect(() => {
+    // Check if we have at least patient name
+    if (patientNameFromUrl) {
+      // Save patient details from URL parameters - this is crucial for the printout
+      const patientDetails = {
+        _id: patientIdFromUrl || `temp-${Date.now()}`,
+        full_name: patientNameFromUrl || "",
+        email: patientEmailFromUrl || "",
+        phoneNumber: patientPhoneFromUrl || "",
+        age: patientAgeFromUrl || "",
+        address: patientAddressFromUrl || ""
+      };
+      
+      // Save these details to localStorage for use in prescription
+      localStorage.setItem('currentPatientDetails', JSON.stringify(patientDetails));
+    }
+  }, [patientNameFromUrl, patientIdFromUrl, patientEmailFromUrl, patientPhoneFromUrl, patientAgeFromUrl, patientAddressFromUrl]);
+
+  // Fetch patient prescription history when patient is pre-selected from URL
+  useEffect(() => {
+    if (patientIdFromUrl && !loading) {
+      fetchPatientPrescriptionHistory(patientIdFromUrl);
+      
+      // Only try to fetch more details if we're missing key information
+      if (!patientNameFromUrl || !patientEmailFromUrl) {
+        const fetchPatientDetails = async () => {
+          try {
+            const token = localStorage.getItem("token");
+            if (!token) return;
+            
+            const config = {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            };
+            
+            // Try different API endpoints until we find one that works
+            try {
+              const response = await axios.get(
+                `${import.meta.env.VITE_BACKEND_URL}/user/${patientIdFromUrl}`,
+                config
+              );
+              
+              if (response.data) {
+                // Merge with existing patient details
+                const localPatientDetails = JSON.parse(localStorage.getItem('currentPatientDetails') || '{}');
+                const mergedData = {...localPatientDetails, ...response.data};
+                localStorage.setItem('currentPatientDetails', JSON.stringify(mergedData));
+              }
+            } catch (e) {
+              // Attempt alternative endpoint - but don't log errors
+              try {
+                const response = await axios.get(
+                  `${import.meta.env.VITE_BACKEND_URL}/auth/${patientIdFromUrl}`,
+                  config
+                );
+                
+                if (response.data) {
+                  // Merge with existing patient details
+                  const localPatientDetails = JSON.parse(localStorage.getItem('currentPatientDetails') || '{}');
+                  const mergedData = {...localPatientDetails, ...response.data};
+                  localStorage.setItem('currentPatientDetails', JSON.stringify(mergedData));
+                }
+              } catch (e2) {
+                // If all attempts fail, we still have the URL parameters
+              }
+            }
+          } catch (error) {
+            // Silently continue with URL parameter data
+          }
+        };
+        
+        fetchPatientDetails();
+      }
+    }
+  }, [patientIdFromUrl, patientNameFromUrl, patientEmailFromUrl, patientPhoneFromUrl, patientAgeFromUrl, patientAddressFromUrl, loading]);
+
+  // Load existing prescription data when in edit mode
+  useEffect(() => {
+    const fetchPrescriptionForEdit = async () => {
+      if (!editPrescriptionId) return;
+      
+      try {
+        setLoading(true);
+        const token = localStorage.getItem("token");
+        
+        if (!token) {
+          toast("Authentication Error", {
+            description: "You need to be logged in to access this page.",
+          });
+          setLoading(false);
+          return;
+        }
+
+        const config = {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        };
+
+        // Fetch the specific prescription by ID
+        const response = await axios.get(
+          `${import.meta.env.VITE_BACKEND_URL}/prescription/single/${editPrescriptionId}`,
+          config
+        );
+
+        const prescriptionData = response.data;
+        
+        // Also fetch detailed patient info
+        if (prescriptionData?.patient?._id) {
+          const patientResponse = await axios.get(
+            `${import.meta.env.VITE_BACKEND_URL}/user/${prescriptionData.patient._id}`,
+            config
+          );
+          // Store detailed patient info for use in the prescription
+          if (patientResponse.data) {
+            localStorage.setItem('currentPatientDetails', JSON.stringify(patientResponse.data));
+          }
+        }
+        
+        if (prescriptionData) {
+          // Populate all form fields with existing data
+          setPrescriptionText(prescriptionData.prescriptionText || "");
+          setDiagnosis(prescriptionData.diagnosis || "");
+          setNotes(prescriptionData.notes || "");
+          setPatientHistory(prescriptionData.patientHistory || "");
+          setTreatmentPlan(prescriptionData.treatmentPlan || "");
+          setMedications(prescriptionData.medications?.length > 0 
+            ? prescriptionData.medications 
+            : [DEFAULT_MEDICATION]);
+          setPaymentAmount(prescriptionData.paymentAmount ? prescriptionData.paymentAmount.toString() : "");
+          setPhysicalExaminer(prescriptionData.physicalExaminer?._id || "");
+          setInvestigation(prescriptionData.investigation || "");
+          
+          // Handle dates
+          if (prescriptionData.expiryDate) {
+            setExpiryDate(new Date(prescriptionData.expiryDate));
+          }
+          
+          if (prescriptionData.followUpDate) {
+            setFollowUpDate(new Date(prescriptionData.followUpDate));
+          }
+
+          toast("Prescription loaded for editing", {
+            description: "You can now update the prescription details.",
+          });
+        }
+      } catch (error: any) {
+        console.error("Error fetching prescription for edit:", error);
+        toast("Error", {
+          description: "Failed to load prescription for editing. Please try again.",
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (editPrescriptionId) {
+      fetchPrescriptionForEdit();
+    }
+  }, [editPrescriptionId]);
+
+
+
   const handleAddMedication = () => {
     setMedications([...medications, { ...DEFAULT_MEDICATION }]);
   };
@@ -311,32 +482,38 @@ const Prescriptions = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!selectedPatient) {
+    // Check for patient name or ID from URL - if either exists, we can proceed
+    if (!patientIdFromUrl && !patientNameFromUrl) {
       toast("Validation Error", {
-        description: "Please select a patient.",
+        description: "No patient selected. Please go back to the dashboard and click 'Write Prescription' on a specific appointment.",
       });
       return;
     }
+    
+    // If we have a patient name but not ID, create a temporary ID to allow submission
+    const effectivePatientId = patientIdFromUrl || `temp-${Date.now()}`;
 
-    // Validate medications if any are entered
+    // Only validate medications that have a name entered
     if (medications.length > 0) {
-      const hasIncompleteMedication = medications.some(
-        (med) => med.name && (!med.dosage || !med.frequency || !med.duration)
-      );
-
-      if (hasIncompleteMedication) {
-        toast("Validation Error", {
-          description:
-            "Please complete all medication fields (dosage, frequency, duration).",
-        });
-        return;
+      // Filter out empty medication entries first
+      const namedMedications = medications.filter(med => med.name.trim() !== "");
+      
+      // No validation needed if all medications are empty
+      if (namedMedications.length === 0) {
+        // Continue with empty medications array
       }
     }
 
-    // Filter out empty medications
-    const validMedications = medications.filter(
-      (med) => med.name.trim() !== ""
-    );
+    // Filter out empty medications and ensure all fields are strings
+    const validMedications = medications
+      .filter((med) => med.name && med.name.trim() !== "")
+      .map((med) => ({
+        name: med.name.trim(),
+        dosage: med.dosage?.trim() || "",
+        frequency: med.frequency?.trim() || "",
+        duration: med.duration?.trim() || "",
+        instructions: med.instructions?.trim() || "",
+      }));
 
     // Require either prescription text or at least one medication
     if (!prescriptionText && validMedications.length === 0) {
@@ -365,56 +542,127 @@ const Prescriptions = () => {
         },
       };
 
-      const appointmentId = await fetchAppointmentId(userId!, selectedPatient);
+      // Use appointmentId from URL if available
+      let appointmentId = appointmentIdFromUrl;
+      
+      // Only try to fetch appointment ID if we have a valid patient ID (not a temp one)
+      if (!appointmentId && !editPrescriptionId && patientIdFromUrl && patientIdFromUrl.indexOf('temp-') !== 0) {
+        try {
+          appointmentId = await fetchAppointmentId(userId!, patientIdFromUrl);
+        } catch (err) {
+          console.log("Could not fetch appointment ID, continuing without it");
+          // Continue without appointment ID
+        }
+      }
 
-      const response = await axios.post(
-        `${import.meta.env.VITE_BACKEND_URL}/prescription/create/${userId}`,
-        {
-          patientId: selectedPatient,
-          prescriptionText,
-          medications: validMedications,
-          diagnosis,
-          notes,
-          patientHistory,
-          treatmentPlan,
-          paymentAmount: paymentAmount ? parseFloat(paymentAmount) : null,
-          expiryDate: expiryDate ? expiryDate.toISOString() : null,
-          followUpDate: followUpDate ? followUpDate.toISOString() : null,
-          appointmentId: appointmentId || null,
-          physicalExaminer: physicalExaminer || null,
-          investigation: investigation || "",
-        },
-        config
-      );
+            // Prepare prescription data - sanitize all fields to prevent server errors
+      const prescriptionData = {
+        patientId: effectivePatientId, // Use our effective patient ID (real or temporary)
+        prescriptionText: prescriptionText || "",
+        medications: validMedications || [],
+        diagnosis: diagnosis || "",
+        notes: notes || "",
+        patientHistory: patientHistory || "",
+        treatmentPlan: treatmentPlan || "",
+        paymentAmount: paymentAmount ? parseFloat(paymentAmount) : 0,
+        expiryDate: expiryDate ? expiryDate.toISOString() : null,
+        followUpDate: followUpDate ? followUpDate.toISOString() : null,
+        appointmentId: appointmentId || null,
+        physicalExaminer: physicalExaminer || null,
+        investigation: investigation || "",
+        // Add patient details directly from URL params if available
+        patientName: patientNameFromUrl || "",
+        patientEmail: patientEmailFromUrl || "",
+        patientPhone: patientPhoneFromUrl || "",
+        patientAge: patientAgeFromUrl || "",
+        patientAddress: patientAddressFromUrl || "",
+      };
 
-      toast("Success", {
-        description: "Prescription created successfully!",
-      });
+      let savedResponse;
+      
+      try {
+        // If we're editing an existing prescription
+        if (editPrescriptionId) {
+          // Update existing prescription
+          savedResponse = await axios.put(
+            `${import.meta.env.VITE_BACKEND_URL}/prescription/${userId}/update/${editPrescriptionId}`,
+            prescriptionData,
+            config
+          );
+          
+          toast("Success", {
+            description: "Prescription updated successfully!",
+          });
+        } else {
+          // Create new prescription - using the correct endpoint format from backend
+          console.log("Creating prescription with endpoint: /prescription/create/" + userId);
+          
+          // Exactly match the fields used in createPrescription controller
+          const serverData = {
+            patientId: effectivePatientId,
+            prescriptionText: prescriptionText || "",
+            medications: validMedications,
+            diagnosis: diagnosis || "",
+            notes: notes || "",
+            patientHistory: patientHistory || "",
+            treatmentPlan: treatmentPlan || "",
+            paymentAmount: paymentAmount ? parseFloat(paymentAmount) : null,
+            expiryDate: expiryDate ? expiryDate.toISOString() : null,
+            followUpDate: followUpDate ? followUpDate.toISOString() : null,
+            appointmentId: appointmentId || null,
+            physicalExaminer: physicalExaminer || null,
+            investigation: investigation || ""
+          };
+          
+          savedResponse = await axios.post(
+            `${import.meta.env.VITE_BACKEND_URL}/prescription/create/${userId}`,
+            serverData,
+            config
+          );
+          
+          toast("Success", {
+            description: "Prescription created successfully!",
+          });
+        }
+        
+        // Set the shareable URL if provided in response
+        if (savedResponse && savedResponse.data && savedResponse.data.shareableUrl) {
+          setShareableUrl(window.location.origin + savedResponse.data.shareableUrl);
+        }
+        
+        // Reset form
+        setPrescriptionText("");
+        setDiagnosis("");
+        setNotes("");
+        setPatientHistory("");
+        setTreatmentPlan("");
+        setMedications([DEFAULT_MEDICATION]);
+        setPaymentAmount("");
+        setExpiryDate(undefined);
+        setFollowUpDate(undefined);
 
-      // Reset form
-      setSelectedPatient("");
-      setPrescriptionText("");
-      setDiagnosis("");
-      setNotes("");
-      setPatientHistory("");
-      setTreatmentPlan("");
-      setMedications([DEFAULT_MEDICATION]);
-      setPaymentAmount("");
-      setExpiryDate(undefined);
-      setFollowUpDate(undefined);
+        // Clear URL parameters after successful operation
+        window.history.replaceState({}, document.title, "/prescriptions");
 
-      // Set the shareable URL
-      setShareableUrl(window.location.origin + response.data.shareableId);
+        // Set the shareable URL if available
+        if (savedResponse.data && savedResponse.data.shareableId) {
+          setShareableUrl(window.location.origin + savedResponse.data.shareableId);
+        }
 
-      // Refresh prescriptions list with auth token
-      const updatedPrescriptions = await axios.get(
-        `${import.meta.env.VITE_BACKEND_URL}/prescription/${userId}`,
-        config
-      );
-      setPrescriptions(updatedPrescriptions.data);
-      setFilteredPrescriptions(updatedPrescriptions.data);
+        // Refresh prescriptions list with auth token
+        const updatedPrescriptions = await axios.get(
+          `${import.meta.env.VITE_BACKEND_URL}/prescription/${userId}`,
+          config
+        );
+        setPrescriptions(updatedPrescriptions.data);
+        setFilteredPrescriptions(updatedPrescriptions.data);
+        
+      } catch (apiError) {
+        console.error("API call failed:", apiError);
+        throw apiError; // Re-throw for the outer catch block to handle
+      }
     } catch (error: any) {
-      console.error("Error creating prescription:", error);
+      console.error(`Error ${editPrescriptionId ? 'updating' : 'creating'} prescription:`, error);
 
       // Improved error handling
       if (error.response) {
@@ -424,11 +672,11 @@ const Prescriptions = () => {
           });
         } else if (error.response.status === 403) {
           toast("Permission Error", {
-            description: "You don't have permission to create prescriptions.",
+            description: `You don't have permission to ${editPrescriptionId ? 'update' : 'create'} prescriptions.`,
           });
         } else {
           toast("Error", {
-            description: `Failed to create prescription: ${
+            description: `Failed to ${editPrescriptionId ? 'update' : 'create'} prescription: ${
               error.response.data?.message || "Unknown error"
             }`,
           });
@@ -454,22 +702,23 @@ const Prescriptions = () => {
         <!DOCTYPE html>
         <html>
         <head>
-          <title>Medical Prescription</title>
+          <title>Physiotherapy Prescription</title>
           <style>
-            body { font-family: Arial, sans-serif; margin: 20px; }
-            .header { display: flex; justify-content: space-between; border-bottom: 1px solid #ccc; padding-bottom: 10px; }
-            .logo { font-weight: bold; font-size: 24px; }
-            .doctor-info { margin-bottom: 20px; }
-            .patient-info { margin-bottom: 20px; border: 1px solid #ccc; padding: 10px; }
-            .prescription { margin-bottom: 20px; }
+            body { font-family: Arial, sans-serif; margin: 20px; max-width: 800px; margin: 0 auto; }
+            .header { display: flex; justify-content: space-between; border-bottom: 2px solid #333; padding-bottom: 10px; margin-bottom: 20px; }
+            .clinic-name { font-weight: bold; font-size: 24px; }
+            .clinic-info { font-size: 14px; color: #555; }
+            .doctor-info { margin-bottom: 10px; padding: 5px; background-color: #f0f7ff; border-radius: 5px; }
+            .patient-info { margin-bottom: 20px; padding: 10px; background-color: #f9f9f9; border-radius: 5px; }
+            .section { margin-bottom: 20px; }
+            .section-title { font-weight: bold; margin-bottom: 5px; border-bottom: 1px solid #eee; padding-bottom: 3px; }
+            .section-content { padding: 5px 0; }
             .medications { margin-bottom: 20px; }
-            .med-item { margin-bottom: 10px; border-bottom: 1px dashed #eee; padding-bottom: 5px; }
-            .footer { margin-top: 30px; border-top: 1px solid #ccc; padding-top: 10px; text-align: center; }
-            .date { text-align: right; margin-bottom: 20px; }
-            .rx-symbol { font-size: 24px; margin-right: 10px; }
-            table { width: 100%; border-collapse: collapse; margin: 15px 0; }
-            th, td { padding: 8px; text-align: left; border-bottom: 1px solid #ddd; }
-            th { background-color: #f2f2f2; }
+            .med-table { width: 100%; border-collapse: collapse; }
+            .med-table td, .med-table th { padding: 8px; text-align: left; border-bottom: 1px solid #ddd; }
+            .signature-area { margin-top: 40px; display: flex; justify-content: flex-end; }
+            .signature-line { width: 200px; border-top: 1px solid #000; text-align: center; padding-top: 5px; }
+            .date { text-align: right; font-size: 14px; color: #555; }
             @media print {
               body { margin: 0; padding: 15px; }
               .no-print { display: none; }
@@ -479,60 +728,67 @@ const Prescriptions = () => {
         </head>
         <body>
           <div class="header">
-            <div class="logo">Physiotherapy Clinic</div>
+            <div>
+              <div class="clinic-name">Samarth Clinics</div>
+              <div class="clinic-info">Physiotherapy & Rehabilitation</div>
+            </div>
             <div class="date">Date: ${new Date(
               selectedPrescription.dateIssued
             ).toLocaleDateString()}</div>
           </div>
           
           <div class="doctor-info">
-            <p><strong>Doctor:</strong> Dr. ${
-              selectedPrescription.patient?.full_name || "Unknown"
+            <p><strong>Doctor:</strong> ${
+              selectedPrescription.physicalExaminer ? `Dr. ${selectedPrescription.physicalExaminer.full_name}` : "Dr. "
             }</p>
           </div>
           
           <div class="patient-info">
-            <p><strong>Patient:</strong> ${
+            <p><strong>Patient Name:</strong> ${
               selectedPrescription.patient?.full_name || "Unknown"
             }</p>
             <p><strong>Email:</strong> ${
               selectedPrescription.patient?.email || "Unknown"
             }</p>
+            <p><strong>Phone:</strong> ${
+              JSON.parse(localStorage.getItem('currentPatientDetails') || '{}').phoneNumber || 
+              JSON.parse(localStorage.getItem('currentPatientDetails') || '{}').patientPhone || 
+              "Not provided"
+            }</p>
+            <p><strong>Age:</strong> ${
+              JSON.parse(localStorage.getItem('currentPatientDetails') || '{}').age || 
+              JSON.parse(localStorage.getItem('currentPatientDetails') || '{}').patientAge || 
+              "Not provided"
+            }</p>
+            <p><strong>Address:</strong> ${
+              JSON.parse(localStorage.getItem('currentPatientDetails') || '{}').address || 
+              JSON.parse(localStorage.getItem('currentPatientDetails') || '{}').patientAddress || 
+              "Not provided"
+            }</p>
           </div>
           
-          ${
-            selectedPrescription.diagnosis
-              ? `<div class="diagnosis">
-            <p><strong>Diagnosis:</strong> ${selectedPrescription.diagnosis}</p>
-          </div>`
-              : ""
-          }
+          <div class="section">
+            <div class="section-title">Diagnosis</div>
+            <div class="section-content">${selectedPrescription.diagnosis || "Not specified"}</div>
+          </div>
           
-          <div class="prescription">
-            <h3><span class="rx-symbol">℞</span> Prescription</h3>
-            ${
-              selectedPrescription.prescriptionText
-                ? `<p>${selectedPrescription.prescriptionText.replace(
-                    /\n/g,
-                    "<br>"
-                  )}</p>`
-                : ""
-            }
+          <div class="section">
+            <div class="section-title">Treatment Plan</div>
+            <div class="section-content">${selectedPrescription.treatmentPlan ? selectedPrescription.treatmentPlan.replace(/\n/g, "<br>") : "Not specified"}</div>
           </div>
           
           ${
             selectedPrescription.medications &&
             selectedPrescription.medications.length > 0
-              ? `<div class="medications">
-              <h3>Medications</h3>
-              <table>
+              ? `<div class="section">
+              <div class="section-title">Medications</div>
+              <table class="med-table">
                 <thead>
                   <tr>
-                    <th>Medication</th>
+                    <th>Name</th>
                     <th>Dosage</th>
                     <th>Frequency</th>
                     <th>Duration</th>
-                    <th>Special Instructions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -540,11 +796,10 @@ const Prescriptions = () => {
                     .map(
                       (med) => `
                     <tr>
-                      <td>${med.name}</td>
-                      <td>${med.dosage}</td>
-                      <td>${med.frequency}</td>
-                      <td>${med.duration}</td>
-                      <td>${med.instructions || "-"}</td>
+                      <td>${med.name || "-"}</td>
+                      <td>${med.dosage || "-"}</td>
+                      <td>${med.frequency || "-"}</td>
+                      <td>${med.duration || "-"}</td>
                     </tr>
                   `
                     )
@@ -556,41 +811,36 @@ const Prescriptions = () => {
           }
           
           ${
-            selectedPrescription.treatmentPlan
-              ? `<div class="treatment-plan">
-            <h3>Treatment Plan</h3>
-            <p>${selectedPrescription.treatmentPlan.replace(/\n/g, "<br>")}</p>
+            selectedPrescription.prescriptionText
+              ? `<div class="section">
+            <div class="section-title">Additional Instructions</div>
+            <div class="section-content">${selectedPrescription.prescriptionText.replace(/\n/g, "<br>")}</div>
           </div>`
               : ""
           }
           
           ${
             selectedPrescription.notes
-              ? `<div class="notes">
-            <h3>Additional Notes</h3>
-            <p>${selectedPrescription.notes.replace(/\n/g, "<br>")}</p>
+              ? `<div class="section">
+            <div class="section-title">Notes</div>
+            <div class="section-content">${selectedPrescription.notes.replace(/\n/g, "<br>")}</div>
           </div>`
               : ""
           }
           
-          ${
+          <div class="section">
+            <div class="section-title">Follow-up</div>
+            <div class="section-content">${
             selectedPrescription.followUpDate
-              ? `<div class="follow-up">
-            <h3>Follow-up Date</h3>
-            <p>${new Date(
-              selectedPrescription.followUpDate
-            ).toLocaleDateString()}</p>
-          </div>`
-              : ""
-          }
+                ? `Follow-up on: ${new Date(selectedPrescription.followUpDate).toLocaleDateString()}`
+                : "No follow-up scheduled"
+            }</div>
+          </div>
           
-          <div class="footer">
-            <p>This prescription is valid until: ${
-              selectedPrescription.expiryDate
-                ? new Date(selectedPrescription.expiryDate).toLocaleDateString()
-                : "Not specified"
-            }</p>
-            <p>Doctor's Signature: _______________________</p>
+          <div class="signature-area">
+            <div>
+              <div class="signature-line">Doctor's Signature</div>
+            </div>
           </div>
           
           <button class="no-print" onclick="window.print()">Print Prescription</button>
@@ -614,8 +864,74 @@ const Prescriptions = () => {
     });
   };
 
-  const getPatientDetails = (patientId: string) => {
-    return patients.find((patient) => patient._id === patientId);
+  const handlePaymentUpdate = async (prescriptionId: string) => {
+    try {
+      const token = localStorage.getItem("token");
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      await axios.patch(
+        `${import.meta.env.VITE_BACKEND_URL}/prescription/${userId}/payment/${prescriptionId}`,
+        {
+          paymentStatus: "paid",
+          paymentDate: new Date().toISOString(),
+        },
+        config
+      );
+
+      toast("Success", {
+        description: "Payment status updated successfully!",
+      });
+
+      // Refresh prescriptions list
+      const updatedPrescriptions = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/prescription/${userId}`,
+        config
+      );
+      setPrescriptions(updatedPrescriptions.data);
+      setFilteredPrescriptions(updatedPrescriptions.data);
+    } catch (error: any) {
+      console.error("Error updating payment status:", error);
+      toast("Error", {
+        description: "Failed to update payment status",
+      });
+    }
+  };
+
+  // Get patient details from localStorage instead of using this function
+  // const getPatientDetails = (patientId: string) => {
+  //   return patients.find((patient) => patient._id === patientId);
+  // };
+
+  const fetchPatientPrescriptionHistory = async (patientId: string) => {
+    try {
+      setLoadingPatientHistory(true);
+      const token = localStorage.getItem("token");
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const response = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/prescription/user/${patientId}`,
+        config
+      );
+
+      if (response.data && Array.isArray(response.data)) {
+        setPatientPrescriptions(response.data);
+      } else {
+        setPatientPrescriptions([]);
+      }
+    } catch (error) {
+      console.error("Error fetching patient prescription history:", error);
+      setPatientPrescriptions([]);
+    } finally {
+      setLoadingPatientHistory(false);
+    }
   };
 
   return (
@@ -651,11 +967,13 @@ const Prescriptions = () => {
           <Card className="border-t-4 border-t-blue-500">
             <CardHeader>
               <CardTitle className="text-2xl">
-                Clinical Prescription Builder
+                {editPrescriptionId ? 'Edit Physiotherapy Prescription' : 'Physiotherapy Prescription'}
               </CardTitle>
               <CardDescription>
-                Create a detailed prescription with medications, diagnosis, and
-                treatment plan
+                {editPrescriptionId 
+                  ? 'Update this prescription with any necessary changes'
+                  : 'Create a simple prescription sheet with essential details'
+                }
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -688,281 +1006,181 @@ const Prescriptions = () => {
                 </div>
               )}
 
-              <form onSubmit={handleSubmit} className="space-y-6">
+                            <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="bg-slate-50 p-4 rounded-md border">
                   <h3 className="font-medium mb-3 text-slate-800">
                     Patient Information
                   </h3>
-                  <div className="space-y-2">
-                    <Label htmlFor="patient">Select Patient</Label>
-                    <Select
-                      value={selectedPatient}
-                      onValueChange={(value) => {
-                        setSelectedPatient(value);
-                        // Auto-populate any patient history if available
-                        const selectedPatientDetails = getPatientDetails(value);
-                        if (selectedPatientDetails) {
-                          // You could fetch previous history here if needed
-                        }
-                      }}
-                    >
-                      <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Select Patient" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {patients.length > 0 ? (
-                          patients.map((patient) => (
-                            <SelectItem key={patient._id} value={patient._id}>
-                              {patient.full_name}
-                              {patient.appointmentDate
-                                ? ` (Last visit: ${new Date(
-                                    patient.appointmentDate
-                                  ).toLocaleDateString()})`
-                                : " (No appointment date)"}
-                            </SelectItem>
-                          ))
-                        ) : (
-                          <SelectItem value="none" disabled>
-                            {loading
-                              ? "Loading patients..."
-                              : "No patients with appointments"}
-                          </SelectItem>
+                  {patientNameFromUrl ? (
+                    <div className="mb-3 p-3 bg-blue-50 border border-blue-200 rounded-md">
+                      <p className="text-sm text-blue-700">
+                        <strong>Patient:</strong> {patientNameFromUrl}
+                        {appointmentIdFromUrl && (
+                          <span className="ml-2 text-blue-600">
+                            (Appointment ID: {appointmentIdFromUrl})
+                          </span>
                         )}
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  {selectedPatient && (
-                    <div className="mt-3 pt-3 border-t border-slate-200">
-                      <h4 className="text-sm font-medium text-slate-600 mb-2">
-                        Selected Patient Details
-                      </h4>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
-                        {(() => {
-                          const patientDetails =
-                            getPatientDetails(selectedPatient);
-                          return patientDetails ? (
-                            <>
-                              <div>
-                                <span className="font-medium">Name:</span>{" "}
-                                {patientDetails.full_name}
-                              </div>
-                              <div>
-                                <span className="font-medium">Email:</span>{" "}
-                                {patientDetails.email}
-                              </div>
-                              {patientDetails.phoneNumber && (
-                                <div>
-                                  <span className="font-medium">Phone:</span>{" "}
-                                  {patientDetails.phoneNumber}
-                                </div>
-                              )}
-                              {patientDetails.appointmentDate && (
-                                <div>
-                                  <span className="font-medium">
-                                    Last Visit:
-                                  </span>{" "}
-                                  {new Date(
-                                    patientDetails.appointmentDate
-                                  ).toLocaleDateString()}
-                                </div>
-                              )}
-                            </>
-                          ) : null;
-                        })()}
+                      </p>
+                      
+                      {/* Show all available patient details */}
+                      <div className="grid grid-cols-2 gap-2 mt-2 text-sm">
+                        {patientEmailFromUrl && (
+                          <p className="text-blue-700"><strong>Email:</strong> {patientEmailFromUrl}</p>
+                        )}
+                        {patientPhoneFromUrl && (
+                          <p className="text-blue-700"><strong>Phone:</strong> {patientPhoneFromUrl}</p>
+                        )}
+                        {patientAgeFromUrl && (
+                          <p className="text-blue-700"><strong>Age:</strong> {patientAgeFromUrl}</p>
+                        )}
+                        {patientAddressFromUrl && (
+                          <p className="text-blue-700"><strong>Address:</strong> {patientAddressFromUrl}</p>
+                        )}
                       </div>
                     </div>
+                  ) : (
+                    <div className="mb-3 p-3 bg-yellow-50 border border-yellow-200 rounded-md">
+                      <p className="text-sm text-yellow-700">
+                        <strong>No patient selected.</strong> Please go back to the dashboard and click "Write Prescription" on a specific appointment.
+                      </p>
+                    </div>
+                  )}
+
+                  {/* Patient Prescription History */}
+                  {patientIdFromUrl && (
+                    <>
+                      {loadingPatientHistory ? (
+                        <div className="mt-4 p-3 bg-gray-50 rounded-md">
+                          <p className="text-sm text-gray-600">Loading prescription history...</p>
+                        </div>
+                      ) : patientPrescriptions.length > 0 ? (
+                        <div className="mt-4">
+                          <h5 className="text-sm font-medium text-slate-600 mb-2">
+                            Previous Prescriptions ({patientPrescriptions.length})
+                          </h5>
+                          <div className="space-y-2 max-h-40 overflow-y-auto">
+                            {patientPrescriptions.map((prescription) => (
+                              <div
+                                key={prescription._id}
+                                className="p-2 bg-blue-50 border border-blue-200 rounded text-xs"
+                              >
+                                <div className="flex justify-between items-start">
+                                  <div>
+                                    <span className="font-medium">
+                                      {new Date(prescription.dateIssued).toLocaleDateString()}
+                                    </span>
+                                    {prescription.diagnosis && (
+                                      <span className="ml-2 text-blue-600">
+                                        - {prescription.diagnosis}
+                                      </span>
+                                    )}
+                                  </div>
+                                  <button
+                                    onClick={() => {
+                                      setSelectedPrescription(prescription);
+                                      setIsPrintDialogOpen(true);
+                                    }}
+                                    className="text-blue-600 hover:text-blue-800 text-xs"
+                                  >
+                                    View
+                                  </button>
+                                </div>
+                                {prescription.prescriptionText && (
+                                  <p className="mt-1 text-gray-600 line-clamp-2">
+                                    {prescription.prescriptionText}
+                                  </p>
+                                )}
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="mt-4 p-3 bg-gray-50 rounded-md">
+                          <p className="text-sm text-gray-600">No previous prescriptions found for this patient.</p>
+                        </div>
+                      )}
+                    </>
                   )}
                 </div>
 
-                <Accordion
-                  type="single"
-                  collapsible
-                  defaultValue="diagnosis"
-                  className="w-full"
-                >
-                  <AccordionItem value="diagnosis">
-                    <AccordionTrigger className="text-base font-medium">
-                      Diagnosis & Clinical Assessment
-                    </AccordionTrigger>
-                    <AccordionContent>
-                      <div className="space-y-4 mt-2">
-                        <div className="space-y-2">
-                          <Label htmlFor="diagnosis">Diagnosis</Label>
-                          <Textarea
-                            id="diagnosis"
-                            value={diagnosis}
-                            onChange={(e) => setDiagnosis(e.target.value)}
-                            placeholder="Enter patient diagnosis..."
-                            className="min-h-[80px]"
-                          />
-                        </div>
+                <div className="p-6 bg-white border-2 border-gray-200 rounded-md shadow-sm">
+                  <div className="flex justify-between border-b pb-4 mb-4">
+                    <div>
+                      <h3 className="text-xl font-bold">Physiotherapy Prescription</h3>
+                      <p className="text-sm text-gray-500">Date: {new Date().toLocaleDateString()}</p>
+                    </div>
+                    <div className="text-right">
+                      <h3 className="font-semibold">Samarth Clinics</h3>
+                      <p className="text-sm text-gray-500">Physiotherapy & Rehabilitation</p>
+                    </div>
+                  </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          <div className="space-y-2">
-                            <Label htmlFor="physicalExaminer">
-                              Physical Examiner
-                            </Label>
-                            <Select
-                              value={physicalExaminer}
-                              onValueChange={setPhysicalExaminer}
-                            >
-                              <SelectTrigger>
-                                <SelectValue placeholder="Select Doctor" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                {doctors.map((doctor) => (
-                                  <SelectItem
-                                    key={doctor._id}
-                                    value={doctor._id}
-                                  >
-                                    Dr. {doctor.full_name}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                          </div>
+                  {/* Main Prescription Content */}
+                  <div className="space-y-4">
+                    {/* Diagnosis Section */}
+                    <div className="space-y-2">
+                      <Label htmlFor="diagnosis" className="text-base font-semibold">Diagnosis</Label>
+                      <Textarea
+                        id="diagnosis"
+                        value={diagnosis}
+                        onChange={(e) => setDiagnosis(e.target.value)}
+                        placeholder="Enter patient diagnosis..."
+                        className="min-h-[80px]"
+                      />
+                    </div>
 
-                          <div className="space-y-2">
-                            <Label htmlFor="investigation">Investigation</Label>
-                            <Textarea
-                              id="investigation"
-                              value={investigation}
-                              onChange={(e) => setInvestigation(e.target.value)}
-                              placeholder="Enter investigation details..."
-                              className="min-h-[80px]"
-                            />
-                          </div>
-                        </div>
+                    {/* Treatment Plan */}
+                    <div className="space-y-2">
+                      <Label htmlFor="treatmentPlan" className="text-base font-semibold">Treatment Plan</Label>
+                      <Textarea
+                        id="treatmentPlan"
+                        value={treatmentPlan}
+                        onChange={(e) => setTreatmentPlan(e.target.value)}
+                        placeholder="Enter treatment plan details, recommended physical therapy exercises, etc."
+                        className="min-h-[100px]"
+                      />
+                    </div>
 
-                        <div className="space-y-2">
-                          <Label htmlFor="patientHistory">
-                            Patient History
-                          </Label>
-                          <Textarea
-                            id="patientHistory"
-                            value={patientHistory}
-                            onChange={(e) => setPatientHistory(e.target.value)}
-                            placeholder="Enter relevant patient history..."
-                            className="min-h-[100px]"
-                          />
-                        </div>
-                      </div>
-                    </AccordionContent>
-                  </AccordionItem>
-
-                  <AccordionItem value="medications">
-                    <AccordionTrigger className="text-base font-medium">
-                      Medications
-                    </AccordionTrigger>
-                    <AccordionContent>
+                    {/* Medications - Simplified */}
+                    <div>
+                      <Label className="text-base font-semibold mb-2 block">Medications</Label>
                       {medications.map((medication, index) => (
-                        <div
-                          key={index}
-                          className="mb-4 p-4 border rounded-md bg-slate-50 relative"
-                        >
+                        <div key={index} className="mb-3 p-3 border rounded-md relative flex flex-wrap items-center gap-2">
+                          <Input
+                            className="flex-1 min-w-[200px]"
+                            value={medication.name}
+                            onChange={(e) => handleMedicationChange(index, "name", e.target.value)}
+                            placeholder="Medication name"
+                          />
+                          <Input
+                            className="w-[120px]"
+                            value={medication.dosage}
+                            onChange={(e) => handleMedicationChange(index, "dosage", e.target.value)}
+                            placeholder="Dosage"
+                          />
+                          <Input
+                            className="w-[150px]"
+                            value={medication.frequency}
+                            onChange={(e) => handleMedicationChange(index, "frequency", e.target.value)}
+                            placeholder="Frequency"
+                          />
+                          <Input
+                            className="w-[120px]"
+                            value={medication.duration}
+                            onChange={(e) => handleMedicationChange(index, "duration", e.target.value)}
+                            placeholder="Duration"
+                          />
                           {index > 0 && (
                             <Button
                               type="button"
                               variant="ghost"
                               size="icon"
-                              className="absolute top-2 right-2 h-6 w-6 text-red-500 hover:text-red-700"
+                              className="h-8 w-8 text-red-500 hover:text-red-700"
                               onClick={() => handleRemoveMedication(index)}
                             >
                               <XCircleIcon className="h-5 w-5" />
                             </Button>
                           )}
-
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
-                            <div className="space-y-2">
-                              <Label htmlFor={`med-name-${index}`}>
-                                Medication Name
-                              </Label>
-                              <Input
-                                id={`med-name-${index}`}
-                                value={medication.name}
-                                onChange={(e) =>
-                                  handleMedicationChange(
-                                    index,
-                                    "name",
-                                    e.target.value
-                                  )
-                                }
-                                placeholder="Medication name"
-                              />
-                            </div>
-                            <div className="space-y-2">
-                              <Label htmlFor={`med-dosage-${index}`}>
-                                Dosage
-                              </Label>
-                              <Input
-                                id={`med-dosage-${index}`}
-                                value={medication.dosage}
-                                onChange={(e) =>
-                                  handleMedicationChange(
-                                    index,
-                                    "dosage",
-                                    e.target.value
-                                  )
-                                }
-                                placeholder="e.g. 500mg, 10ml"
-                              />
-                            </div>
-                          </div>
-
-                          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-3">
-                            <div className="space-y-2">
-                              <Label htmlFor={`med-frequency-${index}`}>
-                                Frequency
-                              </Label>
-                              <Input
-                                id={`med-frequency-${index}`}
-                                value={medication.frequency}
-                                onChange={(e) =>
-                                  handleMedicationChange(
-                                    index,
-                                    "frequency",
-                                    e.target.value
-                                  )
-                                }
-                                placeholder="e.g. Twice daily, Every 8 hours"
-                              />
-                            </div>
-                            <div className="space-y-2">
-                              <Label htmlFor={`med-duration-${index}`}>
-                                Duration
-                              </Label>
-                              <Input
-                                id={`med-duration-${index}`}
-                                value={medication.duration}
-                                onChange={(e) =>
-                                  handleMedicationChange(
-                                    index,
-                                    "duration",
-                                    e.target.value
-                                  )
-                                }
-                                placeholder="e.g. 7 days, 2 weeks"
-                              />
-                            </div>
-                            <div className="space-y-2">
-                              <Label htmlFor={`med-instructions-${index}`}>
-                                Special Instructions
-                              </Label>
-                              <Input
-                                id={`med-instructions-${index}`}
-                                value={medication.instructions}
-                                onChange={(e) =>
-                                  handleMedicationChange(
-                                    index,
-                                    "instructions",
-                                    e.target.value
-                                  )
-                                }
-                                placeholder="e.g. Take with food"
-                              />
-                            </div>
-                          </div>
                         </div>
                       ))}
 
@@ -970,150 +1188,100 @@ const Prescriptions = () => {
                         type="button"
                         variant="outline"
                         onClick={handleAddMedication}
-                        className="mt-2"
+                        className="mt-1"
+                        size="sm"
                       >
-                        <PlusCircleIcon className="h-4 w-4 mr-2" />
-                        Add Another Medication
+                        <PlusCircleIcon className="h-4 w-4 mr-1" />
+                        Add Medication
                       </Button>
-                    </AccordionContent>
-                  </AccordionItem>
+                    </div>
 
-                  <AccordionItem value="treatment">
-                    <AccordionTrigger className="text-base font-medium">
-                      Treatment Plan & Additional Information
-                    </AccordionTrigger>
-                    <AccordionContent>
-                      <div className="space-y-4 mt-2">
-                        <div className="space-y-2">
-                          <Label htmlFor="prescription">
-                            Additional Prescription Text
-                          </Label>
-                          <Textarea
-                            id="prescription"
-                            value={prescriptionText}
-                            onChange={(e) =>
-                              setPrescriptionText(e.target.value)
-                            }
-                            placeholder="Enter any additional prescription details not covered by medication list..."
-                            className="min-h-[100px]"
-                          />
-                        </div>
+                    {/* Additional Prescription Text */}
+                    <div className="space-y-2">
+                      <Label htmlFor="prescription" className="text-base font-semibold">Additional Instructions</Label>
+                      <Textarea
+                        id="prescription"
+                        value={prescriptionText}
+                        onChange={(e) => setPrescriptionText(e.target.value)}
+                        placeholder="Enter any additional prescription details..."
+                        className="min-h-[80px]"
+                      />
+                    </div>
 
-                        <div className="space-y-2">
-                          <Label htmlFor="treatmentPlan">Treatment Plan</Label>
-                          <Textarea
-                            id="treatmentPlan"
-                            value={treatmentPlan}
-                            onChange={(e) => setTreatmentPlan(e.target.value)}
-                            placeholder="Enter treatment plan details, including recommended physical therapy exercises, care instructions, etc."
-                            className="min-h-[100px]"
-                          />
-                        </div>
+                    {/* Notes Section */}
+                    <div className="space-y-2">
+                      <Label htmlFor="notes" className="text-base font-semibold">Additional Notes</Label>
+                      <Textarea
+                        id="notes"
+                        value={notes}
+                        onChange={(e) => setNotes(e.target.value)}
+                        placeholder="Additional notes or instructions..."
+                        className="min-h-[80px]"
+                      />
+                    </div>
 
-                        <div className="space-y-2">
-                          <Label htmlFor="notes">Additional Notes</Label>
-                          <Textarea
-                            id="notes"
-                            value={notes}
-                            onChange={(e) => setNotes(e.target.value)}
-                            placeholder="Additional physician notes or comments..."
-                            className="min-h-[80px]"
-                          />
-                        </div>
-                      </div>
-                    </AccordionContent>
-                  </AccordionItem>
-
-                  <AccordionItem value="dates">
-                    <AccordionTrigger className="text-base font-medium">
-                      Payment & Scheduling
-                    </AccordionTrigger>
-                    <AccordionContent>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-2">
-                        <div className="space-y-2">
-                          <Label htmlFor="payment">Payment Amount</Label>
-                          <div className="relative">
-                            <span className="absolute left-3 top-2.5">₹</span>
-                            <Input
-                              id="payment"
-                              type="number"
-                              step="0.01"
-                              min="0"
-                              value={paymentAmount}
-                              onChange={(e) => setPaymentAmount(e.target.value)}
-                              placeholder="0.00"
-                              className="pl-7"
+                    {/* Bottom Section - Follow-up and Payment in a single row */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4 pt-4 border-t border-gray-200">
+                      <div>
+                        <Label htmlFor="followUp" className="text-sm font-medium block mb-2">Follow-up Date</Label>
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <Button
+                              variant="outline"
+                              className={cn(
+                                "w-full md:w-[200px] justify-start text-left font-normal",
+                                !followUpDate && "text-muted-foreground"
+                              )}
+                            >
+                              <CalendarIcon className="mr-2 h-4 w-4" />
+                              {followUpDate
+                                ? format(followUpDate, "PPP")
+                                : "Schedule follow-up"}
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-auto p-0">
+                            <Calendar
+                              mode="single"
+                              selected={followUpDate}
+                              onSelect={setFollowUpDate}
+                              initialFocus
+                              disabled={(date) => date < new Date()}
                             />
-                          </div>
-                        </div>
+                          </PopoverContent>
+                        </Popover>
+                      </div>
 
-                        <div className="space-y-2">
-                          <Label htmlFor="followUp">Follow-up Date</Label>
-                          <Popover>
-                            <PopoverTrigger asChild>
-                              <Button
-                                variant="outline"
-                                className={cn(
-                                  "w-full justify-start text-left font-normal",
-                                  !followUpDate && "text-muted-foreground"
-                                )}
-                              >
-                                <CalendarIcon className="mr-2 h-4 w-4" />
-                                {followUpDate
-                                  ? format(followUpDate, "PPP")
-                                  : "Schedule follow-up"}
-                              </Button>
-                            </PopoverTrigger>
-                            <PopoverContent className="w-auto p-0">
-                              <Calendar
-                                mode="single"
-                                selected={followUpDate}
-                                onSelect={setFollowUpDate}
-                                initialFocus
-                                disabled={(date) => date < new Date()}
-                              />
-                            </PopoverContent>
-                          </Popover>
-                        </div>
-
-                        <div className="space-y-2">
-                          <Label htmlFor="expiry">
-                            Prescription Expiry Date
-                          </Label>
-                          <Popover>
-                            <PopoverTrigger asChild>
-                              <Button
-                                variant="outline"
-                                className={cn(
-                                  "w-full justify-start text-left font-normal",
-                                  !expiryDate && "text-muted-foreground"
-                                )}
-                              >
-                                <CalendarIcon className="mr-2 h-4 w-4" />
-                                {expiryDate
-                                  ? format(expiryDate, "PPP")
-                                  : "Set expiry date"}
-                              </Button>
-                            </PopoverTrigger>
-                            <PopoverContent className="w-auto p-0">
-                              <Calendar
-                                mode="single"
-                                selected={expiryDate}
-                                onSelect={setExpiryDate}
-                                initialFocus
-                                disabled={(date) => date < new Date()}
-                              />
-                            </PopoverContent>
-                          </Popover>
+                      <div className="text-right">
+                        <Label htmlFor="payment" className="text-sm font-medium block mb-2">Payment Amount</Label>
+                        <div className="relative inline-block w-[150px]">
+                          <span className="absolute left-3 top-2.5">₹</span>
+                          <Input
+                            id="payment"
+                            type="number"
+                            step="0.01"
+                            min="0"
+                            value={paymentAmount}
+                            onChange={(e) => setPaymentAmount(e.target.value)}
+                            placeholder="0.00"
+                            className="pl-7"
+                          />
                         </div>
                       </div>
-                    </AccordionContent>
-                  </AccordionItem>
-                </Accordion>
+                    </div>
+
+                    {/* Doctor Signature Line */}
+                    <div className="mt-8 pt-8 border-t border-gray-200 flex justify-end">
+                      <div className="text-center w-[200px]">
+                        <div className="border-b border-black mb-1 h-8"></div>
+                        <p className="text-sm">Doctor's Signature</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
 
                 <div className="pt-4 border-t">
                   <Button type="submit" className="w-full md:w-auto">
-                    Create Prescription
+                    {editPrescriptionId ? 'Update Prescription' : 'Create Prescription'}
                   </Button>
                 </div>
               </form>
@@ -1231,6 +1399,30 @@ const Prescriptions = () => {
                                 >
                                   <CopyIcon className="h-4 w-4" />
                                 </Button>
+                                {prescription.paymentStatus === "pending" && (
+                                  <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    onClick={() =>
+                                      handlePaymentUpdate(prescription._id)
+                                    }
+                                    className="text-green-600 hover:text-green-800"
+                                  >
+                                    <svg
+                                      className="h-4 w-4"
+                                      fill="none"
+                                      stroke="currentColor"
+                                      viewBox="0 0 24 24"
+                                    >
+                                      <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                                      />
+                                    </svg>
+                                  </Button>
+                                )}
                                 <Dialog>
                                   <DialogTrigger asChild>
                                     <Button variant="ghost" size="icon">

@@ -3,7 +3,7 @@ import axios from "axios";
 import { toast } from "sonner";
 import { getUserId, getAuthHeaders } from "@/lib/authUtils";
 
-// Types for our data
+  // Types for our data
 interface Appointment {
   _id: string;
   date: string;
@@ -13,6 +13,12 @@ interface Appointment {
     full_name: string;
     email: string;
   };
+  // New patient fields directly in booking
+  patientName: string;
+  patientEmail: string;
+  patientPhone: string;
+  patientAge: number;
+  patientAddress: string;
   issue: string;
   status: "pending" | "confirmed" | "cancelled";
   createdAt: string;
@@ -31,6 +37,7 @@ interface Prescription {
   paymentAmount: number;
   notes?: string;
   expiryDate?: string;
+  shareableId?: string;
 }
 
 const Dashboard: React.FC = () => {
@@ -46,6 +53,10 @@ const Dashboard: React.FC = () => {
     "appointments"
   );
   const [doctorName, setDoctorName] = useState<string>("Doctor");
+  
+  // Search state
+  const [appointmentSearchTerm, setAppointmentSearchTerm] = useState<string>("");
+  const [prescriptionSearchTerm, setPrescriptionSearchTerm] = useState<string>("");
 
   useEffect(() => {
     // If no userId is found, redirect to signup
@@ -110,9 +121,9 @@ const Dashboard: React.FC = () => {
       // Get auth headers
       const headers = await getAuthenticationHeaders();
 
-      // Try MongoDB ID first - for doctors
+      // Fetch all bookings for doctors
       const response = await axios.get(
-        `${import.meta.env.VITE_BACKEND_URL}/booking/${userId}`,
+        `${import.meta.env.VITE_BACKEND_URL}/booking/all`,
         { headers }
       );
       setAppointments(response.data);
@@ -197,6 +208,65 @@ const Dashboard: React.FC = () => {
       : "bg-yellow-100 text-yellow-800";
   }, []);
 
+  // Filtered appointments based on search term
+  const filteredAppointments = useMemo(() => {
+    if (!appointmentSearchTerm.trim()) return appointments;
+    
+    try {
+      const searchTerm = appointmentSearchTerm.toLowerCase();
+      return appointments.filter((appointment) => {
+        try {
+          return (
+            // Search in both old and new patient data structure
+            (appointment.patientName && appointment.patientName.toLowerCase().includes(searchTerm)) ||
+            (appointment.patientEmail && appointment.patientEmail.toLowerCase().includes(searchTerm)) ||
+            (appointment.patientPhone && appointment.patientPhone.includes(searchTerm)) ||
+            (appointment.user?.full_name && appointment.user.full_name.toLowerCase().includes(searchTerm)) ||
+            (appointment.user?.email && appointment.user.email.toLowerCase().includes(searchTerm)) ||
+            (appointment.issue && appointment.issue.toLowerCase().includes(searchTerm)) ||
+            (appointment.status && appointment.status.toLowerCase().includes(searchTerm)) ||
+            (appointment.date && new Date(appointment.date).toLocaleDateString().includes(searchTerm)) ||
+            (appointment.time && appointment.time.toLowerCase().includes(searchTerm))
+          );
+        } catch (error) {
+          console.error("Error filtering appointment:", error, appointment);
+          return false;
+        }
+      });
+    } catch (error) {
+      console.error("Error in appointment filtering:", error);
+      return appointments;
+    }
+  }, [appointments, appointmentSearchTerm]);
+
+  // Filtered prescriptions based on search term
+  const filteredPrescriptions = useMemo(() => {
+    if (!prescriptionSearchTerm.trim()) return prescriptions;
+    
+    try {
+      const searchTerm = prescriptionSearchTerm.toLowerCase();
+      return prescriptions.filter((prescription) => {
+        try {
+          return (
+            (prescription.patient?.full_name && prescription.patient.full_name.toLowerCase().includes(searchTerm)) ||
+            (prescription.patient?.email && prescription.patient.email.toLowerCase().includes(searchTerm)) ||
+            (prescription.prescriptionText && prescription.prescriptionText.toLowerCase().includes(searchTerm)) ||
+            (prescription.notes && prescription.notes.toLowerCase().includes(searchTerm)) ||
+            (prescription.paymentStatus && prescription.paymentStatus.toLowerCase().includes(searchTerm)) ||
+            (prescription.dateIssued && new Date(prescription.dateIssued).toLocaleDateString().includes(searchTerm)) ||
+            (prescription.paymentAmount && prescription.paymentAmount.toString().includes(searchTerm))
+          );
+        } catch (error) {
+          console.error("Error filtering prescription:", error, prescription);
+          return false;
+        }
+      });
+    } catch (error) {
+      console.error("Error in prescription filtering:", error);
+      return prescriptions;
+    }
+  }, [prescriptions, prescriptionSearchTerm]);
+
   // Handle appointment status update
   const handleAppointmentUpdate = useCallback(
     async (appointmentId: string, status: "confirmed" | "cancelled") => {
@@ -265,6 +335,9 @@ const Dashboard: React.FC = () => {
   const handleTabChange = useCallback(
     (tab: "appointments" | "prescriptions") => {
       setActiveTab(tab);
+      // Clear search terms when switching tabs
+      setAppointmentSearchTerm("");
+      setPrescriptionSearchTerm("");
     },
     []
   );
@@ -465,6 +538,56 @@ const Dashboard: React.FC = () => {
         {/* Appointments Tab Content */}
         {activeTab === "appointments" && (
           <>
+            {/* Search Bar for Appointments */}
+            <div className="p-4 bg-gray-50 border-b">
+              <div className="max-w-md">
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <svg
+                      className="h-5 w-5 text-gray-400"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                      />
+                    </svg>
+                  </div>
+                  <input
+                    type="text"
+                    placeholder="Search appointments by patient name, email, issue, status, date, or time..."
+                    value={appointmentSearchTerm}
+                    onChange={(e) => setAppointmentSearchTerm(e.target.value)}
+                    className="block w-full pl-10 pr-10 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                  />
+                  {appointmentSearchTerm && (
+                    <button
+                      onClick={() => setAppointmentSearchTerm("")}
+                      className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                    >
+                      <svg
+                        className="h-5 w-5 text-gray-400 hover:text-gray-600"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M6 18L18 6M6 6l12 12"
+                        />
+                      </svg>
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
+            
             {loading.appointments ? (
               <div className="p-6 flex justify-center">
                 <div className="animate-pulse space-y-4 w-full">
@@ -485,7 +608,7 @@ const Dashboard: React.FC = () => {
                   Try Again
                 </button>
               </div>
-            ) : appointments.length === 0 ? (
+            ) : filteredAppointments.length === 0 ? (
               <div className="p-12 text-center">
                 <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-blue-100 text-blue-600 mb-4">
                   <svg
@@ -503,10 +626,13 @@ const Dashboard: React.FC = () => {
                   </svg>
                 </div>
                 <h3 className="text-lg font-medium text-gray-900 mb-2">
-                  No appointments found
+                  {appointmentSearchTerm ? "No appointments match your search" : "No appointments found"}
                 </h3>
                 <p className="text-gray-500">
-                  You don't have any appointments scheduled yet.
+                  {appointmentSearchTerm 
+                    ? "Try adjusting your search terms or clear the search to see all appointments."
+                    : "You don't have any appointments scheduled yet."
+                  }
                 </p>
               </div>
             ) : (
@@ -532,47 +658,65 @@ const Dashboard: React.FC = () => {
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
-                    {appointments.map((appointment) => (
+                    {filteredAppointments.map((appointment) => (
                       <tr key={appointment._id} className="hover:bg-gray-50">
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="text-sm font-medium text-gray-900">
-                            {formatDate(appointment.date)}
+                            {appointment.date ? formatDate(appointment.date) : "No date"}
                           </div>
                           <div className="text-sm text-gray-500">
-                            {appointment.time}
+                            {appointment.time || "No time"}
+                          </div>
+                          <div className="text-xs text-gray-400 mt-1">
+                            Booked: {appointment.createdAt ? new Date(appointment.createdAt).toLocaleDateString() + ' ' + 
+                            new Date(appointment.createdAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : "Unknown"}
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="text-sm text-gray-900">
-                            {appointment.user?.full_name || "Unknown"}
+                            {appointment.patientName || appointment.user?.full_name || "Unknown"}
                           </div>
                           <div className="text-xs text-gray-500">
-                            {appointment.user?.email || "No email"}
+                            {appointment.patientEmail || appointment.user?.email || "No email"}
                           </div>
+                          {appointment.patientPhone && (
+                            <div className="text-xs text-gray-500">
+                              {appointment.patientPhone}
+                            </div>
+                          )}
                         </td>
                         <td className="px-6 py-4">
                           <div className="text-sm text-gray-500 line-clamp-2">
-                            {appointment.issue}
+                            {appointment.issue || "No issue description"}
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <span
                             className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(
-                              appointment.status
+                              appointment.status || "pending"
                             )}`}
                           >
-                            {appointment.status.charAt(0).toUpperCase() +
-                              appointment.status.slice(1)}
+                            {appointment.status ? (appointment.status.charAt(0).toUpperCase() +
+                              appointment.status.slice(1)) : "Pending"}
                           </span>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+
                           <button
-                            className="text-blue-600 hover:text-blue-900 mr-3"
-                            onClick={() =>
-                              (window.location.href = `/appointments`)
-                            }
+                            className="text-green-600 hover:text-green-900 mr-3"
+                            onClick={() => {
+                              // Use either direct patient data or referenced user data
+                              const patientId = appointment.user?._id || '';
+                              const patientName = appointment.patientName || appointment.user?.full_name || 'Unknown';
+                              const patientEmail = appointment.patientEmail || appointment.user?.email || '';
+                              const patientPhone = appointment.patientPhone || '';
+                              const patientAge = appointment.patientAge || '';
+                              const patientAddress = appointment.patientAddress || '';
+                              
+                              window.location.href = `/prescriptions?patientId=${patientId}&patientName=${encodeURIComponent(patientName)}&patientEmail=${encodeURIComponent(patientEmail)}&patientPhone=${encodeURIComponent(patientPhone)}&patientAge=${patientAge}&patientAddress=${encodeURIComponent(patientAddress)}&appointmentId=${appointment._id}`;
+                            }}
                           >
-                            View
+                            Write Prescription
                           </button>
                           {appointment.status === "pending" && (
                             <>
@@ -613,6 +757,56 @@ const Dashboard: React.FC = () => {
         {/* Prescriptions Tab Content */}
         {activeTab === "prescriptions" && (
           <>
+            {/* Search Bar for Prescriptions */}
+            <div className="p-4 bg-gray-50 border-b">
+              <div className="max-w-md">
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <svg
+                      className="h-5 w-5 text-gray-400"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                      />
+                    </svg>
+                  </div>
+                  <input
+                    type="text"
+                    placeholder="Search prescriptions by patient name, email, prescription text, notes, payment status, date, or amount..."
+                    value={prescriptionSearchTerm}
+                    onChange={(e) => setPrescriptionSearchTerm(e.target.value)}
+                    className="block w-full pl-10 pr-10 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                  />
+                  {prescriptionSearchTerm && (
+                    <button
+                      onClick={() => setPrescriptionSearchTerm("")}
+                      className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                    >
+                      <svg
+                        className="h-5 w-5 text-gray-400 hover:text-gray-600"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M6 18L18 6M6 6l12 12"
+                        />
+                      </svg>
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
+            
             {loading.prescriptions ? (
               <div className="p-6 flex justify-center">
                 <div className="animate-pulse space-y-4 w-full">
@@ -633,7 +827,7 @@ const Dashboard: React.FC = () => {
                   Try Again
                 </button>
               </div>
-            ) : prescriptions.length === 0 ? (
+            ) : filteredPrescriptions.length === 0 ? (
               <div className="p-12 text-center">
                 <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-purple-100 text-purple-600 mb-4">
                   <svg
@@ -651,10 +845,13 @@ const Dashboard: React.FC = () => {
                   </svg>
                 </div>
                 <h3 className="text-lg font-medium text-gray-900 mb-2">
-                  No prescriptions found
+                  {prescriptionSearchTerm ? "No prescriptions match your search" : "No prescriptions found"}
                 </h3>
                 <p className="text-gray-500">
-                  You haven't created any prescriptions yet.
+                  {prescriptionSearchTerm 
+                    ? "Try adjusting your search terms or clear the search to see all prescriptions."
+                    : "You haven't created any prescriptions yet."
+                  }
                 </p>
               </div>
             ) : (
@@ -683,11 +880,11 @@ const Dashboard: React.FC = () => {
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
-                    {prescriptions.map((prescription) => (
+                    {filteredPrescriptions.map((prescription) => (
                       <tr key={prescription._id} className="hover:bg-gray-50">
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="text-sm text-gray-900">
-                            {formatDate(prescription.dateIssued)}
+                            {prescription.dateIssued ? formatDate(prescription.dateIssued) : "No date"}
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
@@ -700,19 +897,19 @@ const Dashboard: React.FC = () => {
                         </td>
                         <td className="px-6 py-4">
                           <div className="text-sm text-gray-500 line-clamp-2">
-                            {prescription.prescriptionText}
+                            {prescription.prescriptionText || "No prescription text"}
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <span
                             className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getPaymentStatusColor(
-                              prescription.paymentStatus
+                              prescription.paymentStatus || "pending"
                             )}`}
                           >
-                            {prescription.paymentStatus
+                            {prescription.paymentStatus ? (prescription.paymentStatus
                               .charAt(0)
                               .toUpperCase() +
-                              prescription.paymentStatus.slice(1)}
+                              prescription.paymentStatus.slice(1)) : "Pending"}
                           </span>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
@@ -727,10 +924,18 @@ const Dashboard: React.FC = () => {
                           <button
                             className="text-blue-600 hover:text-blue-900 mr-3"
                             onClick={() =>
-                              (window.location.href = "/prescriptions")
+                              (window.location.href = `/prescriptions/share/${prescription.shareableId}`)
                             }
                           >
                             View
+                          </button>
+                          <button
+                            className="text-indigo-600 hover:text-indigo-900 mr-3"
+                            onClick={() =>
+                              (window.location.href = `/prescriptions?edit=${prescription._id}&patientId=${prescription.patient?._id || ''}&patientName=${encodeURIComponent(prescription.patient?.full_name || 'Unknown')}`)
+                            }
+                          >
+                            Edit
                           </button>
                           {prescription.paymentStatus === "pending" && (
                             <button

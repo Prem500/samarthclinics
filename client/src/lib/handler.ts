@@ -46,18 +46,28 @@ export const isAuthenticated = async () => {
   }
 };
 
-export const fetchAppointmentId = async (userId: string, patientId: string) => {
+export const fetchAppointmentId = async (
+  doctorId: string,
+  patientId: string
+) => {
   try {
-    const res = await axios.get(
-      `${
-        import.meta.env.VITE_BACKEND_URL
-      }/booking/${userId}/details/${patientId}`
+    const token = localStorage.getItem("token");
+    const res = await axios.post(
+      `${import.meta.env.VITE_BACKEND_URL}/booking/${doctorId}/details/${patientId}`,
+      {},
+      token
+        ? {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        : undefined
     );
 
     console.log(res.data);
 
-    return res.data;
+    // Server responds with { bookingId }
+    return res.data?.bookingId || null;
   } catch (error) {
     console.log(error);
+    return null;
   }
 };

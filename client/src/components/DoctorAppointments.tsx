@@ -103,25 +103,9 @@ const DoctorAppointments = () => {
       setLoading(true);
       setError(null);
 
-      // First, get the doctor's MongoDB ID from the custom AuthContext ID
-      const doctorResponse = await axios.get(
-        `${import.meta.env.VITE_BACKEND_URL}/auth/${doctorId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
-
-      const doctorMongoId = doctorResponse.data._id;
-
-      if (!doctorMongoId) {
-        throw new Error("Could not retrieve doctor information");
-      }
-
-      // Now use the MongoDB ID to fetch bookings with populated user data
+      // Fetch all bookings for doctors (server side verifies doctor role)
       const response = await axios.get(
-        `${import.meta.env.VITE_BACKEND_URL}/booking/${doctorMongoId}`,
+        `${import.meta.env.VITE_BACKEND_URL}/booking/all`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,

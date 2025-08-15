@@ -5,19 +5,22 @@ const Schema = mongoose.Schema;
 const medicationSchema = new Schema({
   name: {
     type: String,
-    required: true,
+    required: function() {
+      // Only require name if any medication field is provided
+      return this.name || this.dosage || this.frequency || this.duration || this.instructions;
+    },
   },
   dosage: {
     type: String,
-    required: true,
+    required: false,
   },
   frequency: {
     type: String,
-    required: true,
+    required: false,
   },
   duration: {
     type: String,
-    required: true,
+    required: false,
   },
   instructions: {
     type: String,

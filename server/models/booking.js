@@ -12,6 +12,27 @@ const BookingSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
+    // Patient details stored directly in booking
+    patientName: {
+      type: String,
+      required: false,
+    },
+    patientEmail: {
+      type: String,
+      required: false,
+    },
+    patientPhone: {
+      type: String, 
+      required: false,
+    },
+    patientAge: {
+      type: Number,
+      required: false,
+    },
+    patientAddress: {
+      type: String,
+      required: false,
+    },
     date: {
       type: Date,
       required: true,
@@ -24,6 +45,10 @@ const BookingSchema = new mongoose.Schema(
       type: String,
       enum: ["pending", "confirmed", "cancelled", "scheduled", "completed"],
       default: "pending",
+    },
+    issue: {
+      type: String,
+      default: "",
     },
   },
   {

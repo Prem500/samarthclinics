@@ -230,16 +230,7 @@ const VisitUsSection: React.FC = () => {
                   >
                     {category.description}
                   </p>{" "}
-                  <a
-                    href={`/services#${category.id}`}
-                    className="treatment-link d-inline-flex align-items-center universal-button-outline"
-                  >
-                    Learn More
-                    <i
-                      className="fa fa-arrow-right ms-2"
-                      style={{ fontSize: "0.8rem" }}
-                    ></i>
-                  </a>
+                  
                 </div>
               </div>
             </motion.div>

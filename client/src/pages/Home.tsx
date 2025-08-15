@@ -50,28 +50,43 @@ const Home: React.FC = () => {
   const shouldShowAppointments = userRole !== "doctor";
 
   return (
-    <div>
+    <div id="home">
       {/* Header */}
       <TopBar />
       {/* Hero Section */}
-      <HeroSection /> {/* Conditionally render Appointments section */}
+      <section id="hero">
+        <HeroSection />
+      </section>
+      {/* Conditionally render Appointments section */}
       {shouldShowAppointments && (
         <div ref={appointmentsRef} id="appointments">
           <Appointments homepage={true} />
         </div>
       )}
       {/* Visit Us Section - specialized treatments */}
-      <VisitUsSection />
+      <section id="services">
+        <VisitUsSection />
+      </section>
       {/* Team Section */}
-      <TeamSection />
+      <section id="about">
+        <TeamSection />
+      </section>
       {/* Why Choose Us Section */}
-      <WhyChooseUsSection />
+      <section id="why-choose-us">
+        <WhyChooseUsSection />
+      </section>
       {/* Testimonials Section */}
-      <TestimonialsSection />
+      <section id="testimonials">
+        <TestimonialsSection />
+      </section>
       {/* Map Section */}
-      <Map />
+      <section id="contact">
+        <Map />
+      </section>
       {/* Quick Info Section */}
-      <QuickInfoSection />
+      <section id="info">
+        <QuickInfoSection />
+      </section>
       {/* Footer */}
       <Footer />
       {/* WhatsApp Sticky Widget */}

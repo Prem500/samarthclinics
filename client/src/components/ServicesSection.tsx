@@ -371,7 +371,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
             >
-              Learn More
+          
             </motion.a>
           </div>
         </div>
@@ -416,7 +416,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
               transition: "all 0.3s ease",
             }}
           >
-            Learn More <i className="fa fa-arrow-right ms-1"></i>
+      <i className="fa fa-arrow-right ms-1"></i>
           </motion.a>
         </div>
       </div>

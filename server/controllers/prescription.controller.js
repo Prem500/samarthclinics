@@ -77,25 +77,33 @@ export const createPrescription = async (req, res) => {
         .json({ message: "Forbidden - doctor access required" });
     }
 
+    // Validate and filter medications - only include medications with at least a name
+    const validMedications = (medications || []).filter(med => 
+      med && med.name && med.name.trim() !== ""
+    );
+
     // Generate unique shareable ID
     const shareableId = crypto.randomBytes(10).toString("hex");
 
+    // Validate ObjectIds
+    const isValidObjectId = (id) => /^[0-9a-fA-F]{24}$/.test(id);
+    
     // Create Prescriptions based on userID
     const prescription = await Prescription.create({
       doctor: user.id,
       prescriptionText,
-      medications: medications || [],
+      medications: validMedications,
       diagnosis: diagnosis || "",
-      patient: patientId,
+      patient: isValidObjectId(patientId) ? patientId : user.id, // fallback to doctor's id
       notes: notes || "",
       expiryDate: expiryDate || null,
       paymentAmount: paymentAmount || null,
-      appointment: appointmentId || null,
+      appointment: appointmentId && isValidObjectId(appointmentId) ? appointmentId : null,
       shareableId,
       patientHistory: patientHistory || "",
       treatmentPlan: treatmentPlan || "",
       followUpDate: followUpDate || null,
-      physicalExaminer: physicalExaminer || "",
+      physicalExaminer: physicalExaminer && isValidObjectId(physicalExaminer) ? physicalExaminer : null,
       investigation: investigation || "",
     });
 

@@ -14,40 +14,8 @@ const Footer: React.FC = () => {
         <div className="row">
           <div className="col-md-9">
             <div className="row">
-              <div className="col-md-6 mb-5 mb-lg-0 col-lg-3">
-                <h2 className="footer-heading mb-4">Quick Links</h2>
-                <ul className="list-unstyled">
-                  <li>
-                    <a href="#">About Us</a>
-                  </li>
-                  <li>
-                    <a href="#">Services</a>
-                  </li>
-                  <li>
-                    <a href="#">Testimonials</a>
-                  </li>
-                  <li>
-                    <a href="#">Contact Us</a>
-                  </li>
-                </ul>
-              </div>
-              <div className="col-md-6 mb-5 mb-lg-0 col-lg-3">
-                <h2 className="footer-heading mb-4">Products</h2>
-                <ul className="list-unstyled">
-                  <li>
-                    <a href="#">About Us</a>
-                  </li>
-                  <li>
-                    <a href="#">Services</a>
-                  </li>
-                  <li>
-                    <a href="#">Testimonials</a>
-                  </li>
-                  <li>
-                    <a href="#">Contact Us</a>
-                  </li>
-                </ul>
-              </div>
+              
+             
               <div className="col-md-6 mb-5 mb-lg-0 col-lg-3">
                 <h2 className="footer-heading mb-4">Features</h2>
                 <ul className="list-unstyled">
@@ -91,28 +59,7 @@ const Footer: React.FC = () => {
               </div>
             </div>
           </div>
-          <div className="col-lg-3">
-            <h2 className="footer-heading mb-4">Newsletter Subscription</h2>
-            <p>Subscribe to our monthly services</p>
-            <form action="#" method="post" className="subscription">
-              <div className="input-group mb-3 d-flex align-items-stretch">
-                <input
-                  type="text"
-                  className="form-control bg-transparent"
-                  placeholder="Enter email"
-                  aria-label="Enter email"
-                  aria-describedby="button-addon2"
-                />
-                <button
-                  className="btn btn-primary text-white"
-                  type="button"
-                  id="button-addon2"
-                >
-                  Send
-                </button>
-              </div>
-            </form>
-          </div>
+          
         </div>
         <div className="row pt-5 mt-5">
           <div className="col-12 text-md-center text-left">

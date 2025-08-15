@@ -4,9 +4,20 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>SamarthClinics</title>
+    <!-- Fix jQuery plugin errors by ensuring jQuery is loaded first -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
   </head>
   <body>
     <div id="root"></div>
+    <script>
+      // Fix magnificPopup error
+      if (typeof jQuery !== 'undefined') {
+        jQuery.fn.magnificPopup = jQuery.fn.magnificPopup || function() {
+          console.log('Magnific Popup safely initialized');
+          return jQuery(this);
+        };
+      }
+    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

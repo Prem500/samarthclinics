@@ -1,13 +1,12 @@
 @import url("./css/aos.css");
 @import url("./css/bootstrap-datepicker.css");
-@import url("./css/bootstrap.min.css");
+/* Bootstrap is now imported from npm in main.tsx */
 @import url("./css/jquery-ui.css");
 @import url("./css/magnific-popup.css");
 @import url("./css/mediaelementplayer.css");
 @import url("./css/owl.carousel.min.css");
-@import url("./css/rangeslider.css");
-@import url("./css/bootstrap/bootstrap-reboot.css");
-@import url("./css/bootstrap/bootstrap-grid.css");
+/* Rangeslider removed - was causing errors */
+/* Bootstrap partials removed as main bootstrap is used from npm */
 @import url("./css/bootstrap/bootstrap.css");
 @import url("./css/custom-buttons.css"); /* Added custom button styles */
 

@@ -23,5 +23,5 @@ app.use("/api/booking", bookingRoute);
 
 app.listen(4000, () => {
   connectMongoDb();
-  console.log("Server is running on port 3000");
+  console.log("Server is running on port 4000");
 });

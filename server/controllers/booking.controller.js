@@ -36,6 +36,30 @@ export const GetBookings = async (req, res) => {
   }
 };
 
+// Return all bookings for doctors (with populated user and doctor details)
+export const GetAllBookings = async (req, res) => {
+  try {
+    const bookings = await Booking.find({})
+      .populate({
+        path: "user",
+        select: "full_name email phoneNumber _id",
+        model: "User",
+      })
+      .populate({
+        path: "doctor",
+        select: "full_name email _id",
+        model: "User",
+      })
+      .sort({ date: -1, time: -1 });
+
+    // Always return an array (possibly empty) to simplify client handling
+    return res.status(200).json(bookings || []);
+  } catch (error) {
+    console.error("Error in GetAllBookings:", error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
 export const GetBooking = async (req, res) => {
   const { id } = req.params;
 
@@ -104,48 +128,85 @@ export const CreateBooking = async (req, res) => {
     if (user) {
       // If an authenticated user is booking
       userId = user;
-    } else if (email) {
-      // For non-authenticated users, check if the email exists in our system
-      let existingUser = await User.findOne({ email });
+    } else if (email || phoneNumber) {
+      // For non-authenticated users, check if the email or phone number exists
+      let existingUser = null;
+      
+      if (email) {
+        existingUser = await User.findOne({ email });
+      }
+      
+      if (!existingUser && phoneNumber) {
+        existingUser = await User.findOne({ phoneNumber });
+      }
 
       if (existingUser) {
         // Use existing user
         userId = existingUser._id;
 
-        // Update user info if new data is provided
-        if (full_name || phoneNumber || age || address) {
-          const updateData = {};
-          if (full_name) updateData.full_name = full_name;
-          if (phoneNumber) updateData.phoneNumber = phoneNumber;
-          if (age) updateData.age = age;
-          if (address) updateData.address = address;
+        // Update user info if new data is provided (but don't change unique fields)
+        const updateData = {};
+        if (full_name && full_name !== existingUser.full_name) updateData.full_name = full_name;
+        if (age && age !== existingUser.age) updateData.age = age;
+        if (address && address !== existingUser.address) updateData.address = address;
 
+        // Only update email if it's different and not already taken
+        if (email && email !== existingUser.email) {
+          const emailExists = await User.findOne({ email, _id: { $ne: existingUser._id } });
+          if (!emailExists) {
+            updateData.email = email;
+          }
+        }
+
+        // Only update phone number if it's different and not already taken
+        if (phoneNumber && phoneNumber !== existingUser.phoneNumber) {
+          const phoneExists = await User.findOne({ phoneNumber, _id: { $ne: existingUser._id } });
+          if (!phoneExists) {
+            updateData.phoneNumber = phoneNumber;
+          }
+        }
+
+        if (Object.keys(updateData).length > 0) {
           await User.findByIdAndUpdate(userId, updateData);
         }
       } else {
-        // Create a new user without password (non-authenticated)
-        const newUser = new User({
-          email,
-          full_name,
-          phoneNumber,
-          age,
-          address,
-          role: "user", // Default role
-        });
-
-        const savedUser = await newUser.save();
-        userId = savedUser._id;
+        // Instead of creating a new user, create a temporary reference 
+        // Store patient data directly in booking without creating user account
+        userId = new mongoose.Types.ObjectId(); // Generate a temporary ID
+        
+        // We'll store patient details in the booking itself
+        // This prevents creating unnecessary user accounts
       }
     } else {
-      return res.status(400).json({ message: "Email is required for booking" });
+      return res.status(400).json({ message: "Email or phone number is required for booking" });
     }
 
-    // Create the booking with the user ID
+    // Check if booking already exists for this user, doctor, date, and time
+    const existingBooking = await Booking.findOne({
+      user: userId,
+      doctor,
+      date,
+      time,
+    });
+
+    if (existingBooking) {
+      return res.status(409).json({ 
+        message: "You already have a booking with this doctor on this date and time" 
+      });
+    }
+
+    // Create the booking with patient details
     const newBooking = new Booking({
       date,
       time,
       user: userId,
       doctor,
+      // Store patient details directly in the booking
+      patientName: full_name,
+      patientEmail: email,
+      patientPhone: phoneNumber,
+      patientAge: age,
+      patientAddress: address,
     });
 
     await newBooking.save();
@@ -155,7 +216,22 @@ export const CreateBooking = async (req, res) => {
       .json({ message: "Booking created successfully", booking: newBooking });
   } catch (error) {
     console.error("Error creating booking:", error);
-    res.status(409).json({ message: error.message });
+    
+    // Handle specific MongoDB errors
+    if (error.code === 11000) {
+      if (error.keyPattern && error.keyPattern.phoneNumber) {
+        return res.status(409).json({ 
+          message: "A user with this phone number already exists. Please use a different phone number or contact support." 
+        });
+      }
+      if (error.keyPattern && error.keyPattern.email) {
+        return res.status(409).json({ 
+          message: "A user with this email already exists. Please use a different email or contact support." 
+        });
+      }
+    }
+    
+    res.status(500).json({ message: "Failed to create booking. Please try again." });
   }
 };
 

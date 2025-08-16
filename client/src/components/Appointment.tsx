@@ -81,8 +81,8 @@ const Appointment = () => {
   
   const [selectedTime, setSelectedTime] = useState("10:00");
   
-  // Temporary hardcoded backend URL for testing
-  const BACKEND_URL = "http://localhost:4000/api";
+  // Use environment variable for backend URL
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
   // Set initial values and fetch necessary data
   useEffect(() => {

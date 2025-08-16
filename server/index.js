@@ -16,6 +16,11 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Root route
+app.get("/", (req, res) => {
+  res.send("Samarth Clinics API Server is running");
+});
+
 app.use("/api/auth", authRoute);
 app.use("/api/role", roleRoute);
 app.use("/api/prescription", prescriptionRoute);

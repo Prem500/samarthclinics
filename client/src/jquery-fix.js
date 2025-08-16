@@ -4,11 +4,11 @@
 (function() {
   // Check if jQuery exists
   if (typeof window.jQuery === 'undefined') {
-    console.warn('jQuery not found, magnificPopup may not initialize properly');
+    console.warn('jQuery not found, jQuery plugins may not initialize properly');
     return;
   }
   
-  // If jQuery exists but magnificPopup is causing errors
+  // If jQuery exists but plugins are causing errors
   const originalFn = window.jQuery.fn;
   
   if (originalFn) {
@@ -23,6 +23,14 @@
       }
     };
     
+    // Add waypoint plugin support
+    if (!originalFn.waypoint) {
+      originalFn.waypoint = function() {
+        console.warn('Waypoint plugin not loaded correctly - ignoring waypoint call');
+        return this; // Return the jQuery object to allow chaining
+      };
+    }
+    
     // Monitor for magnificPopup specifically
     Object.defineProperty(window.jQuery.fn, 'magnificPopup', {
       set: function(val) {
@@ -30,6 +38,20 @@
       },
       get: function() {
         return originalFn.magnificPopup;
+      },
+      configurable: true
+    });
+    
+    // Monitor for waypoint plugin
+    Object.defineProperty(window.jQuery.fn, 'waypoint', {
+      set: function(val) {
+        safePluginInit('waypoint', val);
+      },
+      get: function() {
+        return originalFn.waypoint || function() { 
+          console.warn('Waypoint plugin not loaded - ignoring waypoint call');
+          return this; 
+        };
       },
       configurable: true
     });

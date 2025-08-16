@@ -1,4 +1,5 @@
 import axios, { AxiosResponse } from "axios";
+import { buildApiUrl } from "@/lib/urlUtils";
 
 // Define interface types based on the models
 interface UserDetails {
@@ -198,7 +199,7 @@ export const prescriptionAPI = {
   getPrescriptionByShareableId: (
     shareableId: string
   ): Promise<AxiosResponse<Prescription>> =>
-    axios.get(`${API_BASE_URL}/prescription/share/${shareableId}`), // Public endpoint, no auth needed
+    axios.get(buildApiUrl(`prescription/share/${shareableId}`)), // Public endpoint, no auth needed
 };
 
 // Booking API
@@ -231,7 +232,7 @@ export const bookingAPI = {
 // Role API
 export const roleAPI = {
   getDoctors: (): Promise<AxiosResponse<UserDetails[]>> =>
-    axios.get(`${API_BASE_URL}/role/doctors`), // Public endpoint
+    axios.get(buildApiUrl(`role/doctors`)), // Public endpoint
   updateRole: (data: {
     userId: string;
     role: string;

@@ -16,6 +16,7 @@ import { toast } from "sonner";
 import { useNavigate } from "react-router";
 import { useAuth } from "@/contexts/AuthContext";
 import { authAxios } from "@/lib/authUtils";
+import { buildApiUrl } from "@/lib/urlUtils";
 import { motion } from "framer-motion";
 
 // Define the Doctor interface
@@ -81,8 +82,7 @@ const Appointment = () => {
   
   const [selectedTime, setSelectedTime] = useState("10:00");
   
-  // Use environment variable for backend URL
-  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+  // We'll use the buildApiUrl utility instead of direct URL construction
 
   // Set initial values and fetch necessary data
   useEffect(() => {
@@ -90,7 +90,7 @@ const Appointment = () => {
     const fetchDoctors = async () => {
       try {
         const response = await axios.get(
-          `${BACKEND_URL}/role/doctors`
+          buildApiUrl('role/doctors')
         );
 
         // Find Dr. Prem and set as selected doctor
@@ -127,7 +127,7 @@ const Appointment = () => {
   const fetchUserDetails = async () => {
     try {
       const response = await authAxios.get(
-        `${BACKEND_URL}/auth/${userId}`
+        buildApiUrl(`auth/${userId}`)
       );
       if (response.data) {
         setFullName(response.data.full_name || "");
@@ -166,7 +166,7 @@ const Appointment = () => {
       
       // Fetch prescriptions for this patient
       const response = await axios.get(
-        `${BACKEND_URL}/prescription/user/${patientId}`,
+        buildApiUrl(`prescription/user/${patientId}`),
         config
       );
       
@@ -289,7 +289,7 @@ const Appointment = () => {
       console.log("Sending booking data:", bookingData);
 
       const response = await authAxios.post(
-        `${BACKEND_URL}/booking/create`,
+        buildApiUrl('booking/create'),
         bookingData
       );
 

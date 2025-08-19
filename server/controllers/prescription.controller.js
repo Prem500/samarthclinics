@@ -55,6 +55,9 @@ export const createPrescription = async (req, res) => {
     followUpDate,
     physicalExaminer,
     investigation,
+    vitals,
+    complaints,
+    tests,
   } = req.body;
   try {
     const { id: userId } = req.params;
@@ -105,6 +108,9 @@ export const createPrescription = async (req, res) => {
       followUpDate: followUpDate || null,
       physicalExaminer: physicalExaminer && isValidObjectId(physicalExaminer) ? physicalExaminer : null,
       investigation: investigation || "",
+      vitals: vitals || "",
+      complaints: complaints || "",
+      tests: tests || "",
     });
 
     // update prescription details in the user's prescriptions array

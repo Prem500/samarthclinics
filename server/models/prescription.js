@@ -36,6 +36,15 @@ const prescriptionSchema = new Schema(
       type: [medicationSchema],
       default: [],
     },
+    vitals: {
+      type: String,
+    },
+    complaints: {
+      type: String,
+    },
+    tests: {
+      type: String,
+    },
     diagnosis: {
       type: String,
     },

@@ -21,10 +21,23 @@ app.get("/", (req, res) => {
   res.send("Samarth Clinics API Server is running");
 });
 
-app.use("/api/auth", authRoute);
-app.use("/api/role", roleRoute);
-app.use("/api/prescription", prescriptionRoute);
-app.use("/api/booking", bookingRoute);
+// Setup API routes with flexible path handling
+const setupApiRoutes = () => {
+  // Direct API routes
+  app.use("/api/auth", authRoute);
+  app.use("/api/role", roleRoute);
+  app.use("/api/prescription", prescriptionRoute);
+  app.use("/api/booking", bookingRoute);
+  
+  // Also handle routes without /api prefix for flexibility
+  app.use("/auth", authRoute);
+  app.use("/role", roleRoute);
+  app.use("/prescription", prescriptionRoute);
+  app.use("/booking", bookingRoute);
+};
+
+// Initialize all routes
+setupApiRoutes();
 
 app.listen(4000, () => {
   connectMongoDb();

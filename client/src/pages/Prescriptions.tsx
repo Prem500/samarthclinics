@@ -104,6 +104,9 @@ interface Prescription {
     full_name: string;
   } | null;
   investigation?: string;
+  vitals?: string;
+  complaints?: string;
+  tests?: string;
 }
 
 const DEFAULT_MEDICATION: Medication = {
@@ -120,6 +123,9 @@ const Prescriptions = () => {
   const [physicalExaminer, setPhysicalExaminer] = useState<string>("");
   const [investigation, setInvestigation] = useState<string>("");
   const [_patients, setPatients] = useState<Patient[]>([]);
+  const [vitals, setVitals] = useState<string>("");
+  const [complaints, setComplaints] = useState<string>("");
+  const [tests, setTests] = useState<string>("");
   const [prescriptions, setPrescriptions] = useState<Prescription[]>([]);
   const [filteredPrescriptions, setFilteredPrescriptions] = useState<
     Prescription[]
@@ -426,6 +432,9 @@ const Prescriptions = () => {
           setPaymentAmount(prescriptionData.paymentAmount ? prescriptionData.paymentAmount.toString() : "");
           setPhysicalExaminer(prescriptionData.physicalExaminer?._id || "");
           setInvestigation(prescriptionData.investigation || "");
+          setVitals(prescriptionData.vitals || "");
+          setComplaints(prescriptionData.complaints || "");
+          setTests(prescriptionData.tests || "");
           
           // Handle dates
           if (prescriptionData.expiryDate) {
@@ -571,6 +580,9 @@ const Prescriptions = () => {
         appointmentId: appointmentId || null,
         physicalExaminer: physicalExaminer || null,
         investigation: investigation || "",
+        vitals: vitals || "",
+        complaints: complaints || "",
+        tests: tests || "",
         // Add patient details directly from URL params if available
         patientName: patientNameFromUrl || "",
         patientEmail: patientEmailFromUrl || "",
@@ -612,7 +624,10 @@ const Prescriptions = () => {
             followUpDate: followUpDate ? followUpDate.toISOString() : null,
             appointmentId: appointmentId || null,
             physicalExaminer: physicalExaminer || null,
-            investigation: investigation || ""
+            investigation: investigation || "",
+            vitals: vitals || "",
+            complaints: complaints || "",
+            tests: tests || ""
           };
           
           savedResponse = await axios.post(
@@ -641,6 +656,9 @@ const Prescriptions = () => {
         setPaymentAmount("");
         setExpiryDate(undefined);
         setFollowUpDate(undefined);
+        setVitals("");
+        setComplaints("");
+        setTests("");
 
         // Clear URL parameters after successful operation
         window.history.replaceState({}, document.title, "/prescriptions");
@@ -767,6 +785,33 @@ const Prescriptions = () => {
               "Not provided"
             }</p>
           </div>
+          
+          ${
+            selectedPrescription.vitals
+              ? `<div class="section">
+            <div class="section-title">Vitals</div>
+            <div class="section-content">${selectedPrescription.vitals.replace(/\n/g, "<br>") || "Not specified"}</div>
+          </div>`
+              : ""
+          }
+
+          ${
+            selectedPrescription.complaints
+              ? `<div class="section">
+            <div class="section-title">Complaints</div>
+            <div class="section-content">${selectedPrescription.complaints.replace(/\n/g, "<br>") || "Not specified"}</div>
+          </div>`
+              : ""
+          }
+
+          ${
+            selectedPrescription.tests
+              ? `<div class="section">
+            <div class="section-title">Tests</div>
+            <div class="section-content">${selectedPrescription.tests.replace(/\n/g, "<br>") || "Not specified"}</div>
+          </div>`
+              : ""
+          }
           
           <div class="section">
             <div class="section-title">Diagnosis</div>
@@ -1104,6 +1149,22 @@ const Prescriptions = () => {
                   )}
                 </div>
 
+                {/* Vitals Section */}
+                <div className="bg-slate-50 p-4 rounded-md border mt-4">
+                  <h3 className="font-medium mb-3 text-slate-800">
+                    Vitals
+                  </h3>
+                  <div className="space-y-2">
+                    <Textarea
+                      id="vitals"
+                      value={vitals}
+                      onChange={(e) => setVitals(e.target.value)}
+                      placeholder="Enter patient vitals (bp, diabetes, etc)..."
+                      className="min-h-[60px]"
+                    />
+                  </div>
+                </div>
+
                 <div className="p-6 bg-white border-2 border-gray-200 rounded-md shadow-sm">
                   <div className="flex justify-between border-b pb-4 mb-4">
                     <div>
@@ -1118,6 +1179,30 @@ const Prescriptions = () => {
 
                   {/* Main Prescription Content */}
                   <div className="space-y-4">
+                    {/* Complaints Section */}
+                    <div className="space-y-2">
+                      <Label htmlFor="complaints" className="text-base font-semibold">Complaints</Label>
+                      <Textarea
+                        id="complaints"
+                        value={complaints}
+                        onChange={(e) => setComplaints(e.target.value)}
+                        placeholder="Enter patient complaints..."
+                        className="min-h-[80px]"
+                      />
+                    </div>
+
+                    {/* Tests Section */}
+                    <div className="space-y-2">
+                      <Label htmlFor="tests" className="text-base font-semibold">Tests</Label>
+                      <Textarea
+                        id="tests"
+                        value={tests}
+                        onChange={(e) => setTests(e.target.value)}
+                        placeholder="Enter patient tests..."
+                        className="min-h-[80px]"
+                      />
+                    </div>
+                    
                     {/* Diagnosis Section */}
                     <div className="space-y-2">
                       <Label htmlFor="diagnosis" className="text-base font-semibold">Diagnosis</Label>
@@ -1489,6 +1574,39 @@ const Prescriptions = () => {
                                           )}
                                         </div>
                                       </div>
+
+                                      {prescription.vitals && (
+                                        <div>
+                                          <h4 className="font-medium">
+                                            Vitals
+                                          </h4>
+                                          <p className="mt-1 p-3 border rounded whitespace-pre-line">
+                                            {prescription.vitals}
+                                          </p>
+                                        </div>
+                                      )}
+
+                                      {prescription.complaints && (
+                                        <div>
+                                          <h4 className="font-medium">
+                                            Complaints
+                                          </h4>
+                                          <p className="mt-1 p-3 border rounded whitespace-pre-line">
+                                            {prescription.complaints}
+                                          </p>
+                                        </div>
+                                      )}
+
+                                      {prescription.tests && (
+                                        <div>
+                                          <h4 className="font-medium">
+                                            Tests
+                                          </h4>
+                                          <p className="mt-1 p-3 border rounded whitespace-pre-line">
+                                            {prescription.tests}
+                                          </p>
+                                        </div>
+                                      )}
 
                                       {prescription.diagnosis && (
                                         <div>

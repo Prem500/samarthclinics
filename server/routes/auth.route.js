@@ -22,8 +22,10 @@ router.post("/doctor/register", registerDoctor);
 router.post("/user", getBasicUserInfo);
 router.post("/", authFunction);
 
-// Protected routes - require authentication
+// Protected routes - require authentication  
 router.use(verifyToken);
+
+// Get user details by ID
 router.get("/:id", getUserDetails);
 
 export default router;

@@ -289,30 +289,43 @@ jQuery(document).ready(function ($) {
   siteRangeSlider();
 
   var counter = function () {
-    $(".section-counter").waypoint(
-      function (direction) {
-        if (
-          direction === "down" &&
-          !$(this.element).hasClass("ftco-animated")
-        ) {
-          var comma_separator_number_step =
-            $.animateNumber.numberStepFactories.separator(",");
-          $(".block-counter-1-number").each(function () {
-            var $this = $(this),
-              num = $this.data("number");
-            console.log(num);
-            $this.animateNumber(
-              {
-                number: num,
-                numberStep: comma_separator_number_step,
-              },
-              7000
-            );
-          });
-        }
-      },
-      { offset: "95%" }
-    );
+    // Check if waypoint plugin exists before using it
+    if (typeof $.fn.waypoint === 'function') {
+      $(".section-counter").waypoint(
+        function (direction) {
+          if (
+            direction === "down" &&
+            !$(this.element).hasClass("ftco-animated")
+          ) {
+            var comma_separator_number_step =
+              $.animateNumber.numberStepFactories.separator(",");
+            $(".block-counter-1-number").each(function () {
+              var $this = $(this),
+                num = $this.data("number");
+              console.log(num);
+              $this.animateNumber(
+                {
+                  number: num,
+                  numberStep: comma_separator_number_step,
+                },
+                7000
+              );
+            });
+          }
+        },
+        { offset: "95%" }
+      );
+    } else {
+      console.log('Waypoint plugin not available - skipping counter animation');
+    }
   };
-  counter();
+  
+  // Only call counter if jQuery is available
+  if (typeof jQuery !== 'undefined') {
+    try {
+      counter();
+    } catch (e) {
+      console.log('Error in counter function:', e);
+    }
+  }
 });

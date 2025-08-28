@@ -170,12 +170,20 @@ export const CreateBooking = async (req, res) => {
           await User.findByIdAndUpdate(userId, updateData);
         }
       } else {
-        // Instead of creating a new user, create a temporary reference 
-        // Store patient data directly in booking without creating user account
-        userId = new mongoose.Types.ObjectId(); // Generate a temporary ID
+        // Create a new user record for non-authenticated booking
+        // This ensures we have a valid User record for prescriptions
+        const newUser = new User({
+          full_name,
+          email: email || undefined,
+          phoneNumber: phoneNumber || undefined,
+          age: age || undefined,
+          address: address || undefined,
+          role: "user", // Default role for patients
+          password: "temp_password_" + Date.now(), // Temporary password, user can reset later
+        });
         
-        // We'll store patient details in the booking itself
-        // This prevents creating unnecessary user accounts
+        const savedUser = await newUser.save();
+        userId = savedUser._id;
       }
     } else {
       return res.status(400).json({ message: "Email or phone number is required for booking" });

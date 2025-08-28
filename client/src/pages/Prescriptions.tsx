@@ -90,6 +90,11 @@ interface Prescription {
     full_name: string;
     email: string;
   };
+  doctor: {
+    _id: string;
+    full_name: string;
+    email: string;
+  };
   dateIssued: string;
   notes: string;
   expiryDate: string | null;
@@ -107,6 +112,7 @@ interface Prescription {
   vitals?: string;
   complaints?: string;
   tests?: string;
+  appointment?: string;
 }
 
 const DEFAULT_MEDICATION: Medication = {
@@ -142,7 +148,18 @@ const Prescriptions = () => {
   const patientAgeFromUrl = searchParams.get("patientAge");
   const patientAddressFromUrl = searchParams.get("patientAddress");
   const appointmentIdFromUrl = searchParams.get("appointmentId");
+  const doctorIdFromUrl = searchParams.get("doctorId");
   const editPrescriptionId = searchParams.get("edit");
+  
+  // Debug URL parameters when edit mode is detected
+  if (editPrescriptionId) {
+    console.log("=== URL PARAMETERS FOR EDIT ===");
+    console.log("editPrescriptionId from URL:", editPrescriptionId);
+    console.log("patientIdFromUrl:", patientIdFromUrl);
+    console.log("doctorIdFromUrl:", doctorIdFromUrl);
+    console.log("Current URL:", window.location.href);
+    console.log("All search params:", Object.fromEntries(searchParams));
+  }
   
 
   const [prescriptionText, setPrescriptionText] = useState<string>("");
@@ -202,6 +219,21 @@ const Prescriptions = () => {
             config
           ),
         ]);
+        
+        // Make sure we get the doctor's name for display
+        if (!localStorage.getItem("fullName")) {
+          try {
+            const doctorRes = await axios.get(
+              `${import.meta.env.VITE_BACKEND_URL}/auth/${userId}`,
+              config
+            );
+            if (doctorRes.data && doctorRes.data.full_name) {
+              localStorage.setItem("fullName", doctorRes.data.full_name);
+            }
+          } catch (err) {
+            console.error("Could not fetch doctor name:", err);
+          }
+        }
 
         // Check if valid data was returned
         if (patientsRes.data && Array.isArray(patientsRes.data)) {
@@ -212,6 +244,18 @@ const Prescriptions = () => {
         }
 
         if (prescriptionsRes.data && Array.isArray(prescriptionsRes.data)) {
+          console.log("=== LOADED PRESCRIPTIONS ===");
+          console.log("Number of prescriptions:", prescriptionsRes.data.length);
+          console.log("Prescriptions data:", prescriptionsRes.data);
+          prescriptionsRes.data.forEach((prescription, index) => {
+            console.log(`Prescription ${index + 1}:`, {
+              id: prescription._id,
+              patient: prescription.patient,
+              doctor: prescription.doctor,
+              dateIssued: prescription.dateIssued
+            });
+          });
+          
           setPrescriptions(prescriptionsRes.data);
           setFilteredPrescriptions(prescriptionsRes.data);
         } else {
@@ -349,7 +393,7 @@ const Prescriptions = () => {
                 localStorage.setItem('currentPatientDetails', JSON.stringify(mergedData));
               }
             } catch (e) {
-              // Attempt alternative endpoint - but don't log errors
+              // Attempt alternative endpoint - but don't log errors  
               try {
                 const response = await axios.get(
                   `${import.meta.env.VITE_BACKEND_URL}/auth/${patientIdFromUrl}`,
@@ -381,16 +425,39 @@ const Prescriptions = () => {
     const fetchPrescriptionForEdit = async () => {
       if (!editPrescriptionId) return;
       
+      console.log("=== EDITING PRESCRIPTION ===");
+      console.log("Edit Prescription ID:", editPrescriptionId);
+      console.log("Edit Prescription ID type:", typeof editPrescriptionId);
+      console.log("Edit Prescription ID length:", editPrescriptionId.length);
+      console.log("Current User ID:", userId);
+      console.log("Doctor ID from URL:", doctorIdFromUrl);
+      console.log("Backend URL:", import.meta.env.VITE_BACKEND_URL);
+      console.log("Is valid ObjectId format:", /^[0-9a-fA-F]{24}$/.test(editPrescriptionId));
+      
       try {
         setLoading(true);
         const token = localStorage.getItem("token");
         
         if (!token) {
+          console.log("No token found");
           toast("Authentication Error", {
             description: "You need to be logged in to access this page.",
           });
           setLoading(false);
           return;
+        }
+        
+        // Test basic connectivity to backend
+        console.log("Testing backend connectivity...");
+        try {
+          const healthCheck = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/health`).catch(() => {
+            console.log("Health check endpoint not available, continuing anyway...");
+          });
+          if (healthCheck) {
+            console.log("Backend is reachable");
+          }
+        } catch (e) {
+          console.log("Backend connectivity test failed, but continuing...");
         }
 
         const config = {
@@ -400,22 +467,82 @@ const Prescriptions = () => {
         };
 
         // Fetch the specific prescription by ID
-        const response = await axios.get(
-          `${import.meta.env.VITE_BACKEND_URL}/prescription/single/${editPrescriptionId}`,
-          config
-        );
+        // Use correct endpoint with auth token
+        const apiUrl = `${import.meta.env.VITE_BACKEND_URL}/prescription/single/${editPrescriptionId}`;
+        console.log("Fetching prescription from:", apiUrl);
+        console.log("Config headers:", config.headers);
+        
+        // Try direct approach first with proper auth
+        let response;
+        try {
+          response = await axios.get(apiUrl, config);
+          console.log("Direct API call successful!");
+          console.log("Response status:", response.status);
+          console.log("Response data:", response.data);
+        } catch (directError) {
+          console.log("Direct approach failed:", directError);
+          console.log("Error status:", (directError as any).response?.status);
+          console.log("Error details:", (directError as any).response?.data || (directError as Error).message);
+          
+          // If the single prescription endpoint failed, try fallback approach
+          if ((directError as any).response?.status === 404) {
+            console.log("Prescription not found via single endpoint, trying fallback...");
+            
+            try {
+              const allPrescriptionsResponse = await axios.get(
+                `${import.meta.env.VITE_BACKEND_URL}/prescription/${userId}`,
+                config
+              );
+              
+              console.log("Fallback response status:", allPrescriptionsResponse.status);
+              
+              if (allPrescriptionsResponse.data && Array.isArray(allPrescriptionsResponse.data)) {
+                const foundPrescription = allPrescriptionsResponse.data.find(
+                  p => p._id?.toString() === editPrescriptionId
+                );
+                
+                if (foundPrescription) {
+                  console.log("Found prescription via fallback:", foundPrescription._id);
+                  response = { data: foundPrescription, status: 200 };
+                } else {
+                  console.log("Prescription not found in doctor's prescriptions");
+                  throw new Error("The prescription you're trying to edit was not found. It may have been deleted or you may not have permission to edit it.");
+                }
+              } else {
+                throw new Error("Unable to retrieve prescriptions list");
+              }
+            } catch (fallbackError) {
+              console.log("Fallback approach also failed:", fallbackError);
+              throw new Error("Unable to load prescription for editing. Please try again or contact support.");
+            }
+          } else {
+            // For other errors (network, auth, etc.), throw the original error
+            throw directError;
+          }
+        }
 
         const prescriptionData = response.data;
         
-        // Also fetch detailed patient info
+        // Try to fetch detailed patient info (optional - don't fail if this doesn't work)
         if (prescriptionData?.patient?._id) {
-          const patientResponse = await axios.get(
-            `${import.meta.env.VITE_BACKEND_URL}/user/${prescriptionData.patient._id}`,
-            config
-          );
-          // Store detailed patient info for use in the prescription
-          if (patientResponse.data) {
-            localStorage.setItem('currentPatientDetails', JSON.stringify(patientResponse.data));
+          try {
+            console.log("Attempting to fetch patient details...");
+            const patientResponse = await axios.get(
+              `${import.meta.env.VITE_BACKEND_URL}/auth/${prescriptionData.patient._id}`,
+              config
+            );
+            // Store detailed patient info for use in the prescription
+            if (patientResponse.data) {
+              console.log("Patient details fetched successfully");
+              localStorage.setItem('currentPatientDetails', JSON.stringify(patientResponse.data));
+            }
+          } catch (patientError) {
+            console.log("Could not fetch additional patient details, continuing with prescription data:", patientError);
+            // Store basic patient info from prescription instead
+            if (prescriptionData.patient) {
+              console.log("Using patient data from prescription");
+              localStorage.setItem('currentPatientDetails', JSON.stringify(prescriptionData.patient));
+            }
           }
         }
         
@@ -451,8 +578,29 @@ const Prescriptions = () => {
         }
       } catch (error: any) {
         console.error("Error fetching prescription for edit:", error);
+        console.error("Error response:", error.response);
+        console.error("Error config:", error.config);
+        
+        let errorMessage = "Failed to load prescription for editing. Please try again.";
+        
+        if (error.response) {
+          if (error.response.status === 404) {
+            errorMessage = "Prescription not found. It may have been deleted.";
+          } else if (error.response.status === 401) {
+            errorMessage = "Authentication error. Please log in again.";
+          } else if (error.response.data?.details) {
+            errorMessage = `Error: ${error.response.data.details}`;
+          } else if (error.response.data?.message) {
+            errorMessage = `Error: ${error.response.data.message}`;
+          }
+        } else if (error.message && error.message.includes("Network Error")) {
+          errorMessage = "Network error. Please check your internet connection.";
+        } else if (error.message) {
+          errorMessage = `Error: ${error.message}`;
+        }
+        
         toast("Error", {
-          description: "Failed to load prescription for editing. Please try again.",
+          description: errorMessage,
         });
       } finally {
         setLoading(false);
@@ -500,8 +648,8 @@ const Prescriptions = () => {
       return;
     }
     
-    // If we have a patient name but not ID, create a temporary ID to allow submission
-    const effectivePatientId = patientIdFromUrl || `temp-${Date.now()}`;
+    // Use patientId if available, otherwise let the server handle patient creation from patient details
+    const effectivePatientId = patientIdFromUrl;
 
     // Only validate medications that have a name entered
     if (medications.length > 0) {
@@ -565,47 +713,43 @@ const Prescriptions = () => {
         }
       }
 
-            // Prepare prescription data - sanitize all fields to prevent server errors
-      const prescriptionData = {
-        patientId: effectivePatientId, // Use our effective patient ID (real or temporary)
-        prescriptionText: prescriptionText || "",
-        medications: validMedications || [],
-        diagnosis: diagnosis || "",
-        notes: notes || "",
-        patientHistory: patientHistory || "",
-        treatmentPlan: treatmentPlan || "",
-        paymentAmount: paymentAmount ? parseFloat(paymentAmount) : 0,
-        expiryDate: expiryDate ? expiryDate.toISOString() : null,
-        followUpDate: followUpDate ? followUpDate.toISOString() : null,
-        appointmentId: appointmentId || null,
-        physicalExaminer: physicalExaminer || null,
-        investigation: investigation || "",
-        vitals: vitals || "",
-        complaints: complaints || "",
-        tests: tests || "",
-        // Add patient details directly from URL params if available
-        patientName: patientNameFromUrl || "",
-        patientEmail: patientEmailFromUrl || "",
-        patientPhone: patientPhoneFromUrl || "",
-        patientAge: patientAgeFromUrl || "",
-        patientAddress: patientAddressFromUrl || "",
-      };
-
       let savedResponse;
       
       try {
         // If we're editing an existing prescription
         if (editPrescriptionId) {
-          // Update existing prescription
+          // Update existing prescription - match the server endpoint format
+          console.log("Updating prescription with ID:", editPrescriptionId);
+          console.log("URL format:", `${import.meta.env.VITE_BACKEND_URL}/prescription/${userId}/update/${editPrescriptionId}`);
+          console.log("Doctor ID:", userId);
+          
+          // Use the current user's ID for the update endpoint (backend now allows any doctor to edit)
           savedResponse = await axios.put(
             `${import.meta.env.VITE_BACKEND_URL}/prescription/${userId}/update/${editPrescriptionId}`,
-            prescriptionData,
+            {
+              prescriptionText: prescriptionText || "",
+              medications: validMedications,
+              diagnosis: diagnosis || "",
+              notes: notes || "",
+              patientHistory: patientHistory || "",
+              treatmentPlan: treatmentPlan || "",
+              paymentAmount: paymentAmount ? parseFloat(paymentAmount) : null,
+              expiryDate: expiryDate ? expiryDate.toISOString() : null,
+              followUpDate: followUpDate ? followUpDate.toISOString() : null,
+              physicalExaminer: physicalExaminer || null,
+              investigation: investigation || "",
+              vitals: vitals || "",
+              complaints: complaints || "",
+              tests: tests || "",
+            },
             config
           );
           
-          toast("Success", {
-            description: "Prescription updated successfully!",
-          });
+          if (savedResponse && savedResponse.status === 200) {
+            toast("Success", {
+              description: "Prescription updated successfully!",
+            });
+          }
         } else {
           // Create new prescription - using the correct endpoint format from backend
           console.log("Creating prescription with endpoint: /prescription/create/" + userId);
@@ -622,12 +766,19 @@ const Prescriptions = () => {
             paymentAmount: paymentAmount ? parseFloat(paymentAmount) : null,
             expiryDate: expiryDate ? expiryDate.toISOString() : null,
             followUpDate: followUpDate ? followUpDate.toISOString() : null,
-            appointmentId: appointmentId || null,
+            appointmentId: appointmentIdFromUrl || appointmentId || null,
             physicalExaminer: physicalExaminer || null,
             investigation: investigation || "",
             vitals: vitals || "",
             complaints: complaints || "",
-            tests: tests || ""
+            tests: tests || "",
+            doctorId: doctorIdFromUrl || userId, // Make sure the doctor ID is properly passed
+            // Patient details for creating user record if needed
+            patientName: patientNameFromUrl || "",
+            patientEmail: patientEmailFromUrl || "",
+            patientPhone: patientPhoneFromUrl || "",
+            patientAge: patientAgeFromUrl || "",
+            patientAddress: patientAddressFromUrl || "",
           };
           
           savedResponse = await axios.post(
@@ -636,14 +787,19 @@ const Prescriptions = () => {
             config
           );
           
-          toast("Success", {
-            description: "Prescription created successfully!",
-          });
+          // Only show success message here if we get a valid response
+          if (savedResponse && savedResponse.status === 201) {
+            toast("Success", {
+              description: "Prescription created successfully!",
+            });
+          }
         }
         
         // Set the shareable URL if provided in response
         if (savedResponse && savedResponse.data && savedResponse.data.shareableUrl) {
           setShareableUrl(window.location.origin + savedResponse.data.shareableUrl);
+        } else if (savedResponse && savedResponse.data && savedResponse.data.shareableId) {
+          setShareableUrl(window.location.origin + `/prescription/share/${savedResponse.data.shareableId}`);
         }
         
         // Reset form
@@ -663,11 +819,6 @@ const Prescriptions = () => {
         // Clear URL parameters after successful operation
         window.history.replaceState({}, document.title, "/prescriptions");
 
-        // Set the shareable URL if available
-        if (savedResponse.data && savedResponse.data.shareableId) {
-          setShareableUrl(window.location.origin + savedResponse.data.shareableId);
-        }
-
         // Refresh prescriptions list with auth token
         const updatedPrescriptions = await axios.get(
           `${import.meta.env.VITE_BACKEND_URL}/prescription/${userId}`,
@@ -682,8 +833,25 @@ const Prescriptions = () => {
       }
     } catch (error: any) {
       console.error(`Error ${editPrescriptionId ? 'updating' : 'creating'} prescription:`, error);
+      console.error("Full error object:", error);
+      console.error("Error response:", error.response);
+      console.error("Error request:", error.request);
+      console.error("Error config:", error.config);
+      
+      // Log important data to help debug API calls
+      if (editPrescriptionId) {
+        console.log("Update API URL:", `${import.meta.env.VITE_BACKEND_URL}/prescription/${userId}/update/${editPrescriptionId}`);
+        console.log("Current User ID (Doctor):", userId);
+        console.log("Prescription ID:", editPrescriptionId);
+        console.log("Update request data:", {
+          prescriptionText: prescriptionText || "",
+          medications: validMedications,
+          diagnosis: diagnosis || "",
+          notes: notes || ""
+        });
+      }
 
-      // Improved error handling
+      // Improved error handling with more detailed messages
       if (error.response) {
         if (error.response.status === 401) {
           toast("Authentication Error", {
@@ -693,10 +861,26 @@ const Prescriptions = () => {
           toast("Permission Error", {
             description: `You don't have permission to ${editPrescriptionId ? 'update' : 'create'} prescriptions.`,
           });
+        } else if (error.response.status === 400) {
+          // Validation error
+          toast("Validation Error", {
+            description: error.response.data?.details || "Please check the prescription form fields.",
+          });
+        } else if (error.response.status === 409) {
+          // Conflict error
+          toast("Conflict Error", {
+            description: error.response.data?.details || "This prescription conflicts with an existing one.",
+          });
+        } else if (error.response.status === 404) {
+          // Not found error
+          toast("Not Found Error", {
+            description: error.response.data?.details || error.response.data?.message || "The requested resource was not found.",
+          });
         } else {
+          // Any other server error
           toast("Error", {
             description: `Failed to ${editPrescriptionId ? 'update' : 'create'} prescription: ${
-              error.response.data?.message || "Unknown error"
+              error.response.data?.details || error.response.data?.message || "Unknown error"
             }`,
           });
         }
@@ -710,13 +894,24 @@ const Prescriptions = () => {
   };
 
   const handlePrint = (prescription: Prescription) => {
-    setSelectedPrescription(prescription);
-    setIsPrintDialogOpen(true);
+    try {
+      console.log("handlePrint called for prescription:", prescription?._id);
+      setSelectedPrescription(prescription);
+      setIsPrintDialogOpen(true);
+    } catch (error) {
+      console.error("Error in handlePrint:", error);
+      // Show toast error instead of crashing
+      toast("Error", {
+        description: "Could not prepare prescription for printing. Please try again.",
+      });
+    }
   };
 
   const printPrescription = () => {
-    const printWindow = window.open("", "_blank");
-    if (printWindow && selectedPrescription) {
+    try {
+      console.log("printPrescription called, selectedPrescription:", selectedPrescription?._id);
+      const printWindow = window.open("", "_blank");
+      if (printWindow && selectedPrescription) {
       const content = `
         <!DOCTYPE html>
         <html>
@@ -758,7 +953,8 @@ const Prescriptions = () => {
           
           <div class="doctor-info">
             <p><strong>Doctor:</strong> ${
-              selectedPrescription.physicalExaminer ? `Dr. ${selectedPrescription.physicalExaminer.full_name}` : "Dr. "
+              selectedPrescription.physicalExaminer ? `Dr. ${selectedPrescription.physicalExaminer.full_name}` : 
+              selectedPrescription.doctor ? `Dr. ${selectedPrescription.doctor.full_name}` : "Dr. "
             }</p>
           </div>
           
@@ -898,10 +1094,22 @@ const Prescriptions = () => {
       printWindow.document.write(content);
       printWindow.document.close();
       printWindow.focus();
+    } else {
+      console.error("Cannot open print window or no prescription selected");
+      toast("Error", {
+        description: "Could not open print window. Please try again.",
+      });
     }
 
     setIsPrintDialogOpen(false);
-  };
+  } catch (error) {
+    console.error("Error in printPrescription:", error);
+    toast("Error", {
+      description: "Could not print prescription. Please try again.",
+    });
+    setIsPrintDialogOpen(false);
+  }
+};
 
   const copyShareableLink = (url: string) => {
     navigator.clipboard.writeText(url);
@@ -1055,7 +1263,7 @@ const Prescriptions = () => {
                             <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="bg-slate-50 p-4 rounded-md border">
                   <h3 className="font-medium mb-3 text-slate-800">
-                    Patient Information
+                    Patient & Doctor Information
                   </h3>
                   {patientNameFromUrl ? (
                     <div className="mb-3 p-3 bg-blue-50 border border-blue-200 rounded-md">
@@ -1066,6 +1274,10 @@ const Prescriptions = () => {
                             (Appointment ID: {appointmentIdFromUrl})
                           </span>
                         )}
+                      </p>
+                      
+                      <p className="text-sm text-blue-700 mt-1">
+                        <strong>Doctor:</strong> Dr. {localStorage.getItem("fullName") || ""}
                       </p>
                       
                       {/* Show all available patient details */}
@@ -1122,7 +1334,10 @@ const Prescriptions = () => {
                                     )}
                                   </div>
                                   <button
-                                    onClick={() => {
+                                    onClick={(e) => {
+                                      e.preventDefault(); // Prevent default browser behavior
+                                      e.stopPropagation(); // Stop event bubbling
+                                      console.log("View button clicked for prescription:", prescription._id);
                                       setSelectedPrescription(prescription);
                                       setIsPrintDialogOpen(true);
                                     }}
@@ -1376,7 +1591,7 @@ const Prescriptions = () => {
         </TabsContent>
 
         <TabsContent value="view">
-          <Card className="border-t-4 border-t-blue-500">
+          <Card className="border-t-4 border-t-blue-500 mb-8">
             <CardHeader>
               <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <CardTitle className="text-2xl">Prescription Records</CardTitle>
@@ -1469,7 +1684,12 @@ const Prescriptions = () => {
                                 <Button
                                   variant="ghost"
                                   size="icon"
-                                  onClick={() => handlePrint(prescription)}
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    console.log("Print button clicked for:", prescription._id);
+                                    handlePrint(prescription);
+                                  }}
                                 >
                                   <PrinterIcon className="h-4 w-4" />
                                 </Button>
@@ -1511,7 +1731,15 @@ const Prescriptions = () => {
                                 )}
                                 <Dialog>
                                   <DialogTrigger asChild>
-                                    <Button variant="ghost" size="icon">
+                                    <Button 
+                                      variant="ghost" 
+                                      size="icon" 
+                                      onClick={(e) => {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        console.log("View details clicked");
+                                      }}
+                                    >
                                       <SearchIcon className="h-4 w-4" />
                                     </Button>
                                   </DialogTrigger>
@@ -1753,6 +1981,196 @@ const Prescriptions = () => {
               )}
             </CardContent>
           </Card>
+          
+          {/* Manage Prescriptions Section - Group prescriptions by patient */}
+          <Card className="border-t-4 border-t-green-500">
+            <CardHeader>
+              <CardTitle className="text-2xl">Manage Prescriptions</CardTitle>
+              <CardDescription>
+                View and manage prescriptions by patient
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              {loading ? (
+                <p className="text-center py-4">Loading patient prescriptions...</p>
+              ) : filteredPrescriptions.length === 0 ? (
+                <div className="text-center py-10 border rounded-md bg-slate-50">
+                  <p className="text-gray-500">No prescriptions found</p>
+                </div>
+              ) : (
+                <>
+                  {/* Group prescriptions by patient */}
+                  {(() => {
+                    // Create a map of patient ID to their prescriptions
+                    const patientPrescriptionsMap = new Map();
+                    
+                    // Group prescriptions by patient
+                    filteredPrescriptions.forEach(prescription => {
+                      const patientId = prescription.patient._id;
+                      if (!patientPrescriptionsMap.has(patientId)) {
+                        patientPrescriptionsMap.set(patientId, {
+                          patient: prescription.patient,
+                          prescriptions: []
+                        });
+                      }
+                      patientPrescriptionsMap.get(patientId).prescriptions.push(prescription);
+                    });
+                    
+                    // Convert map to array and sort
+                    const patientGroups = Array.from(patientPrescriptionsMap.values())
+                      .map(group => ({
+                        ...group,
+                        // Sort prescriptions by date, newest first
+                        prescriptions: group.prescriptions.sort(
+                          (a: Prescription, b: Prescription) => new Date(b.dateIssued).getTime() - new Date(a.dateIssued).getTime()
+                        )
+                      }));
+                    
+                    // Render each patient group
+                    return patientGroups.map(group => (
+                      <div key={group.patient._id} className="mb-8">
+                        <div className="flex justify-between items-center mb-4">
+                          <h3 className="text-lg font-semibold">{group.patient.full_name}</h3>
+                          <Badge className="bg-blue-600">{group.prescriptions.length} Prescriptions</Badge>
+                        </div>
+                        
+                        <div className="space-y-3">
+                          {group.prescriptions.map((prescription: Prescription, index: number) => (
+                            <div 
+                              key={prescription._id} 
+                              className={`p-4 rounded-lg border ${index === 0 ? 'bg-green-50 border-green-200' : 'bg-gray-50 border-gray-200'}`}
+                            >
+                              <div className="flex justify-between items-start">
+                                <div>
+                                  <div className="flex items-center gap-2">
+                                    <Badge 
+                                      variant={index === 0 ? "default" : "outline"} 
+                                      className={index === 0 ? "bg-green-600" : ""}
+                                    >
+                                      {index === 0 ? "Latest Version" : `Version ${group.prescriptions.length - index}`}
+                                    </Badge>
+                                    <span className="text-sm text-gray-500">
+                                      {new Date(prescription.dateIssued).toLocaleDateString()}
+                                    </span>
+                                  </div>
+                                  <p className="font-medium mt-2">
+                                    {prescription.diagnosis || "No diagnosis"}
+                                  </p>
+                                </div>
+                                
+                                <div className="flex gap-2">
+                                                                    <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      e.stopPropagation();
+                                      // Debug: log the prescription data before editing
+                                      console.log("=== CLICKING EDIT ===");
+                                      console.log("Prescription ID:", prescription._id);
+                                      console.log("Prescription ID type:", typeof prescription._id);
+                                      console.log("Prescription ID toString():", prescription._id?.toString());
+                                      console.log("Patient ID:", prescription.patient?._id);
+                                      console.log("Patient Name:", prescription.patient?.full_name);
+                                      console.log("Doctor ID:", prescription.doctor?._id);
+                                      console.log("Is valid ObjectId format:", /^[0-9a-fA-F]{24}$/.test(prescription._id?.toString() || ''));
+                                      console.log("Full Prescription Object:", prescription);
+                                      
+                                      // Ensure we have fresh token
+                                      const token = localStorage.getItem("token");
+                                      if (!token) {
+                                        toast("Authentication Error", {
+                                          description: "You need to be logged in to edit prescriptions.",
+                                        });
+                                        return;
+                                      }
+                                      
+                                      // Open edit with this prescription
+                                      // Build URL with all necessary parameters
+                                      const editUrl = new URL("/prescriptions", window.location.origin);
+                                      
+                                      // Add essential parameters - ensure proper string conversion
+                                      const prescriptionId = prescription._id?.toString() || prescription._id;
+                                      const patientId = prescription.patient?._id?.toString() || prescription.patient?._id;
+                                      // Use current user ID instead of prescription's doctor ID for better compatibility
+                                      const currentUserId = userId;
+                                      
+                                      console.log("Adding to URL - prescriptionId:", prescriptionId);
+                                      console.log("Adding to URL - patientId:", patientId);
+                                      console.log("Adding to URL - currentUserId:", currentUserId);
+                                      console.log("Original prescription doctor:", prescription.doctor?._id);
+                                      
+                                      editUrl.searchParams.append("edit", prescriptionId);
+                                      editUrl.searchParams.append("patientId", patientId);
+                                      editUrl.searchParams.append("doctorId", currentUserId || "");
+                                      
+                                      // Add patient details - only if they exist
+                                      if (prescription.patient.full_name) {
+                                        editUrl.searchParams.append("patientName", prescription.patient.full_name);
+                                      }
+                                      if (prescription.patient.email) {
+                                        editUrl.searchParams.append("patientEmail", prescription.patient.email);
+                                      }
+                                      
+                                      console.log("Navigating to:", editUrl.toString());
+                                      window.location.href = editUrl.toString();
+                                    }}
+                                  >
+                                    Edit
+                                  </Button>
+                                  <Button 
+                                    variant="ghost" 
+                                    size="sm"
+                                    onClick={() => handlePrint(prescription)}
+                                  >
+                                    <PrinterIcon className="h-4 w-4" />
+                                  </Button>
+                                </div>
+                              </div>
+                              
+                              {/* Prescription details */}
+                              {prescription.medications && prescription.medications.length > 0 && (
+                                <div className="mt-3">
+                                  <p className="text-sm font-medium text-gray-700 mb-1">
+                                    Medications:
+                                  </p>
+                                  <div className="text-sm text-gray-600">
+                                    {prescription.medications.map((med: Medication, i: number) => (
+                                      <span key={i} className="inline-block mr-2 mb-1 bg-blue-100 text-blue-800 px-2 py-0.5 rounded text-xs">
+                                        {med.name}
+                                      </span>
+                                    ))}
+                                  </div>
+                                </div>
+                              )}
+                              
+                              {prescription.treatmentPlan && (
+                                <div className="mt-2 text-sm text-gray-600">
+                                  <span className="font-medium text-gray-700">Treatment: </span>
+                                  {prescription.treatmentPlan.length > 100
+                                    ? `${prescription.treatmentPlan.substring(0, 100)}...`
+                                    : prescription.treatmentPlan}
+                                </div>
+                              )}
+                              
+                              {prescription.notes && (
+                                <div className="mt-2 text-sm text-gray-600">
+                                  <span className="font-medium text-gray-700">Notes: </span>
+                                  {prescription.notes.length > 100
+                                    ? `${prescription.notes.substring(0, 100)}...`
+                                    : prescription.notes}
+                                </div>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    ));
+                  })()}
+                </>
+              )}
+            </CardContent>
+          </Card>
         </TabsContent>
       </Tabs>
 
@@ -1781,10 +2199,15 @@ const Prescriptions = () => {
             >
               Cancel
             </Button>
-            <Button onClick={printPrescription}>
-              <PrinterIcon className="h-4 w-4 mr-2" />
-              Print
-            </Button>
+                      <Button onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log("Print dialog confirm button clicked");
+            printPrescription();
+          }}>
+            <PrinterIcon className="h-4 w-4 mr-2" />
+            Print
+          </Button>
           </div>
         </DialogContent>
       </Dialog>

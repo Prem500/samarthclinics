@@ -301,7 +301,7 @@ const Appointment = () => {
           
           // Navigate to prescriptions with edit parameter and other patient details
           console.log("Redirecting to prescriptions with existing prescription:", latestPrescription._id);
-          navigate(`/prescriptions?edit=${latestPrescription._id}&patientId=${latestPrescription.patient._id}&patientName=${encodeURIComponent(fullName)}&patientEmail=${encodeURIComponent(email)}&patientPhone=${encodeURIComponent(phoneNumber)}&patientAge=${age}&patientAddress=${encodeURIComponent(address)}&appointmentId=${response.data._id}`);
+          navigate(`/prescriptions?edit=${latestPrescription._id}&patientId=${latestPrescription.patient._id}&patientName=${encodeURIComponent(fullName)}&patientEmail=${encodeURIComponent(email)}&patientPhone=${encodeURIComponent(phoneNumber)}&patientAge=${age}&patientAddress=${encodeURIComponent(address)}&appointmentId=${response.data._id}&doctorId=${selectedDoctor}`);
           
           return; // Skip showing success modal
         }

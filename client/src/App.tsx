@@ -40,6 +40,10 @@ function App() {
           path="/prescription/share/:id"
           element={<SharedPrescriptions />}
         />
+        <Route
+          path="/prescriptions/share/:id"
+          element={<SharedPrescriptions />}
+        />
       </Routes>
     </AuthProvider>
   );

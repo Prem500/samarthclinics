@@ -26,17 +26,23 @@ export const getPrescriptions = async (req, res) => {
         .json({ message: "Forbidden - doctor access required" });
     }
 
-    // Finding all prescriptions for the doctor
+    // Finding all prescriptions for the doctor - simplified populate to avoid errors
     const prescriptions = await Prescription.find({
       doctor: user.id,
     })
       .populate("patient", "full_name email")
+      .populate("physicalExaminer", "full_name email")
       .sort({ dateIssued: -1 });
 
     return res.status(200).json(prescriptions);
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ message: "Internal server error" });
+    console.log("Error in getPrescriptions:", error);
+    console.log("Error details:", error.message);
+    console.log("Stack trace:", error.stack);
+    res.status(500).json({ 
+      message: "Internal server error",
+      details: error.message 
+    });
   }
 };
 
@@ -58,6 +64,13 @@ export const createPrescription = async (req, res) => {
     vitals,
     complaints,
     tests,
+    doctorId, // Added doctorId to support prescription creation from appointments
+    // Patient details for creating user if needed
+    patientName,
+    patientEmail,
+    patientPhone,
+    patientAge,
+    patientAddress,
   } = req.body;
   try {
     const { id: userId } = req.params;
@@ -91,13 +104,60 @@ export const createPrescription = async (req, res) => {
     // Validate ObjectIds
     const isValidObjectId = (id) => /^[0-9a-fA-F]{24}$/.test(id);
     
-    // Create Prescriptions based on userID
+    // Handle cases where we don't have a valid patient ID
+    let finalPatientId;
+    if (patientId && isValidObjectId(patientId)) {
+      finalPatientId = patientId;
+    } else if (patientName || patientEmail || patientPhone) {
+      // Create a new user record from patient details
+      try {
+        // Check if user exists first
+        let existingUser = null;
+        if (patientEmail) {
+          existingUser = await User.findOne({ email: patientEmail });
+        }
+        if (!existingUser && patientPhone) {
+          existingUser = await User.findOne({ phoneNumber: patientPhone });
+        }
+        
+        if (existingUser) {
+          finalPatientId = existingUser._id;
+        } else {
+          // Create new user record
+          const newUser = new User({
+            full_name: patientName || "Unknown Patient",
+            email: patientEmail || undefined,
+            phoneNumber: patientPhone || undefined,
+            age: patientAge || undefined,
+            address: patientAddress || undefined,
+            role: "user",
+            password: "temp_password_" + Date.now(),
+          });
+          
+          const savedUser = await newUser.save();
+          finalPatientId = savedUser._id;
+        }
+      } catch (userCreationError) {
+        console.log("Error creating patient user:", userCreationError);
+        return res.status(400).json({ 
+          message: "Failed to create patient record",
+          details: userCreationError.message
+        });
+      }
+    } else {
+      return res.status(400).json({ 
+        message: "Invalid patient information",
+        details: "Patient ID or patient details (name/email/phone) are required to create a prescription."
+      });
+    }
+
+    // Create Prescriptions based on userID - simplified to avoid validation errors
     const prescription = await Prescription.create({
-      doctor: user.id,
+      doctor: user.id, // Always use the authenticated user as the doctor
       prescriptionText,
       medications: validMedications,
       diagnosis: diagnosis || "",
-      patient: isValidObjectId(patientId) ? patientId : user.id, // fallback to doctor's id
+      patient: finalPatientId,
       notes: notes || "",
       expiryDate: expiryDate || null,
       paymentAmount: paymentAmount || null,
@@ -124,8 +184,26 @@ export const createPrescription = async (req, res) => {
       shareableUrl: `/prescription/share/${shareableId}`,
     });
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ message: "Internal server error" });
+    console.log("Error in createPrescription:", error);
+    
+    // More detailed error handling with specific error messages
+    if (error.name === "ValidationError") {
+      const validationErrors = Object.values(error.errors).map(err => err.message);
+      return res.status(400).json({ 
+        message: "Validation error", 
+        details: validationErrors.join(", ")
+      });
+    } else if (error.name === "MongoError" && error.code === 11000) {
+      return res.status(409).json({ 
+        message: "Duplicate entry error",
+        details: "A prescription with this information already exists."
+      });
+    } else {
+      res.status(500).json({ 
+        message: "Failed to create prescription",
+        details: error.message || "Internal server error" 
+      });
+    }
   }
 };
 
@@ -391,5 +469,158 @@ export const getUserPrescriptions = async (req, res) => {
   } catch (error) {
     console.log("Error in getUserPrescriptions:", error);
     res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const getSinglePrescription = async (req, res) => {
+  try {
+    const { prescriptionId } = req.params;
+
+    console.log("=== getSinglePrescription ===");
+    console.log("Getting prescription with ID:", prescriptionId);
+    console.log("User making request:", req.user ? req.user.id : 'No user in request');
+    console.log("Auth token present:", req.headers.authorization ? 'Yes' : 'No');
+    console.log("Request method:", req.method);
+    console.log("Request URL:", req.url);
+
+    if (!prescriptionId) {
+      console.log("No prescription ID provided");
+      return res.status(400).json({ message: "Prescription ID is required" });
+    }
+
+    if (!mongoose.Types.ObjectId.isValid(prescriptionId)) {
+      console.log("Invalid prescription ID format:", prescriptionId);
+      return res.status(400).json({ message: "Invalid prescription ID format" });
+    }
+
+    console.log("Attempting to find prescription in database...");
+
+    // No doctor-specific restrictions - anyone with valid auth can get prescription
+    const prescription = await Prescription.findById(prescriptionId)
+      .populate("patient", "full_name email")
+      .populate("physicalExaminer", "full_name email")
+      .populate("doctor", "full_name email");
+
+    if (!prescription) {
+      console.log("Prescription not found for ID:", prescriptionId);
+      
+      // Let's also check if there are any prescriptions at all
+      const totalCount = await Prescription.countDocuments();
+      console.log("Total prescriptions in database:", totalCount);
+      
+      return res.status(404).json({ message: "Prescription not found. It may have been deleted." });
+    }
+
+    console.log("Successfully found prescription:", prescription._id);
+    console.log("Doctor:", prescription.doctor);
+    console.log("Patient:", prescription.patient);
+    
+    return res.status(200).json(prescription);
+  } catch (error) {
+    console.log("Error in getSinglePrescription:", error);
+    console.log("Error details:", error.message);
+    console.log("Error stack:", error.stack);
+    res.status(500).json({ 
+      message: "Internal server error",
+      details: error.message 
+    });
+  }
+};
+
+export const updatePrescription = async (req, res) => {
+  try {
+    const { id: userId, prescriptionId } = req.params;
+    const {
+      prescriptionText,
+      medications,
+      diagnosis,
+      notes,
+      paymentAmount,
+      expiryDate,
+      patientHistory,
+      treatmentPlan,
+      followUpDate,
+      physicalExaminer,
+      investigation,
+      vitals,
+      complaints,
+      tests,
+    } = req.body;
+
+    console.log("Updating prescription:", prescriptionId, "by doctor:", userId);
+
+    // Auth Verification
+    if (!userId) {
+      console.log("No userId provided");
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    const user = await User.findById(userId);
+    if (!user || user.role !== "doctor") {
+      console.log("User not found or not a doctor:", userId);
+      return res.status(403).json({ message: "Forbidden - doctor access required" });
+    }
+
+    // Validate prescription ID
+    if (!mongoose.Types.ObjectId.isValid(prescriptionId)) {
+      console.log("Invalid prescription ID format:", prescriptionId);
+      return res.status(400).json({ message: "Invalid prescription ID format" });
+    }
+
+    // Check if prescription exists - allow any doctor to edit (removed ownership restriction)
+    const existingPrescription = await Prescription.findById(prescriptionId);
+
+    if (!existingPrescription) {
+      console.log("Prescription not found:", prescriptionId);
+      return res.status(404).json({ message: "Prescription not found" });
+    }
+
+    console.log("Found existing prescription:", existingPrescription._id);
+    console.log("Original doctor:", existingPrescription.doctor);
+    console.log("Updating doctor:", userId);
+
+    // Validate and filter medications
+    const validMedications = (medications || []).filter(med => 
+      med && med.name && med.name.trim() !== ""
+    );
+
+    // Validate ObjectIds
+    const isValidObjectId = (id) => /^[0-9a-fA-F]{24}$/.test(id);
+
+    // Update the prescription
+    const updatedPrescription = await Prescription.findByIdAndUpdate(
+      prescriptionId,
+      {
+        prescriptionText,
+        medications: validMedications,
+        diagnosis: diagnosis || "",
+        notes: notes || "",
+        expiryDate: expiryDate || null,
+        paymentAmount: paymentAmount || null,
+        patientHistory: patientHistory || "",
+        treatmentPlan: treatmentPlan || "",
+        followUpDate: followUpDate || null,
+        physicalExaminer: physicalExaminer && isValidObjectId(physicalExaminer) ? physicalExaminer : null,
+        investigation: investigation || "",
+        vitals: vitals || "",
+        complaints: complaints || "",
+        tests: tests || "",
+      },
+      { new: true }
+    );
+
+    console.log("Prescription updated successfully:", prescriptionId);
+
+    res.status(200).json({
+      message: "Prescription updated successfully",
+      prescription: updatedPrescription,
+    });
+  } catch (error) {
+    console.log("Error in updatePrescription:", error);
+    console.log("Error details:", error.message);
+    res.status(500).json({ 
+      message: "Internal server error",
+      details: error.message 
+    });
   }
 };

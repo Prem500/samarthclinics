@@ -45,11 +45,11 @@ export const initializePluginsForPage = () => {
 
 // Clean up function to prevent memory leaks
 export const cleanupPlugins = () => {
-  if (typeof window.jQuery !== 'undefined') {
+  if (typeof (window as any).jQuery !== 'undefined') {
     try {
       // Remove event listeners that might interfere with React
-      window.jQuery(document).off('.plugin-namespace');
-      window.jQuery(window).off('.plugin-namespace');
+      (window as any).jQuery(document).off('.plugin-namespace');
+      (window as any).jQuery(window).off('.plugin-namespace');
     } catch (error) {
       console.warn('Error during plugin cleanup:', error);
     }

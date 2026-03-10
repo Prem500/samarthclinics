@@ -19,16 +19,13 @@ const TeamSection: React.FC = () => {
               <div className="text-center p-4">
                 <div
                   className="team-image-container mb-4 mx-auto position-relative"
-                  style={{ maxWidth: "250px" }}
+                  style={{ maxWidth: "250px", height: "280px" }}
                 >
-                  {" "}
                   <img
-                    src="/images/doctor-1.jpg"
+                    src="/images/premprofile.jpg"
                     alt="Dr. Prem Prakash"
-                    width={250}
-                    height={250}
-                    className="img-fluid"
-                    style={{ objectFit: "contain" }}
+                    className="img-fluid h-100 w-100 rounded"
+                    style={{ objectFit: "contain", objectPosition: "center" }}
                   />
                 </div>
                 <h3 className="h4 fw-bold mb-2">Dr. Prem Prakash</h3>
@@ -48,16 +45,13 @@ const TeamSection: React.FC = () => {
               <div className="text-center p-4">
                 <div
                   className="team-image-container mb-4 mx-auto position-relative"
-                  style={{ maxWidth: "250px" }}
+                  style={{ maxWidth: "250px", height: "280px" }}
                 >
-                  {" "}
                   <img
                     src="/images/doctor-2.jpg"
-                    alt="Dr. Srikrishna"
-                    width={250}
-                    height={250}
-                    className="img-fluid"
-                    style={{ objectFit: "contain" }}
+                    alt="Dr. Nikita Chauhan"
+                    className="img-fluid h-100 w-100 rounded"
+                    style={{ objectFit: "contain", objectPosition: "center" }}
                   />
                 </div>
                 <h3 className="h4 fw-bold mb-2">Dr. Nikita Chauhan</h3>

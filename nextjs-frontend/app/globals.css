@@ -1,0 +1,161 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
+
+@layer components {
+  /* Medical theme colors */
+  .medical-primary {
+    color: #2563eb;
+  }
+  
+  .medical-secondary {
+    color: #0d9488;
+  }
+  
+  .medical-accent {
+    color: #059669;
+  }
+  
+  .medical-bg-primary {
+    background-color: #eff6ff;
+  }
+  
+  .medical-bg-secondary {
+    background-color: #f0fdfa;
+  }
+  
+  .medical-gradient {
+    background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
+  }
+  
+  /* Button styles */
+  .btn-medical {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white !important;
+    padding: 0.875rem 2rem;
+    border-radius: 0.75rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border: none;
+    text-decoration: none;
+    display: inline-block;
+    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.2);
+  }
+  
+  .btn-medical:hover {
+    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
+    color: white !important;
+  }
+
+  .btn-primary-medical {
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+    color: white !important;
+    padding: 0.875rem 2rem;
+    border-radius: 0.75rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border: none;
+    text-decoration: none;
+    display: inline-block;
+    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.2);
+  }
+
+  .btn-primary-medical:hover {
+    background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
+    color: white !important;
+  }
+  
+  .btn-medical-outline {
+    border: 2px solid #10b981;
+    color: #10b981 !important;
+    background: transparent;
+    padding: 0.75rem 1.875rem;
+    border-radius: 0.75rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+  }
+  
+  .btn-medical-outline:hover {
+    background: #10b981;
+    color: white !important;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(16, 185, 129, 0.2);
+  }
+
+  .btn-secondary-outline {
+    border: 2px solid #3b82f6;
+    color: #3b82f6 !important;
+    background: transparent;
+    padding: 0.75rem 1.875rem;
+    border-radius: 0.75rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+  }
+  
+  .btn-secondary-outline:hover {
+    background: #3b82f6;
+    color: white !important;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(59, 130, 246, 0.2);
+  }
+  
+  /* Card styles */
+  .medical-card {
+    background-color: white;
+    border-radius: 0.75rem;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    border: 1px solid #f3f4f6;
+    padding: 1.5rem;
+    transition: box-shadow 0.3s;
+  }
+  
+  .medical-card:hover {
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  }
+  
+  /* Section styles */
+  .section-padding {
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+  }
+  
+  @media (min-width: 1024px) {
+    .section-padding {
+      padding-top: 6rem;
+      padding-bottom: 6rem;
+    }
+  }
+  
+  .container-padding {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  
+  @media (min-width: 640px) {
+    .container-padding {
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    .container-padding {
+      padding-left: 2rem;
+      padding-right: 2rem;
+    }
+  }
+}

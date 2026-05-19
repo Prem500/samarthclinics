@@ -1,0 +1,21 @@
+{
+  "name": "Samarth Clinic - Physiotherapy & Rehabilitation Center",
+  "short_name": "Samarth Clinic",
+  "description": "Professional physiotherapy and rehabilitation services in Dehri. Expert treatment for joint pain, sports injuries, neurological conditions, and post-operative care.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#3b82f6",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512.png", 
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

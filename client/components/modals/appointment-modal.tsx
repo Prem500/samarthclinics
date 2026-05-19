@@ -1,0 +1,141 @@
+"use client";
+
+import { motion } from "framer-motion";
+import { Calendar, Clock, User, Phone, MapPin } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import AppointmentForm from "@/components/booking/appointment-form";
+
+interface AppointmentModalProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}
+
+export default function AppointmentModal({ open, onOpenChange }: AppointmentModalProps) {
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto p-0">
+        <div className="bg-gradient-to-br from-blue-50 to-teal-50 p-6 md:p-8">
+          <DialogHeader className="text-center mb-8">
+            <DialogTitle className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              Book Your Appointment
+            </DialogTitle>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              Schedule your consultation with Dr. Prem Prakash for professional physiotherapy treatment
+            </p>
+          </DialogHeader>
+
+          <div className="grid lg:grid-cols-2 gap-8 items-start">
+            {/* Appointment Form */}
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6 }}
+            >
+              <AppointmentForm />
+            </motion.div>
+
+            {/* Clinic Information */}
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6 }}
+              className="space-y-6"
+            >
+              <Card className="medical-card">
+                <CardContent className="p-6">
+                  <div className="flex items-start gap-4">
+                    <div className="bg-blue-100 p-3 rounded-full">
+                      <User className="h-6 w-6 text-blue-600" />
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                        Dr. Prem Prakash
+                      </h3>
+                      <p className="text-gray-600 mb-2">Senior Physiotherapist</p>
+                      <p className="text-sm text-gray-500">
+                        Bachelor in Physiotherapy with 5+ years of experience in 
+                        home physiotherapy, speech therapy, occupational therapy and neuro rehabilitation.
+                      </p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="medical-card">
+                <CardContent className="p-6">
+                  <div className="flex items-start gap-4">
+                    <div className="bg-teal-100 p-3 rounded-full">
+                      <MapPin className="h-6 w-6 text-teal-600" />
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                        Clinic Location
+                      </h3>
+                      <p className="text-gray-600 mb-2">Nahar Road, Near Sunil Bose, Dehri</p>
+                      <Button variant="outline" size="sm" asChild>
+                        <a 
+                          href="https://maps.app.goo.gl/3Ey94eDkMNvhsrQf7" 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                        >
+                          Get Directions
+                        </a>
+                      </Button>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="medical-card">
+                <CardContent className="p-6">
+                  <div className="flex items-start gap-4">
+                    <div className="bg-green-100 p-3 rounded-full">
+                      <Clock className="h-6 w-6 text-green-600" />
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                        Working Hours
+                      </h3>
+                      <div className="space-y-1 text-gray-600">
+                        <p>Monday - Saturday: 9:00 AM - 8:00 PM</p>
+                        <p>Sunday: Closed</p>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="medical-card bg-gradient-to-r from-blue-600 to-teal-600 text-white">
+                <CardContent className="p-6">
+                  <div className="flex items-start gap-4">
+                    <div className="bg-white/20 p-3 rounded-full">
+                      <Phone className="h-6 w-6 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-semibold mb-2">
+                        Emergency Contact
+                      </h3>
+                      <p className="text-blue-100 mb-2">Available for urgent cases</p>
+                      <Button variant="outline" size="sm" asChild className="bg-white text-blue-600 border-white hover:bg-blue-50 hover:text-blue-700 font-semibold">
+                        <a href="tel:+917004119766">
+                          Call +91 7004119766
+                        </a>
+                      </Button>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+}

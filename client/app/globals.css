@@ -1,0 +1,137 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-poppins), system-ui, sans-serif;
+    letter-spacing: -0.02em;
+  }
+}
+
+@layer components {
+  .premium-badge {
+    @apply inline-flex items-center rounded-full border border-primary/15 bg-primary/5 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-primary;
+  }
+
+  .premium-card {
+    @apply rounded-2xl border border-clinical-200/80 bg-white/90 shadow-premium backdrop-blur-sm transition-all duration-300;
+  }
+
+  .premium-card:hover {
+    @apply shadow-premium-lg border-clinical-200;
+  }
+
+  .section-padding {
+    @apply py-16 lg:py-24;
+  }
+
+  .container-padding {
+    @apply px-4 sm:px-6 lg:px-8;
+  }
+
+  /* Refined CTA buttons — same labels, elevated finish */
+  .btn-medical {
+    background: linear-gradient(135deg, #0f766e 0%, #0d9488 100%);
+    color: white !important;
+    padding: 0.875rem 2rem;
+    border-radius: 9999px;
+    font-weight: 600;
+    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    border: none;
+    text-decoration: none;
+    display: inline-block;
+    box-shadow: 0 8px 24px -4px rgba(15, 118, 110, 0.35);
+  }
+
+  .btn-medical:hover {
+    background: linear-gradient(135deg, #115e59 0%, #0f766e 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 14px 32px -6px rgba(15, 118, 110, 0.45);
+    color: white !important;
+  }
+
+  .btn-primary-medical {
+    background: linear-gradient(135deg, #0f766e 0%, #0e7490 100%);
+    color: white !important;
+    padding: 0.875rem 2rem;
+    border-radius: 9999px;
+    font-weight: 600;
+    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    border: none;
+    text-decoration: none;
+    display: inline-block;
+    box-shadow: 0 8px 24px -4px rgba(14, 116, 144, 0.35);
+  }
+
+  .btn-primary-medical:hover {
+    background: linear-gradient(135deg, #115e59 0%, #0f766e 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 14px 32px -6px rgba(14, 116, 144, 0.45);
+    color: white !important;
+  }
+
+  .btn-medical-outline {
+    border: 1px solid rgba(15, 118, 110, 0.35);
+    color: #0f766e !important;
+    background: #ffffff;
+    padding: 0.75rem 1.875rem;
+    border-radius: 9999px;
+    font-weight: 600;
+    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    text-decoration: none;
+    display: inline-block;
+    box-shadow: 0 2px 8px -2px rgba(15, 38, 50, 0.06);
+  }
+
+  .btn-medical-outline:hover {
+    background: rgba(15, 118, 110, 0.06);
+    border-color: #0f766e;
+    color: #115e59 !important;
+    transform: translateY(-1px);
+    box-shadow: 0 8px 24px -6px rgba(15, 118, 110, 0.18);
+  }
+
+  .btn-secondary-outline {
+    border: 1px solid rgba(14, 116, 144, 0.45);
+    color: #0e7490 !important;
+    background: transparent;
+    padding: 0.75rem 1.875rem;
+    border-radius: 9999px;
+    font-weight: 600;
+    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    text-decoration: none;
+    display: inline-block;
+  }
+
+  .btn-secondary-outline:hover {
+    background: rgba(14, 116, 144, 0.08);
+    color: #0f766e !important;
+    transform: translateY(-1px);
+    box-shadow: 0 8px 24px -6px rgba(14, 116, 144, 0.2);
+  }
+
+  .medical-card {
+    @apply premium-card p-6;
+  }
+
+  .nav-link-premium {
+    @apply relative text-clinical-700 transition-colors duration-300 hover:text-primary;
+  }
+
+  .nav-link-premium::after {
+    content: "";
+    @apply absolute -bottom-1 left-0 h-px w-0 bg-primary transition-all duration-300;
+  }
+
+  .nav-link-premium:hover::after {
+    @apply w-full;
+  }
+}

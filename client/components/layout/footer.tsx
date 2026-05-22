@@ -115,7 +115,7 @@ export default function Footer() {
                   <MapPin className="h-4 w-4 text-primary" />
                 </span>
                 <span className="text-clinical-300 leading-relaxed">
-                  Nahar Road, Near Sunil Bose, Dehri
+                Canal Road, Near Sunil Bose, Dehri
                 </span>
               </div>
               <div className="flex items-center gap-3">

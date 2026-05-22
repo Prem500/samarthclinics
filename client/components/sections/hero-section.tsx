@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react";
-import { Calendar, Home } from "lucide-react";
+import { Home, MessageCircle } from "lucide-react";
 import { motion } from "framer-motion";
-import AppointmentModal from "@/components/modals/appointment-modal";
+
+const WA_PHONE = "917004119766";
+const waLink = (text: string) =>
+  `https://wa.me/${WA_PHONE}?text=${encodeURIComponent(text)}`;
 
 export default function HeroSection() {
-  const [isAppointmentModalOpen, setIsAppointmentModalOpen] = useState(false);
 
   return (
     <section className="relative flex min-h-[90vh] items-center justify-center overflow-hidden">
@@ -45,21 +46,24 @@ export default function HeroSection() {
             transition={{ duration: 0.8, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
             className="flex flex-col items-center justify-center gap-4 sm:flex-row"
           >
-            <button
-              type="button"
-              onClick={() => setIsAppointmentModalOpen(true)}
+            <a
+              href={waLink("Hello, I would like to connect with Samarth Clinic.")}
+              target="_blank"
+              rel="noopener noreferrer"
               className="btn-primary-medical inline-flex items-center px-8 py-4 text-base font-semibold shadow-[0_12px_40px_-8px_rgba(15,118,110,0.5)]"
             >
-              <Calendar className="mr-2 h-5 w-5" />
-              Book Appointment
-            </button>
+              <MessageCircle className="mr-2 h-5 w-5" />
+              Chat on WhatsApp
+            </a>
 
             <a
-              href="#services"
+              href={waLink("I wanted to know more about home physiotherapy")}
+              target="_blank"
+              rel="noopener noreferrer"
               className="inline-flex items-center rounded-full border-2 border-white/90 bg-white/10 px-8 py-4 text-base font-semibold text-white shadow-lg backdrop-blur-sm transition-all duration-300 hover:border-white hover:bg-white hover:text-primary"
             >
               <Home className="mr-2 h-5 w-5" />
-              Home Physiotherapy
+              I Want Home Physiotherapy
             </a>
           </motion.div>
         </motion.div>
@@ -92,11 +96,6 @@ export default function HeroSection() {
           className="absolute bottom-24 right-8 h-40 w-40 rounded-full bg-cyan-400/10 blur-3xl md:right-20"
         />
       </div>
-
-      <AppointmentModal
-        open={isAppointmentModalOpen}
-        onOpenChange={setIsAppointmentModalOpen}
-      />
 
       {/* Scroll indicator */}
       <motion.div

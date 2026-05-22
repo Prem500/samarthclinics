@@ -8,7 +8,7 @@ export default function AchievementsSection() {
   const mainStats = [
     {
       icon: Users,
-      number: "4500+",
+      number: "5000+",
       label: "Patients Treated",
       description: "Successfully treated patients with various conditions",
       color: "blue"

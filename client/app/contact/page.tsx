@@ -56,7 +56,7 @@ export default function ContactPage() {
                           Clinic Address
                         </h3>
                         <p className="text-gray-600 mb-4">
-                          Nahar Road, Near Sunil Bose<br />
+                        Canal Road, Near Sunil Bose<br />
                           Dehri, Bihar, India
                         </p>
                         <Button variant="outline" size="sm" asChild>

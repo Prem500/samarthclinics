@@ -11,7 +11,7 @@ export default function AboutSection() {
   const stats = [
     {
       icon: Users,
-      number: "4500+",
+      number: "5000+",
       label: "Happy Clients",
       color: "blue"
     },
@@ -30,7 +30,7 @@ export default function AboutSection() {
   ];
 
   const achievements = [
-    "4500+ patients treated with successful outcomes",
+    "5000+ patients treated with successful outcomes",
     "Pioneer in innovative rehabilitation techniques for faster recovery",
     "98% patient satisfaction rate based on reviews",
     "Specialized in multiple physiotherapy disciplines"
@@ -51,15 +51,15 @@ export default function AboutSection() {
       qualification: "MBBS (Kolkata) · MS Ortho (Delhi)",
       image: "/servicesimages/susheelkamalorthopedicsurgeon.jpeg",
       description:
-        "Orthopedic surgeon with expertise in joint replacement, spinal disorders, fractures & post-surgical rehabilitation. Trained in Delhi's top institutions.",
+        "Orthopedic surgeon with expertise in pain management, joint replacement, spinal disorders, fractures & post-surgical rehabilitation. Trained in Delhi's top institutions.",
     },
     {
       name: "Dr. Nitish Singh",
       role: "Physiotherapist",
-      qualification: "BPT · NGU",
+      qualification: "BPT · GNSU",
       image: "/servicesimages/nitishkumarphysiotherapist.jpeg",
       description:
-        "Specialist in musculoskeletal physiotherapy, TENS/IFT therapy & patient rehabilitation programs.",
+        "Specialist in musculoskeletal physiotherapy, Neuromuscular physio care with manual and electrotherapy.",
     },
   ];
 
@@ -108,7 +108,7 @@ export default function AboutSection() {
               </p>
               
               <p>
-                Founded in 2020 by Dr. Prem Prakash, a skilled and compassionate physiotherapist, 
+                Founded in 2022 by Dr. Prem Prakash, a skilled and compassionate physiotherapist, 
                 Samarth Clinic was established with the vision of providing high-quality 
                 rehabilitation care to individuals of all ages. Dr. Prem Prakash aimed to 
                 create a welcoming and supportive environment where patients could heal, 

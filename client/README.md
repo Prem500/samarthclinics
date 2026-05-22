@@ -131,7 +131,7 @@ The frontend integrates with a Node.js/Express backend for:
 ## 📞 Contact Information
 
 **Samarth Clinic**
-- **Address**: Nahar Road, Near Sunil Bose, Dehri
+- **Address**: Canal Road, Near Sunil Bose, Dehri
 - **Phone**: +91 7004119766
 - **Email**: Samarthclinic.info@gmail.com
 - **Hours**: Monday-Saturday 9:00 AM - 8:00 PM

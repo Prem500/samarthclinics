@@ -185,7 +185,11 @@ function WhatsApp() {
 /* ══════════════════════════════════════════
    HERO
 ══════════════════════════════════════════ */
-function Hero({ onBook }: { onBook: () => void }) {
+const WA_PHONE = "917004119766";
+const waLink = (text: string) =>
+  `https://wa.me/${WA_PHONE}?text=${encodeURIComponent(text)}`;
+
+function Hero() {
   return (
     <section className="relative flex min-h-[92vh] items-center justify-center overflow-hidden">
       <div className="absolute inset-0 bg-cover bg-center bg-no-repeat"
@@ -215,11 +219,21 @@ function Hero({ onBook }: { onBook: () => void }) {
             Joint Pain · Spinal Promlems · Stroke Rehab · Sports Injury · Home Physiotherapy · Speech Therapy ·  Occupational Therapy · Neurological Rehabilitation
           </p>
 
-          <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
-            <button onClick={onBook}
-              className="inline-flex items-center gap-2 rounded-full bg-amber-600 px-8 py-4 text-base font-semibold text-white shadow-[0_8px_30px_rgba(217,119,6,0.4)] hover:bg-amber-500 hover:shadow-[0_12px_40px_rgba(217,119,6,0.55)] transition-all duration-300">
-              <Calendar className="h-5 w-5" />Book Appointment
-            </button>
+          <div className="flex flex-col items-center justify-center gap-4 sm:flex-row sm:flex-wrap">
+            <a
+              href={waLink("Hello, I would like to connect with Samarth Clinic.")}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 rounded-full bg-emerald-600 px-8 py-4 text-base font-semibold text-white shadow-[0_8px_30px_rgba(5,150,105,0.4)] hover:bg-emerald-500 transition-all duration-300">
+              <MessageCircle className="h-5 w-5" />Chat on WhatsApp
+            </a>
+            <a
+              href={waLink("I wanted to know more about home physiotherapy")}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 rounded-full border-2 border-amber-400/60 bg-amber-600/20 px-8 py-4 text-base font-semibold text-white backdrop-blur-sm hover:border-amber-400 hover:bg-amber-600/30 transition-all">
+              <Home className="h-5 w-5" />I Want Home Physiotherapy
+            </a>
             <a href="tel:+917004119766"
               className="inline-flex items-center gap-2 rounded-full border-2 border-white/30 bg-white/10 px-8 py-4 text-base font-semibold text-white backdrop-blur-sm hover:border-amber-500/60 hover:bg-white/15 transition-all">
               <Phone className="h-5 w-5" />Call Now
@@ -251,13 +265,13 @@ const SERVICES = [
 
   { icon: Brain, title: "Neuro Rehabilitation", desc: "Specialized programs for stroke, spinal cord injuries & neurological conditions.", img: "/servicesimages/neurological rehabilitation samarth clinics dehri on sone.png" },
 
-  { icon: Bone, title: "Orthopedic Rehabilitation", desc: "Expert treatment for bone, muscle & joint injuries with modern techniques.", img: "/servicesimages/Orthopedic_Rehabilitation.jpg" },
+  { icon: Bone, title: "Orthopedic Rehabilitation", desc: "Expert treatment for bone, muscle & joint injuries with modern techniques.", img: "/servicesimages/Orthopedic_Rehabilitation.jpeg" },
 
   { icon: User, title: "Child Rehabilitation", desc: "Dedicated therapy programs for children with developmental delays and physical challenges.", img: "/servicesimages/samarth clinic dehri on sone occupational therapy.jpg" },
 
   { icon: Stethoscope, title: "Orthopedic Consultation", desc: "Professional assessment and guidance for bone, joint, and musculoskeletal conditions.", img: "/servicesimages/Orthopedic_Rehabilitation.jpg" },
 
-  { icon: Dumbbell, title: "Sports Rehabilitation", desc: "Injury recovery and performance enhancement programs tailored for athletes.", img: "/servicesimages/sportsrehabilitation.jpg" },
+  { icon: Dumbbell, title: "Sports Rehabilitation", desc: "Injury recovery and performance enhancement programs tailored for athletes.", img: "/servicesimages/sportsrehabilitation.jpeg" },
 
   { icon: HeartPulse, title: "Pain Management", desc: "Comprehensive pain relief solutions using modern physiotherapy techniques.", img: "/servicesimages/painmanagement.png" },
 
@@ -265,7 +279,7 @@ const SERVICES = [
 
   { icon: Hand, title: "Occupational Therapy", desc: "Regain independence in daily activities and improve your quality of life.", img: "/servicesimages/Occupational Therapy samarth clinics dehri on sone.webp" },
 
-  { icon: MessageCircle, title: "Speech Therapy", desc: "Improve communication, speech clarity and language development.", img: "/servicesimages/speechtherapy.jpg" },
+  { icon: MessageCircle, title: "Speech Therapy", desc: "Improve communication, speech clarity and language development.", img: "/servicesimages/speechtherapy.jpeg" },
 ];
 
 function Services({ onBook }: { onBook: () => void }) {
@@ -342,19 +356,16 @@ function Services({ onBook }: { onBook: () => void }) {
     role: "Consultant Orthopaedic", 
     qual: "MBBS (Kolkata) · MS Ortho (Delhi)", 
     img: "/servicesimages/susheelkamalorthopedicsurgeon.jpeg", 
-    bio: "Orthopedic surgeon with expertise in joint replacement, spinal disorders, fractures & post-surgical rehabilitation. Trained in Delhi's top institutions." 
+    bio: "Orthopedic surgeon with expertise in pain management, joint replacement, spinal disorders, fractures & post-surgical rehabilitation. Trained in Delhi's top institutions." 
   },
 ];
-
-
-
 
 const ASSOC = { 
   name: "Dr. Nitish Singh", 
   role: "Physiotherapist", 
-  qual: "BPT · NGU",
+  qual: "BPT · GNSU",
   img: "/servicesimages/nitishkumarphysiotherapist.jpeg",
-  bio: "Specialist in musculoskeletal physiotherapy, TENS/IFT therapy & patient rehabilitation programs." 
+  bio: "Specialist in musculoskeletal physiotherapy, Neuromuscular physio care with manual and electrotherapy." 
 };
 
 function Team() {
@@ -368,7 +379,7 @@ function Team() {
             Expert Medical Team
           </p>
           <h2 className="text-4xl font-bold text-stone-900 md:text-5xl" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
-            Meet Our Specialists
+           Experts Team Only 
           </h2>
           <p className="mx-auto mt-4 max-w-2xl text-stone-500">
             Qualified, compassionate professionals dedicated to your complete recovery at our physiotherapy center in Dehri.
@@ -471,8 +482,8 @@ const WHY = [
   { icon: Heart, title: "Personalized Plans", desc: "Every patient gets a custom treatment protocol tailored to their exact condition and goals." },
   { icon: Home, title: "Home Visit Service", desc: "Can't travel? We come to you. Home physiotherapy across Dehri, Sasaram & Rohtas." },
   { icon: Award, title: "4.9★ Google Rated", desc: "42 verified Google reviews. Patients call us humble, professional and highly effective." },
-  { icon: Clock, title: "Flexible Timing", desc: "Mon–Sat, 10 AM–8 PM. Flexible slots for busy professionals and senior patients." },
-  { icon: Trophy, title: "4500+ Recoveries", desc: "Thousands of successful outcomes across knee, back, neuro, sports & paediatric cases." },
+  { icon: Clock, title: "Flexible Timing", desc: "Mon–Sun, 10 AM–8 PM. Flexible slots for busy professionals and senior patients." },
+  { icon: Trophy, title: "5000+ Recoveries", desc: "Thousands of successful outcomes across knee, back, neuro, sports & paediatric cases." },
 ];
 
 function WhyUs() {
@@ -481,11 +492,16 @@ function WhyUs() {
       <div className="pointer-events-none absolute inset-0" style={{ backgroundImage: "radial-gradient(ellipse 80% 60% at 50% 0%, rgba(217,119,6,0.12), transparent)" }} />
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <motion.div {...fade()} className="mb-16 text-center">
-          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.3em] text-amber-400">Why Patients Choose Us</p>
+          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.3em] text-amber-400">Why People Trust Us?</p>
           <h2 className="text-4xl font-bold md:text-5xl" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
-            Dehri's Most Trusted<br />Physiotherapy Center
+            Advanced Physiotherapy Care Trusted<br />Across Dehri on Sone
           </h2>
-          <p className="mx-auto mt-4 max-w-2xl text-stone-400">From knee pain & back pain to stroke rehabilitation & sports injuries — we treat with expertise, empathy and evidence-based protocols.</p>
+          <p className="mx-auto mt-4 max-w-3xl text-stone-400">
+            Whether it&apos;s chronic pain, slip disc, knee pain, paralysis, stroke recovery, or sports injuries — our focus is not only pain relief but restoring mobility, confidence, and quality of life through modern rehabilitation techniques.
+          </p>
+          <p className="mx-auto mt-4 text-sm font-semibold tracking-wide text-amber-400/90">
+            Expert Care • Personalized Treatment • Faster Recovery
+          </p>
         </motion.div>
 
         <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
@@ -629,7 +645,7 @@ export default function HomePage() {
       <div className="min-h-screen" style={{ fontFamily: "'DM Sans', system-ui, sans-serif" }}>
         <Header />
         <main>
-          <Hero onBook={() => setBookOpen(true)} />
+          <Hero />
           <Services onBook={() => setBookOpen(true)} />
           <Team />
           <WhyUs />

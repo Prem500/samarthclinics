@@ -43,7 +43,7 @@ export default function Header() {
                 <span className="flex h-7 w-7 items-center justify-center rounded-full bg-white/10 ring-1 ring-white/15">
                   <MapPin className="h-3.5 w-3.5 text-gold-light" aria-hidden />
                 </span>
-                <span>Nahar Road, Near Sunil Bose, Dehri</span>
+                <span>Canal Road, Near Sunil Bose, Dehri</span>
               </div>
             </div>
             <div className="hidden shrink-0 text-white/80 md:block">

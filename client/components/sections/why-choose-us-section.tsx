@@ -41,9 +41,9 @@ export default function WhyChooseUsSection() {
     },
     {
       icon: Clock,
-      title: "Flexible Scheduling",
+      title: "Flexible Timing",
       description:
-        "Convenient appointment times that fit your busy schedule, including evening slots.",
+        "Mon–Sun, 10 AM–8 PM. Flexible slots for busy professionals and senior patients.",
     },
     {
       icon: Stethoscope,
@@ -55,7 +55,7 @@ export default function WhyChooseUsSection() {
 
   const stats = [
     {
-      number: "4500+",
+      number: "5000+",
       label: "Happy Clients",
       description: "Successfully treated patients",
     },
@@ -100,12 +100,16 @@ export default function WhyChooseUsSection() {
           className="mb-16 text-center"
         >
           <h2 className="mb-6 font-heading text-3xl font-semibold tracking-tight md:text-4xl">
-            Why Choose Samarth Clinic?
+            Why People Trust Us?
           </h2>
-          <p className="mx-auto max-w-3xl text-lg leading-relaxed text-teal-50/95 md:text-xl">
-            Choose us for expert physiotherapy, chiropractic and alignment services,
-            where personalized care, holistic approach and cutting-edge techniques
-            ensure your wellness and pain relief.
+          <p className="mx-auto max-w-3xl text-lg font-semibold leading-relaxed text-teal-50/95 md:text-xl">
+            Advanced Physiotherapy Care Trusted Across Dehri on Sone
+          </p>
+          <p className="mx-auto mt-4 max-w-3xl text-lg leading-relaxed text-teal-50/95 md:text-xl">
+            Whether it&apos;s chronic pain, slip disc, knee pain, paralysis, stroke recovery, or sports injuries — our focus is not only pain relief but restoring mobility, confidence, and quality of life through modern rehabilitation techniques.
+          </p>
+          <p className="mx-auto mt-4 text-sm font-semibold tracking-wide text-gold-light">
+            Expert Care • Personalized Treatment • Faster Recovery
           </p>
         </motion.div>
 

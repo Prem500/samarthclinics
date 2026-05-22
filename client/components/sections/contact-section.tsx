@@ -49,7 +49,7 @@ export default function ContactSection() {
                       Clinic Address
                     </h3>
                     <p className="mb-4 text-clinical-600">
-                      Nahar Road, Near Sunil Bose, Dehri
+                    Canal Road , Near Sunil Bose, Dehri
                     </p>
                     <Button variant="outline" size="sm" className="rounded-full" asChild>
                       <a 

@@ -267,7 +267,7 @@ const SERVICES = [
 
   { icon: Bone, title: "Orthopedic Rehabilitation", desc: "Expert treatment for bone, muscle & joint injuries with modern techniques.", img: "/servicesimages/Orthopedic_Rehabilitation.jpeg" },
 
-  { icon: User, title: "Child Rehabilitation", desc: "Dedicated therapy programs for children with developmental delays and physical challenges.", img: "/servicesimages/samarth clinic dehri on sone occupational therapy.jpg" },
+  { icon: User, title: "Child Rehabilitation", desc: "Dedicated therapy programs for children with developmental delays and physical challenges.", img: "/servicesimages/childrehabilitation.jpeg" },
 
   { icon: Stethoscope, title: "Orthopedic Consultation", desc: "Professional assessment and guidance for bone, joint, and musculoskeletal conditions.", img: "/servicesimages/Orthopedic_Rehabilitation.jpg" },
 

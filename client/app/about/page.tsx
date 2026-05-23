@@ -18,7 +18,7 @@ const expertise = [
 ];
 
 const commitment = [
-  "4500+ Recovery Journeys Supported",
+  "5000+ Recovery Journeys Supported",
   "3+ Years of Dedicated Clinical Experience",
   "Advanced Technology for Faster Recovery & Pain Relief",
   "Multidisciplinary Rehabilitation Approach",

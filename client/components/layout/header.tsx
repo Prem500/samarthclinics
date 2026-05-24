@@ -6,19 +6,16 @@ import { Menu, X, UserCog, Phone, MapPin } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export default function Header() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    const fn = () => setScrolled(window.scrollY > 8);
+    window.addEventListener("scroll", fn);
+    return () => window.removeEventListener("scroll", fn);
   }, []);
 
-  const navigation = [
+  const nav = [
     { name: "Home", href: "/" },
     { name: "About", href: "/about" },
     { name: "Services", href: "/services" },
@@ -27,116 +24,92 @@ export default function Header() {
 
   return (
     <>
-      {/* Top Bar */}
-      <div className="relative border-b border-white/10 bg-gradient-to-r from-clinical-950 via-clinical-900 to-clinical-950 text-white">
-        <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-gold/40 to-transparent" />
-        <div className="mx-auto max-w-7xl px-4 py-2.5 text-sm sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between gap-4">
-            <div className="flex flex-wrap items-center gap-x-8 gap-y-1">
-              <div className="flex items-center gap-2 text-white/95">
-                <span className="flex h-7 w-7 items-center justify-center rounded-full bg-white/10 ring-1 ring-white/15">
-                  <Phone className="h-3.5 w-3.5 text-gold-light" aria-hidden />
-                </span>
-                <span className="tracking-wide">+91 7004119766</span>
-              </div>
-              <div className="hidden items-center gap-2 text-white/85 sm:flex">
-                <span className="flex h-7 w-7 items-center justify-center rounded-full bg-white/10 ring-1 ring-white/15">
-                  <MapPin className="h-3.5 w-3.5 text-gold-light" aria-hidden />
-                </span>
-                <span>Canal Road, Near Sunil Bose, Dehri</span>
-              </div>
-            </div>
-            <div className="hidden shrink-0 text-white/80 md:block">
-              <span className="rounded-full bg-white/5 px-3 py-1 text-xs font-medium tracking-wide ring-1 ring-white/10">
-                Open: Mon-Sat 9:00 AM - 8:00 PM
-              </span>
-            </div>
+      <div className="bg-stone-900 text-stone-300 text-xs">
+        <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-2 sm:px-6">
+          <div className="flex flex-wrap gap-x-6 gap-y-1">
+            <a href="tel:+917004119766" className="flex items-center gap-1.5 transition-colors hover:text-amber-400">
+              <Phone className="h-3 w-3" />
+              +91 70041 19766
+            </a>
+            <span className="hidden items-center gap-1.5 sm:flex">
+              <MapPin className="h-3 w-3" />
+              Canal Rd, Rajputana Mohalla, Dehri, Bihar
+            </span>
           </div>
+          <span className="hidden shrink-0 rounded bg-amber-900/40 px-2.5 py-1 text-amber-300 md:block">
+            Mon–Sat · 10 AM–8 PM · 4.9 ★
+          </span>
         </div>
       </div>
 
-      {/* Main Header */}
       <header
         className={cn(
-          "sticky top-0 z-50 w-full border-b border-clinical-200/60 bg-background/85 backdrop-blur-xl transition-all duration-300",
-          isScrolled && "shadow-premium"
+          "sticky top-0 z-50 border-b border-stone-200/70 bg-white/90 backdrop-blur-xl transition-shadow duration-300",
+          scrolled && "shadow-md"
         )}
       >
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex h-[4.25rem] items-center justify-between">
-            {/* Logo */}
-            <Link href="/" className="group flex items-center gap-3">
-              <span className="hidden h-10 w-px shrink-0 bg-gradient-to-b from-transparent via-primary/50 to-transparent sm:block" aria-hidden />
-              <div className="flex flex-col">
-                <span className="font-heading text-xl font-semibold tracking-tight text-clinical-950 transition-colors group-hover:text-primary">
-                  Samarth Clinic
-                </span>
-                <span className="-mt-0.5 text-[11px] font-medium uppercase tracking-[0.22em] text-clinical-500">
-                  Physiotherapy Rehabilitation Center
-                </span>
-              </div>
-            </Link>
-
-            {/* Desktop Navigation */}
-            <nav className="hidden items-center gap-10 md:flex">
-              {navigation.map((item) => (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  className="nav-link-premium text-sm font-medium"
-                >
-                  {item.name}
-                </Link>
-              ))}
-              <Link
-                href="/doctor-auth"
-                className="btn-medical-outline flex items-center gap-2 px-5 py-2 text-sm"
-              >
-                <UserCog className="h-4 w-4" />
-                Doctor Login
-              </Link>
-            </nav>
-
-            {/* Mobile menu button */}
-            <button
-              type="button"
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="rounded-xl p-2.5 text-clinical-700 transition-colors hover:bg-clinical-100/80 hover:text-primary md:hidden"
-              aria-expanded={isMenuOpen}
-              aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+          <Link href="/" className="flex flex-col leading-tight">
+            <span
+              className="text-xl font-bold text-stone-900"
+              style={{ fontFamily: "'Cormorant Garamond', serif", letterSpacing: "0.01em" }}
             >
-              {isMenuOpen ? (
-                <X className="h-6 w-6" />
-              ) : (
-                <Menu className="h-6 w-6" />
-              )}
-            </button>
-          </div>
+              Samarth Clinic
+            </span>
+            <span className="text-[10px] tracking-[0.2em] text-amber-700 uppercase">
+              Physiotherapy & Rehabilitation · Dehri
+            </span>
+          </Link>
+
+          <nav className="hidden items-center gap-8 md:flex">
+            {nav.map(({ name, href }) => (
+              <Link
+                key={name}
+                href={href}
+                className="text-sm font-medium text-stone-700 transition-colors hover:text-amber-700"
+              >
+                {name}
+              </Link>
+            ))}
+            <Link
+              href="/doctor-auth"
+              className="flex items-center gap-1.5 rounded-full border border-stone-300 px-4 py-2 text-sm font-medium text-stone-700 transition-all hover:border-amber-600 hover:text-amber-700"
+            >
+              <UserCog className="h-4 w-4" />
+              Doctor Login
+            </Link>
+          </nav>
+
+          <button
+            type="button"
+            onClick={() => setOpen(!open)}
+            className="rounded-lg p-2 text-stone-700 hover:bg-stone-100 md:hidden"
+            aria-label="Menu"
+          >
+            {open ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+          </button>
         </div>
 
-        {/* Mobile Navigation */}
-        {isMenuOpen && (
-          <div className="border-t border-clinical-200/80 bg-background/95 backdrop-blur-xl md:hidden">
-            <div className="space-y-1 px-4 py-5">
-              {navigation.map((item) => (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  className="block rounded-xl px-3 py-3 font-medium text-clinical-800 transition-colors hover:bg-clinical-50 hover:text-primary"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  {item.name}
-                </Link>
-              ))}
+        {open && (
+          <div className="border-t border-stone-200 bg-white px-4 py-4 md:hidden">
+            {nav.map(({ name, href }) => (
               <Link
-                href="/doctor-auth"
-                className="btn-medical-outline mt-2 flex w-full items-center justify-center gap-2 px-4 py-3 text-sm"
-                onClick={() => setIsMenuOpen(false)}
+                key={name}
+                href={href}
+                onClick={() => setOpen(false)}
+                className="block py-2.5 text-stone-700 hover:text-amber-700"
               >
-                <UserCog className="h-4 w-4" />
-                Doctor Login
+                {name}
               </Link>
-            </div>
+            ))}
+            <Link
+              href="/doctor-auth"
+              onClick={() => setOpen(false)}
+              className="mt-2 flex items-center gap-2 py-2.5 text-stone-700 hover:text-amber-700"
+            >
+              <UserCog className="h-4 w-4" />
+              Doctor Login
+            </Link>
           </div>
         )}
       </header>

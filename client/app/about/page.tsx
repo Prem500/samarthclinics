@@ -6,6 +6,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { CheckCircle, Target, Heart } from "lucide-react";
 import Image from "next/image";
 
+const headingFont = { fontFamily: "'Cormorant Garamond', serif" };
+
 const expertise = [
   "Advanced Physiotherapy & Rehabilitation",
   "Neuro Rehabilitation (Stroke, Paralysis & Neurological Conditions)",
@@ -18,7 +20,7 @@ const expertise = [
 ];
 
 const commitment = [
-  "5000+ Recovery Journeys Supported",
+  "4500+ Recovery Journeys Supported",
   "3+ Years of Dedicated Clinical Experience",
   "Advanced Technology for Faster Recovery & Pain Relief",
   "Multidisciplinary Rehabilitation Approach",
@@ -55,15 +57,16 @@ const teamMembers = [
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-stone-50">
       <Header />
 
-      <section className="relative bg-gradient-to-br from-blue-600 to-teal-600 py-20 text-white">
+      <section className="relative bg-gradient-to-br from-stone-900 via-stone-800 to-amber-950 py-20 text-white">
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-transparent via-amber-500/80 to-transparent" />
         <div className="mx-auto max-w-7xl container-padding text-center">
-          <h1 className="mb-6 text-4xl font-bold md:text-5xl">
+          <h1 className="mb-6 text-4xl font-bold md:text-5xl" style={headingFont}>
             About Samarth Clinic & Physiotherapy Rehabilitation Centre
           </h1>
-          <p className="mx-auto max-w-3xl text-xl text-blue-100">
+          <p className="mx-auto max-w-3xl text-xl text-amber-100/90">
             Physiotherapy • Neuro Rehab • Pain Management • Speech Therapy • Occupational Therapy • Advanced Rehabilitation
           </p>
         </div>
@@ -72,7 +75,7 @@ export default function AboutPage() {
       <main>
         <section className="section-padding bg-white">
           <div className="mx-auto max-w-4xl container-padding">
-            <div className="prose prose-lg mx-auto max-w-none space-y-6 text-gray-600">
+            <div className="mx-auto max-w-none space-y-6 text-stone-600">
               <p>
                 For over 4+ years, Samarth Clinic has been dedicated to improving lives through advanced physiotherapy,
                 rehabilitation, and patient-centered care. Our mission is to help individuals overcome pain, restore
@@ -103,14 +106,16 @@ export default function AboutPage() {
           </div>
         </section>
 
-        <section className="section-padding bg-gray-50">
+        <section className="section-padding bg-stone-50">
           <div className="mx-auto max-w-4xl container-padding">
-            <h2 className="mb-8 text-3xl font-bold text-gray-900">Our Areas of Expertise</h2>
+            <h2 className="mb-8 text-3xl font-bold text-stone-900" style={headingFont}>
+              Our Areas of Expertise
+            </h2>
             <div className="space-y-3">
               {expertise.map((item) => (
                 <div key={item} className="flex items-start gap-3">
-                  <CheckCircle className="mt-0.5 h-6 w-6 shrink-0 text-green-600" />
-                  <span className="text-gray-700">{item}</span>
+                  <CheckCircle className="mt-0.5 h-6 w-6 shrink-0 text-amber-600" />
+                  <span className="text-stone-700">{item}</span>
                 </div>
               ))}
             </div>
@@ -119,32 +124,38 @@ export default function AboutPage() {
 
         <section className="section-padding bg-white">
           <div className="mx-auto max-w-4xl container-padding">
-            <h2 className="mb-8 text-3xl font-bold text-gray-900">Our Commitment to Excellence</h2>
+            <h2 className="mb-8 text-3xl font-bold text-stone-900" style={headingFont}>
+              Our Commitment to Excellence
+            </h2>
             <div className="space-y-3">
               {commitment.map((item) => (
                 <div key={item} className="flex items-start gap-3">
-                  <CheckCircle className="mt-0.5 h-6 w-6 shrink-0 text-green-600" />
-                  <span className="text-gray-700">{item}</span>
+                  <CheckCircle className="mt-0.5 h-6 w-6 shrink-0 text-amber-600" />
+                  <span className="text-stone-700">{item}</span>
                 </div>
               ))}
             </div>
           </div>
         </section>
 
-        <section className="section-padding bg-gray-50">
+        <section className="section-padding bg-stone-50">
           <div className="mx-auto max-w-4xl container-padding grid gap-10 md:grid-cols-2">
-            <div className="rounded-2xl border border-gray-200 bg-white p-8 shadow-sm">
-              <Target className="mb-4 h-10 w-10 text-blue-600" />
-              <h2 className="mb-4 text-2xl font-bold text-gray-900">Our Vision</h2>
-              <p className="leading-relaxed text-gray-600">
+            <div className="rounded-2xl border border-stone-200 bg-white p-8 shadow-sm">
+              <Target className="mb-4 h-10 w-10 text-amber-700" />
+              <h2 className="mb-4 text-2xl font-bold text-stone-900" style={headingFont}>
+                Our Vision
+              </h2>
+              <p className="leading-relaxed text-stone-600">
                 To become a trusted center for advanced physiotherapy, rehabilitation, speech therapy, and occupational
                 therapy, delivering compassionate care, innovative treatments, and meaningful recovery outcomes.
               </p>
             </div>
-            <div className="rounded-2xl border border-gray-200 bg-white p-8 shadow-sm">
-              <Heart className="mb-4 h-10 w-10 text-teal-600" />
-              <h2 className="mb-4 text-2xl font-bold text-gray-900">Our Mission</h2>
-              <p className="leading-relaxed text-gray-600">
+            <div className="rounded-2xl border border-stone-200 bg-white p-8 shadow-sm">
+              <Heart className="mb-4 h-10 w-10 text-amber-700" />
+              <h2 className="mb-4 text-2xl font-bold text-stone-900" style={headingFont}>
+                Our Mission
+              </h2>
+              <p className="leading-relaxed text-stone-600">
                 To help individuals overcome pain, improve mobility, enhance communication skills, regain functional
                 independence, and achieve a healthier life through evidence-based physiotherapy and multidisciplinary
                 rehabilitation services.
@@ -156,12 +167,14 @@ export default function AboutPage() {
         <section className="section-padding bg-white">
           <div className="mx-auto max-w-7xl container-padding">
             <div className="mb-16 text-center">
-              <h2 className="mb-6 text-3xl font-bold text-gray-900 md:text-4xl">Meet Our Expert Team</h2>
+              <h2 className="mb-6 text-3xl font-bold text-stone-900 md:text-4xl" style={headingFont}>
+                Meet Our Expert Team
+              </h2>
             </div>
             <div className="mx-auto grid max-w-6xl gap-8 md:grid-cols-2 lg:grid-cols-3">
               {teamMembers.map((member, index) => (
-                <Card key={index} className="h-full overflow-hidden transition-all duration-300 hover:shadow-xl">
-                  <div className="relative flex h-80 items-center justify-center bg-gradient-to-br from-blue-100 to-teal-100 p-4">
+                <Card key={index} className="h-full overflow-hidden border-stone-200 transition-all duration-300 hover:shadow-xl">
+                  <div className="relative flex h-80 items-center justify-center bg-gradient-to-br from-stone-100 to-amber-50 p-4">
                     <div className="relative mx-auto h-full w-full max-w-xs">
                       <Image
                         src={member.image}
@@ -173,10 +186,10 @@ export default function AboutPage() {
                     </div>
                   </div>
                   <CardContent className="p-6 text-center">
-                    <h4 className="mb-2 text-xl font-semibold text-gray-900">{member.name}</h4>
-                    <p className="mb-1 font-medium text-blue-600">{member.role}</p>
-                    <p className="mb-4 text-sm text-gray-500">{member.qualification}</p>
-                    <p className="text-sm leading-relaxed text-gray-600">{member.description}</p>
+                    <h4 className="mb-2 text-xl font-semibold text-stone-900">{member.name}</h4>
+                    <p className="mb-1 font-medium text-amber-700">{member.role}</p>
+                    <p className="mb-4 text-sm text-stone-500">{member.qualification}</p>
+                    <p className="text-sm leading-relaxed text-stone-600">{member.description}</p>
                   </CardContent>
                 </Card>
               ))}
@@ -184,12 +197,12 @@ export default function AboutPage() {
           </div>
         </section>
 
-        <section className="section-padding bg-gradient-to-r from-blue-600 to-teal-600 text-white">
+        <section className="section-padding bg-gradient-to-br from-stone-900 via-stone-800 to-amber-950 text-white">
           <div className="mx-auto max-w-4xl container-padding text-center">
-            <h2 className="mb-4 text-2xl font-bold md:text-3xl">
+            <h2 className="mb-4 text-2xl font-bold md:text-3xl" style={headingFont}>
               Samarth Clinic & Physiotherapy Rehabilitation Centre
             </h2>
-            <p className="mb-6 text-lg text-blue-100">
+            <p className="mb-6 text-lg text-amber-100/90">
               Physiotherapy • Neuro Rehab • Pain Management • Speech Therapy • Occupational Therapy • Advanced
               Rehabilitation
             </p>
@@ -201,13 +214,13 @@ export default function AboutPage() {
                 href="https://wa.me/917004119766?text=Hello%2C%20I%20would%20like%20to%20connect%20with%20Samarth%20Clinic."
                 target="_blank"
                 rel="noopener noreferrer"
-                className="rounded-lg bg-white px-8 py-4 font-semibold text-blue-600 transition-colors hover:bg-gray-100"
+                className="rounded-lg bg-amber-600 px-8 py-4 font-semibold text-white transition-colors hover:bg-amber-700"
               >
                 Chat on WhatsApp
               </a>
               <a
                 href="/contact"
-                className="rounded-lg border-2 border-white px-8 py-4 font-semibold text-white transition-all hover:bg-blue-50 hover:text-blue-700"
+                className="rounded-lg border-2 border-white/80 px-8 py-4 font-semibold text-white transition-all hover:bg-white hover:text-stone-900"
               >
                 Contact Us
               </a>

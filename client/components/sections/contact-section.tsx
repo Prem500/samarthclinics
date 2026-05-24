@@ -53,7 +53,7 @@ export default function ContactSection() {
                     </p>
                     <Button variant="outline" size="sm" className="rounded-full" asChild>
                       <a 
-                        href="https://maps.app.goo.gl/3Ey94eDkMNvhsrQf7" 
+                        href="https://www.google.com/maps/dir//Physiotherapy+%26+Rehabilitation+Center+%7C+Samarth+Clinic+I+Dr+Prem+Prakash,+Canal+Rd,+Rajputana+Mohalla,+Dehri,+Bihar+821307/@24.9229161,84.1472434,14.11z/data=!4m8!4m7!1m0!1m5!1m1!1s0x398daf007d3ea459:0x46361466f3d9fa30!2m2!1d84.1773499!2d24.9071756?entry=ttu" 
                         target="_blank" 
                         rel="noopener noreferrer"
                         className="flex items-center gap-2"
@@ -166,7 +166,7 @@ export default function ContactSection() {
               <CardContent className="p-0">
                 <div className="relative h-96 lg:h-full min-h-[400px]">
                   <iframe
-                    src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d14391.825675144675!2d85.1406895!3d25.6125392!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39ed58dce6732867%3A0x4d8ce94d30763c1b!2sSamarth%20Clinic!5e0!3m2!1sen!2sin!4v1700992427448!5m2!1sen!2sin"
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3793.9!2d84.1773499!3d24.9071756!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x398daf007d3ea459%3A0x46361466f3d9fa30!2sPhysiotherapy%20%26%20Rehabilitation%20Center%20%7C%20Samarth%20Clinic%20I%20Dr%20Prem%20Prakash!5e0!3m2!1sen!2sin!4v1747650000000!5m2!1sen!2sin"
                     width="100%"
                     height="100%"
                     style={{ border: 0 }}

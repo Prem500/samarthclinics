@@ -7,62 +7,68 @@ import { MapPin, Phone, Mail, Clock, Navigation, MessageCircle } from "lucide-re
 
 export const metadata: Metadata = {
   title: "Contact Us - Get In Touch with Samarth Clinic",
-  description: "Contact Samarth Clinic for appointments, inquiries, or emergency consultations. Find our location, phone number, email, and working hours.",
-  keywords: ["contact samarth clinic", "physiotherapy appointment", "clinic location", "phone number", "dehri physiotherapy"],
+  description:
+    "Contact Samarth Clinic for appointments, inquiries, or emergency consultations. Find our location, phone number, email, and working hours.",
+  keywords: [
+    "contact samarth clinic",
+    "physiotherapy appointment",
+    "clinic location",
+    "phone number",
+    "dehri physiotherapy",
+  ],
 };
+
+const headingFont = { fontFamily: "'Cormorant Garamond', serif" };
 
 export default function ContactPage() {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-stone-50">
       <Header />
-      
-      {/* Hero Section */}
-      <section className="relative py-20 bg-gradient-to-br from-blue-600 to-teal-600 text-white">
-        <div className="max-w-7xl mx-auto container-padding text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-6">
+
+      <section className="relative bg-gradient-to-br from-stone-900 via-stone-800 to-amber-950 py-20 text-white">
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-transparent via-amber-500/80 to-transparent" />
+        <div className="mx-auto max-w-7xl container-padding text-center">
+          <h1 className="mb-6 text-4xl font-bold md:text-5xl" style={headingFont}>
             Get In Touch
           </h1>
-          <p className="text-xl text-blue-100 max-w-3xl mx-auto">
-            We're here to help you on your journey to better health. Contact us for appointments, 
-            inquiries, or any questions about our physiotherapy services.
+          <p className="mx-auto max-w-3xl text-xl text-amber-100/90">
+            We&apos;re here to help you on your journey to better health. Contact us for appointments, inquiries, or any
+            questions about our physiotherapy services.
           </p>
         </div>
       </section>
 
       <main>
-        {/* Contact Information Section */}
         <section className="section-padding bg-white">
-          <div className="max-w-7xl mx-auto container-padding">
-            <div className="grid lg:grid-cols-2 gap-12">
-              {/* Contact Cards */}
+          <div className="mx-auto max-w-7xl container-padding">
+            <div className="grid gap-12 lg:grid-cols-2">
               <div className="space-y-6">
                 <div className="mb-8">
-                  <h2 className="text-3xl font-bold text-gray-900 mb-4">
+                  <h2 className="mb-4 text-3xl font-bold text-stone-900" style={headingFont}>
                     Contact Information
                   </h2>
-                  <p className="text-lg text-gray-600">
-                    Reach out to us through any of the following methods. We're always ready to assist you.
+                  <p className="text-lg text-stone-600">
+                    Reach out to us through any of the following methods. We&apos;re always ready to assist you.
                   </p>
                 </div>
 
-                <Card className="hover:shadow-lg transition-shadow duration-300">
+                <Card className="border-stone-200 transition-shadow duration-300 hover:shadow-lg">
                   <CardContent className="p-6">
                     <div className="flex items-start gap-4">
-                      <div className="bg-blue-100 p-3 rounded-full">
-                        <MapPin className="h-6 w-6 text-blue-600" />
+                      <div className="rounded-full bg-amber-100 p-3">
+                        <MapPin className="h-6 w-6 text-amber-700" />
                       </div>
                       <div className="flex-1">
-                        <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                          Clinic Address
-                        </h3>
-                        <p className="text-gray-600 mb-4">
-                        Canal Road, Near Sunil Bose<br />
+                        <h3 className="mb-2 text-xl font-semibold text-stone-900">Clinic Address</h3>
+                        <p className="mb-4 text-stone-600">
+                          Canal Road, Near Sunil Bose
+                          <br />
                           Dehri, Bihar, India
                         </p>
-                        <Button variant="outline" size="sm" asChild>
-                          <a 
-                            href="https://maps.app.goo.gl/3Ey94eDkMNvhsrQf7" 
-                            target="_blank" 
+                        <Button variant="outline" size="sm" className="border-stone-300 hover:border-amber-600 hover:text-amber-700" asChild>
+                          <a
+                            href="https://www.google.com/maps/dir//Physiotherapy+%26+Rehabilitation+Center+%7C+Samarth+Clinic+I+Dr+Prem+Prakash,+Canal+Rd,+Rajputana+Mohalla,+Dehri,+Bihar+821307/@24.9229161,84.1472434,14.11z/data=!4m8!4m7!1m0!1m5!1m1!1s0x398daf007d3ea459:0x46361466f3d9fa30!2m2!1d84.1773499!2d24.9071756?entry=ttu"
+                            target="_blank"
                             rel="noopener noreferrer"
                             className="flex items-center gap-2"
                           >
@@ -75,31 +81,24 @@ export default function ContactPage() {
                   </CardContent>
                 </Card>
 
-                <Card className="hover:shadow-lg transition-shadow duration-300">
+                <Card className="border-stone-200 transition-shadow duration-300 hover:shadow-lg">
                   <CardContent className="p-6">
                     <div className="flex items-start gap-4">
-                      <div className="bg-green-100 p-3 rounded-full">
-                        <Phone className="h-6 w-6 text-green-600" />
+                      <div className="rounded-full bg-amber-100 p-3">
+                        <Phone className="h-6 w-6 text-amber-700" />
                       </div>
                       <div className="flex-1">
-                        <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                          Phone Number
-                        </h3>
-                        <p className="text-gray-600 mb-4">
-                          Available for appointments and emergencies
-                        </p>
-                        <div className="flex flex-col sm:flex-row gap-2">
-                          <Button variant="outline" size="sm" asChild>
-                            <a 
-                              href="tel:+917004119766"
-                              className="flex items-center gap-2"
-                            >
+                        <h3 className="mb-2 text-xl font-semibold text-stone-900">Phone Number</h3>
+                        <p className="mb-4 text-stone-600">Available for appointments and emergencies</p>
+                        <div className="flex flex-col gap-2 sm:flex-row">
+                          <Button variant="outline" size="sm" className="border-stone-300 hover:border-amber-600 hover:text-amber-700" asChild>
+                            <a href="tel:+917004119766" className="flex items-center gap-2">
                               <Phone className="h-4 w-4" />
                               +91 7004119766
                             </a>
                           </Button>
-                          <Button variant="outline" size="sm" asChild>
-                            <a 
+                          <Button variant="outline" size="sm" className="border-stone-300 hover:border-amber-600 hover:text-amber-700" asChild>
+                            <a
                               href="https://wa.me/917004119766?text=Hello%20Doctor,%20I%20would%20like%20to%20book%20an%20appointment"
                               target="_blank"
                               rel="noopener noreferrer"
@@ -115,24 +114,17 @@ export default function ContactPage() {
                   </CardContent>
                 </Card>
 
-                <Card className="hover:shadow-lg transition-shadow duration-300">
+                <Card className="border-stone-200 transition-shadow duration-300 hover:shadow-lg">
                   <CardContent className="p-6">
                     <div className="flex items-start gap-4">
-                      <div className="bg-purple-100 p-3 rounded-full">
-                        <Mail className="h-6 w-6 text-purple-600" />
+                      <div className="rounded-full bg-amber-100 p-3">
+                        <Mail className="h-6 w-6 text-amber-700" />
                       </div>
                       <div className="flex-1">
-                        <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                          Email Address
-                        </h3>
-                        <p className="text-gray-600 mb-4">
-                          Send us your queries and we'll respond promptly
-                        </p>
-                        <Button variant="outline" size="sm" asChild>
-                          <a 
-                            href="mailto:Samarthclinic.info@gmail.com"
-                            className="flex items-center gap-2"
-                          >
+                        <h3 className="mb-2 text-xl font-semibold text-stone-900">Email Address</h3>
+                        <p className="mb-4 text-stone-600">Send us your queries and we&apos;ll respond promptly</p>
+                        <Button variant="outline" size="sm" className="border-stone-300 hover:border-amber-600 hover:text-amber-700" asChild>
+                          <a href="mailto:Samarthclinic.info@gmail.com" className="flex items-center gap-2">
                             <Mail className="h-4 w-4" />
                             Samarthclinic.info@gmail.com
                           </a>
@@ -142,29 +134,27 @@ export default function ContactPage() {
                   </CardContent>
                 </Card>
 
-                <Card className="hover:shadow-lg transition-shadow duration-300">
+                <Card className="border-stone-200 transition-shadow duration-300 hover:shadow-lg">
                   <CardContent className="p-6">
                     <div className="flex items-start gap-4">
-                      <div className="bg-orange-100 p-3 rounded-full">
-                        <Clock className="h-6 w-6 text-orange-600" />
+                      <div className="rounded-full bg-amber-100 p-3">
+                        <Clock className="h-6 w-6 text-amber-700" />
                       </div>
                       <div className="flex-1">
-                        <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                          Working Hours
-                        </h3>
-                        <div className="space-y-2 text-gray-600">
+                        <h3 className="mb-2 text-xl font-semibold text-stone-900">Working Hours</h3>
+                        <div className="space-y-2 text-stone-600">
                           <div className="flex justify-between">
                             <span>Monday - Saturday</span>
-                            <span className="font-medium">9:00 AM - 8:00 PM</span>
+                            <span className="font-medium">10:00 AM - 8:00 PM</span>
                           </div>
                           <div className="flex justify-between">
                             <span>Sunday</span>
-                            <span className="font-medium text-red-600">Closed</span>
+                            <span className="font-medium text-stone-500">Closed</span>
                           </div>
                         </div>
-                        <div className="mt-4 p-3 bg-blue-50 rounded-lg">
-                          <p className="text-sm text-blue-700">
-                            <strong>Note:</strong> We're available for emergency consultations outside regular hours. 
+                        <div className="mt-4 rounded-lg bg-amber-50 p-3">
+                          <p className="text-sm text-amber-900">
+                            <strong>Note:</strong> We&apos;re available for emergency consultations outside regular hours.
                             Please call or WhatsApp for urgent cases.
                           </p>
                         </div>
@@ -174,19 +164,18 @@ export default function ContactPage() {
                 </Card>
               </div>
 
-              {/* Map */}
               <div>
-                <Card className="h-full overflow-hidden">
+                <Card className="h-full overflow-hidden border-stone-200">
                   <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <MapPin className="h-5 w-5 text-blue-600" />
+                    <CardTitle className="flex items-center gap-2 text-stone-900">
+                      <MapPin className="h-5 w-5 text-amber-700" />
                       Find Us on Map
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="p-0">
-                    <div className="relative h-96 lg:h-full min-h-[500px]">
+                    <div className="relative min-h-[500px] h-96 lg:h-full">
                       <iframe
-                        src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d14391.825675144675!2d85.1406895!3d25.6125392!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39ed58dce6732867%3A0x4d8ce94d30763c1b!2sSamarth%20Clinic!5e0!3m2!1sen!2sin!4v1700992427448!5m2!1sen!2sin"
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3793.9!2d84.1773499!3d24.9071756!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x398daf007d3ea459%3A0x46361466f3d9fa30!2sPhysiotherapy%20%26%20Rehabilitation%20Center%20%7C%20Samarth%20Clinic%20I%20Dr%20Prem%20Prakash!5e0!3m2!1sen!2sin!4v1747650000000!5m2!1sen!2sin"
                         width="100%"
                         height="100%"
                         style={{ border: 0 }}
@@ -196,14 +185,10 @@ export default function ContactPage() {
                         title="Samarth Clinic Location"
                         className="rounded-b-lg"
                       />
-                      
-                      {/* Map Overlay */}
-                      <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm rounded-lg p-3 shadow-lg">
+                      <div className="absolute top-4 left-4 rounded-lg bg-white/90 p-3 shadow-lg backdrop-blur-sm">
                         <div className="flex items-center gap-2">
-                          <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
-                          <span className="text-sm font-medium text-gray-900">
-                            Samarth Clinic
-                          </span>
+                          <div className="h-3 w-3 animate-pulse rounded-full bg-amber-600" />
+                          <span className="text-sm font-medium text-stone-900">Samarth Clinic</span>
                         </div>
                       </div>
                     </div>
@@ -214,51 +199,41 @@ export default function ContactPage() {
           </div>
         </section>
 
-        {/* FAQ Section */}
-        <section className="section-padding bg-gray-50">
-          <div className="max-w-4xl mx-auto container-padding">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
+        <section className="section-padding bg-stone-50">
+          <div className="mx-auto max-w-4xl container-padding">
+            <div className="mb-12 text-center">
+              <h2 className="mb-6 text-3xl font-bold text-stone-900 md:text-4xl" style={headingFont}>
                 Frequently Asked Questions
               </h2>
-              <p className="text-lg text-gray-600">
-                Common questions about our services and appointments
-              </p>
+              <p className="text-lg text-stone-600">Common questions about our services and appointments</p>
             </div>
 
             <div className="space-y-6">
-              <Card>
+              <Card className="border-stone-200">
                 <CardContent className="p-6">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                    How do I book an appointment?
-                  </h3>
-                  <p className="text-gray-600">
-                    You can book an appointment by calling us at +91 7004119766, sending a WhatsApp message, 
-                    or using our online booking form on the homepage. We'll confirm your appointment within a few hours.
+                  <h3 className="mb-2 text-lg font-semibold text-stone-900">How do I book an appointment?</h3>
+                  <p className="text-stone-600">
+                    You can book an appointment by calling us at +91 7004119766, sending a WhatsApp message, or using our
+                    online booking form on the homepage. We&apos;ll confirm your appointment within a few hours.
                   </p>
                 </CardContent>
               </Card>
 
-             
-              <Card>
+              <Card className="border-stone-200">
                 <CardContent className="p-6">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                    What should I bring to my first appointment?
-                  </h3>
-                  <p className="text-gray-600">
-                    Please bring any relevant medical reports, X-rays, MRI scans, or previous treatment records. 
-                    Also bring a list of current medications and wear comfortable clothing that allows easy movement.
+                  <h3 className="mb-2 text-lg font-semibold text-stone-900">What should I bring to my first appointment?</h3>
+                  <p className="text-stone-600">
+                    Please bring any relevant medical reports, X-rays, MRI scans, or previous treatment records. Also bring
+                    a list of current medications and wear comfortable clothing that allows easy movement.
                   </p>
                 </CardContent>
               </Card>
 
-              <Card>
+              <Card className="border-stone-200">
                 <CardContent className="p-6">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                    How long does a typical session last?
-                  </h3>
-                  <p className="text-gray-600">
-                    A typical physiotherapy session lasts 15-40 minutes, depending on your condition and treatment plan. 
+                  <h3 className="mb-2 text-lg font-semibold text-stone-900">How long does a typical session last?</h3>
+                  <p className="text-stone-600">
+                    A typical physiotherapy session lasts 15-40 minutes, depending on your condition and treatment plan.
                     Your first consultation may take longer as it includes a comprehensive assessment.
                   </p>
                 </CardContent>
@@ -267,37 +242,34 @@ export default function ContactPage() {
           </div>
         </section>
 
-        {/* Emergency Contact Banner */}
-        <section className="section-padding bg-gradient-to-r from-red-600 to-pink-600 text-white">
-          <div className="max-w-7xl mx-auto container-padding">
-            <Card className="bg-white/10 backdrop-blur-sm border-white/20 text-white">
+        <section className="section-padding bg-gradient-to-br from-stone-900 via-stone-800 to-amber-950 text-white">
+          <div className="mx-auto max-w-7xl container-padding">
+            <Card className="border-amber-800/30 bg-white/10 text-white backdrop-blur-sm">
               <CardContent className="p-8 text-center">
-                <Phone className="h-12 w-12 mx-auto mb-4 opacity-90" />
-                <h3 className="text-2xl font-bold mb-2">
+                <Phone className="mx-auto mb-4 h-12 w-12 opacity-90 text-amber-400" />
+                <h3 className="mb-2 text-2xl font-bold" style={headingFont}>
                   Need Immediate Assistance?
                 </h3>
-                <p className="text-red-100 mb-6 max-w-2xl mx-auto">
-                  For urgent physiotherapy consultations or emergency cases, 
-                  don't hesitate to contact us directly. We're here to help when you need it most.
+                <p className="mx-auto mb-6 max-w-2xl text-amber-100/90">
+                  For urgent physiotherapy consultations or emergency cases, don&apos;t hesitate to contact us directly.
+                  We&apos;re here to help when you need it most.
                 </p>
-                <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <Button 
-                    size="lg" 
+                <div className="flex flex-col justify-center gap-4 sm:flex-row">
+                  <Button
+                    size="lg"
                     variant="outline"
-                    className="bg-blue-600 text-white hover:bg-white hover:text-red-600"
+                    className="border-white bg-amber-600 text-white hover:bg-white hover:text-stone-900"
                     asChild
                   >
-                    <a href="tel:+917004119766">
-                      Call Now: +91 7004119766
-                    </a>
+                    <a href="tel:+917004119766">Call Now: +91 7004119766</a>
                   </Button>
-                  <Button 
-                    size="lg" 
+                  <Button
+                    size="lg"
                     variant="outline"
-                    className="bg-blue-600  text-white hover:bg-white hover:text-red-600"
+                    className="border-white text-white hover:bg-white hover:text-stone-900"
                     asChild
                   >
-                    <a 
+                    <a
                       href="https://wa.me/917004119766?text=Hello%20Doctor,%20I%20need%20urgent%20consultation"
                       target="_blank"
                       rel="noopener noreferrer"

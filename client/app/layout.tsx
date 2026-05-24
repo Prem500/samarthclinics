@@ -97,7 +97,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 postalCode: "821307",
                 addressCountry: "IN",
               },
-              geo: { "@type": "GeoCoordinates", latitude: 25.6125392, longitude: 85.1406895 },
+              geo: { "@type": "GeoCoordinates", latitude: 24.9071756, longitude: 84.1773499 },
               openingHoursSpecification: [
                 { "@type": "OpeningHoursSpecification", dayOfWeek: ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"], opens: "10:00", closes: "20:00" },
               ],
@@ -107,7 +107,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 "Physiotherapy", "Rehabilitation", "Neurological Rehabilitation",
                 "Orthopedic Physiotherapy", "Sports Medicine", "Occupational Therapy", "Speech Therapy",
               ],
-              hasMap: "https://maps.app.goo.gl/3Ey94eDkMNvhsrQf7",
+              hasMap: "https://www.google.com/maps/dir//Physiotherapy+%26+Rehabilitation+Center+%7C+Samarth+Clinic+I+Dr+Prem+Prakash,+Canal+Rd,+Rajputana+Mohalla,+Dehri,+Bihar+821307/@24.9229161,84.1472434,14.11z/data=!4m8!4m7!1m0!1m5!1m1!1s0x398daf007d3ea459:0x46361466f3d9fa30!2m2!1d84.1773499!2d24.9071756?entry=ttu",
               sameAs: [
                 "https://www.facebook.com/imthepremkumarshah",
                 "https://www.instagram.com/dr._prem__prakash",

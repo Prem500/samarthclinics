@@ -164,7 +164,7 @@ export default function TestimonialsSection() {
               </div>
 
               <div className="text-center">
-                <div className="mb-2 font-heading text-3xl font-semibold text-cyan-700">4500+</div>
+                <div className="mb-2 font-heading text-3xl font-semibold text-cyan-700">5000+</div>
                 <div className="text-sm text-clinical-600">Happy Patients</div>
               </div>
 

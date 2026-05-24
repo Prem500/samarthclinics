@@ -42,7 +42,7 @@ function AppointmentModal({ open, onOpenChange }: { open: boolean; onOpenChange:
             <div className="space-y-4">
               {[
                 { icon: User, title: "Dr. Prem Prakash", sub: "Senior Physiotherapist · BPT · 5+ yrs" },
-                { icon: MapPin, title: "Canal Rd, Rajputana Mohalla, Dehri, Bihar 821307", sub: "", href: "https://maps.app.goo.gl/3Ey94eDkMNvhsrQf7" },
+                { icon: MapPin, title: "Canal Rd, Rajputana Mohalla, Dehri, Bihar 821307", sub: "", href: "https://www.google.com/maps/dir//Physiotherapy+%26+Rehabilitation+Center+%7C+Samarth+Clinic+I+Dr+Prem+Prakash,+Canal+Rd,+Rajputana+Mohalla,+Dehri,+Bihar+821307/@24.9229161,84.1472434,14.11z/data=!4m8!4m7!1m0!1m5!1m1!1s0x398daf007d3ea459:0x46361466f3d9fa30!2m2!1d84.1773499!2d24.9071756?entry=ttu" },
                 { icon: Clock, title: "Mon–Sat: 10 AM – 8 PM", sub: "Sunday Closed" },
                 { icon: Phone, title: "+91 70041 19766", sub: "Emergency & Appointments", href: "tel:+917004119766" },
               ].map((item, i) => (
@@ -148,7 +148,7 @@ function Footer() {
           </div>
           <div>
             <p className="mb-4 text-xs font-semibold uppercase tracking-widest text-amber-400">Treatments</p>
-            {["Home Physiotherapy", "Neuro Rehabilitation", "Speech Therapy", "Occupational Therapy", "Sports Injury", "Orthopedic Rehabilitation"].map(s => (
+            {["Electrotherapy", "Neuro Rehabilitation", "Orthopedic Rehabilitation", "Child Rehabilitation", "Sports Rehabilitation", "Pain Management", "Home Physiotherapy", "Occupational Therapy", "Speech Therapy"].map(s => (
               <p key={s} className="mb-2 text-sm">{s}</p>
             ))}
           </div>
@@ -320,7 +320,7 @@ function Services({ onBook }: { onBook: () => void }) {
           <div className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-amber-600/20 blur-3xl" />
           <p className="mb-2 text-sm uppercase tracking-widest text-amber-400">Dehri's Premier Rehabilitation Center</p>
           <h3 className="mb-4 text-3xl font-bold" style={{ fontFamily: "'Cormorant Garamond', serif" }}>Start Your Recovery Today</h3>
-          <p className="mb-8 text-stone-400">Trusted by 4500+ patients across Dehri, Sasaram, Aurangabad & Rohtas district.</p>
+          <p className="mb-8 text-stone-400">Trusted by 5000+ patients across Dehri, Sasaram, Aurangabad & Rohtas district.</p>
           <div className="flex flex-col justify-center gap-4 sm:flex-row">
             <button onClick={onBook} className="rounded-full bg-amber-600 px-8 py-3 font-semibold hover:bg-amber-500 transition-colors">Book Appointment</button>
             <Link href="/services" className="rounded-full border border-white/30 px-8 py-3 font-semibold hover:border-amber-500 transition-colors">All Services →</Link>
@@ -587,7 +587,7 @@ function Contact() {
         <div className="grid gap-10 lg:grid-cols-2">
           <motion.div {...fade()} className="space-y-5">
             {[
-              { icon: MapPin, label: "Address", value: "Canal Rd, Rajputana Mohalla, Dehri on Sone, Rohtas, Bihar 821307", href: "https://maps.app.goo.gl/3Ey94eDkMNvhsrQf7", cta: "Get Directions →" },
+              { icon: MapPin, label: "Address", value: "Canal Rd, Rajputana Mohalla, Dehri on Sone, Rohtas, Bihar 821307", href: "https://www.google.com/maps/dir//Physiotherapy+%26+Rehabilitation+Center+%7C+Samarth+Clinic+I+Dr+Prem+Prakash,+Canal+Rd,+Rajputana+Mohalla,+Dehri,+Bihar+821307/@24.9229161,84.1472434,14.11z/data=!4m8!4m7!1m0!1m5!1m1!1s0x398daf007d3ea459:0x46361466f3d9fa30!2m2!1d84.1773499!2d24.9071756?entry=ttu", cta: "Get Directions →" },
               { icon: Phone, label: "Phone / WhatsApp", value: "+91 70041 19766", href: "tel:+917004119766", cta: "Call Now →" },
               { icon: Mail, label: "Email", value: "Samarthclinic.info@gmail.com", href: "mailto:Samarthclinic.info@gmail.com", cta: "Send Email →" },
               { icon: Clock, label: "Working Hours", value: "Monday – Saturday: 10:00 AM – 8:00 PM  |  Sunday: Closed" },
@@ -615,7 +615,7 @@ function Contact() {
           <motion.div {...fade(0.15)}>
             <div className="overflow-hidden rounded-3xl border border-stone-200 shadow-lg">
               <iframe
-                src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d14391.825675144675!2d85.1406895!3d25.6125392!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39ed58dce6732867%3A0x4d8ce94d30763c1b!2sSamarth%20Clinic!5e0!3m2!1sen!2sin!4v1700992427448!5m2!1sen!2sin"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3793.9!2d84.1773499!3d24.9071756!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x398daf007d3ea459%3A0x46361466f3d9fa30!2sPhysiotherapy%20%26%20Rehabilitation%20Center%20%7C%20Samarth%20Clinic%20I%20Dr%20Prem%20Prakash!5e0!3m2!1sen!2sin!4v1747650000000!5m2!1sen!2sin"
                 width="100%" height="420" style={{ border: 0 }} allowFullScreen loading="lazy" referrerPolicy="no-referrer-when-downgrade"
                 title="Samarth Clinic Location - Best Physiotherapy in Dehri on Sone Bihar" />
             </div>

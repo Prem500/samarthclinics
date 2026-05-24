@@ -81,7 +81,7 @@ export default function AppointmentModal({ open, onOpenChange }: AppointmentModa
                       <p className="text-gray-600 mb-2">Nahar Road, Near Sunil Bose, Dehri</p>
                       <Button variant="outline" size="sm" asChild>
                         <a 
-                          href="https://maps.app.goo.gl/3Ey94eDkMNvhsrQf7" 
+                          href="https://www.google.com/maps/dir//Physiotherapy+%26+Rehabilitation+Center+%7C+Samarth+Clinic+I+Dr+Prem+Prakash,+Canal+Rd,+Rajputana+Mohalla,+Dehri,+Bihar+821307/@24.9229161,84.1472434,14.11z/data=!4m8!4m7!1m0!1m5!1m1!1s0x398daf007d3ea459:0x46361466f3d9fa30!2m2!1d84.1773499!2d24.9071756?entry=ttu" 
                           target="_blank" 
                           rel="noopener noreferrer"
                         >
